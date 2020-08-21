@@ -24,17 +24,45 @@ export class TopicController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name } = request.body;
+        const { name, organisationID } = request.body;
         
         //no name in body
         if(!name) {
             return response.status(400).send({ message: "Missing name for topic"});
         }
 
+        //no organisation in body
+        if(!organisationID) {
+            return response.status(400).send({ message: "Missing organisation id for topic"});
+        }
+
         try {
 
             //store an instance of connect for db interaction
             const connection = await connect();
+
+            /*
+                Since we are creating a new topic, we need to also relate it to an organisation
+                to do this, we create a repository and then fetch on it using the id
+                then we store the fetched organisation and set it on the new topic
+
+                in case that the provided organisation id doesnt actually exist in the organisation
+                table, we need to break and return an error message otherwise the topic will have a null
+                value
+            */
+
+            //reference to organisation repository
+            const organisationRepository = connection.getRepository(Organisation)
+
+            //find the matching organisaiton by id from repository
+            const fetchedOrganisation = await organisationRepository.findOne(organisationID)
+
+            //if the fetched organisaiton is null or undefined due to it not existing
+            //send error message to client stating that it doesnt exist
+            if (fetchedOrganisation == undefined || fetchedOrganisation == null) {
+                return response.status(400).send({ message: "No organisation exists that matched organisation id: " + organisationID})
+            }
+
 
             //store a reference to the topic repository
             const repo = connection.getRepository(Topic);
@@ -44,6 +72,9 @@ export class TopicController {
 
             //set the name for the topic
             newTopic.topicName = name;
+
+            //set the organisation on the topic
+            newTopic.organisation = fetchedOrganisation;
 
             //save the new topic to DB
             const newSavedTopic = await repo.save(newTopic);
@@ -64,7 +95,7 @@ export class TopicController {
     async getTopicsForOrganisation(request: Request, response: Response) {
 
         /*
-
+            
         */
 
         //get the organisation id from request parameters
@@ -215,6 +246,12 @@ export class TopicController {
 
             //find the matching organisaiton by id from repository
             const fetchedOrganisation = await organisationRepository.findOne(organisationID)
+
+            //if the fetched organisaiton is null or undefined due to it not existing
+            //send error message to client stating that it doesnt exist
+            if (fetchedOrganisation == undefined || fetchedOrganisation == null) {
+                return response.status(400).send({ message: "No organisation exists that matched organisation id: " + organisationID})
+            }
 
             //store the fetched topic to update
             const fetchedTopic = await repository.findOne(topicID);

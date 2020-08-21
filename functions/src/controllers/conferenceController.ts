@@ -20,6 +20,8 @@ export class ConferenceController {
     //creates a new conference in database
     async createconference(request: Request, response: Response) {
 
+        //TODO: include fetching organisation id so that the organisation can be attached to the conference
+
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
         const { name, submissionDeadline } = request.body;

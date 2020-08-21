@@ -1,7 +1,7 @@
 
 //import neccessary firebase APIs
 import * as functions from 'firebase-functions';
-//import * as admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 
 //import dependencies
 import * as express from 'express';
@@ -9,23 +9,28 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 
 
-//import * as cors from 'cors';
-
 
 //import routes
 import { userRoutesConfig } from "./routes/user-routes-config";
 import { topicRoutesConfig } from "./routes/topicRoutesConfig";
 import { organisationRoutesConfig } from "./routes/organisationRoutesConfig";
+import { conferenceRoutesConfig } from './routes/conferenceRoutesConfig'
 
 
-var admin = require("firebase-admin");
+//var admin = require("firebase-admin");
 
 //refence to the service account private key
-//var serviceAccount = require("");
+//use this for local testing
+var serviceAccount = require("/Users/kohdepitcher/Downloads/easyconferencescheduling-firebase-adminsdk-h4pyr-5769f98ea6.json");
 
 //initialise admin with private key
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+
+  //this is used when deploying
+  // credential: admin.credential.applicationDefault(),
+
+  //this is used when testing locally
+  credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://easyconferencescheduling.firebaseio.com"
 });
 
@@ -44,6 +49,9 @@ app.use(cors({ origin : true}));
 userRoutesConfig(app);
 topicRoutesConfig(app);
 organisationRoutesConfig(app);
+conferenceRoutesConfig(app);
+
+
 
 
 //create api end point
