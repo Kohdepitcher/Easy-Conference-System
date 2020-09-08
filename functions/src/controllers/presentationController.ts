@@ -121,7 +121,51 @@ export class PresentationController {
 
 
     //READ
-    //TODO: fetch all conferences for organisation
+    //TODO: fetch all presentations for user
+    async getPresentationsForUser(request: Request, response: Response) {
+        
+        //get the user id from request parameters
+        const { userID } = request.params.UUID;
+        console.log("Fetching presentations for userID: " + userID);
+
+        //send error msg if no userID was provided
+        if (!userID) {
+            return response.status(400).send({ message: "user ID is missing from request paramters"});
+        }
+        
+        try {
+            
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const presentationRepo = connection.getRepository(Presentation);
+            const userRepo = connection.getRepository(User);
+            
+            //all presentations for user
+            var allPresentationsForUser: Presentation[];
+            
+            //create a query to join the required tables together for the specific user
+            allPresentationsForUser = presentationRepo.createQueryBuilder('presentation') 
+            
+                .select()
+            
+                //join the relevant paper to the presentation
+                .leftJoinAndSelect("presentation.paper, "paper")
+                                   
+                //select only those that match the user's UUID
+                
+                //return all
+               .getMany();
+            
+            //send the array to the client
+            return response.status(200).send(allPresentationsForUser);
+            
+        } catch (error) {
+               return handleError(response, error);
+        }
+        
+    }
 
 
     //returns all the conferences from the database
