@@ -15,6 +15,7 @@ import { userRoutesConfig } from "./routes/user-routes-config";
 import { topicRoutesConfig } from "./routes/topicRoutesConfig";
 import { organisationRoutesConfig } from "./routes/organisationRoutesConfig";
 import { conferenceRoutesConfig } from './routes/conferenceRoutesConfig'
+import { paperRoutesConfig } from "./routes/paperRoutesConfig";
 
 
 //var admin = require("firebase-admin");
@@ -51,6 +52,7 @@ userRoutesConfig(app);
 topicRoutesConfig(app);
 organisationRoutesConfig(app);
 conferenceRoutesConfig(app);
+paperRoutesConfig(app);
 
 
 
@@ -72,6 +74,8 @@ export const api = functions.https.onRequest(app);
 //TODO: fill out the stub
 
 exports.setUpUser = functions.auth.user().onCreate((user) => {
+
+  
 
 });
 

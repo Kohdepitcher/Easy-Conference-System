@@ -5,19 +5,10 @@ import { Request, Response } from "express";
 import { connect } from "../config";
 
 //entities
-// import { Conference } from "../entities/conference";
-// import { Organisation } from "../entities/organisation";
 import { Paper } from "../entities/paper";
-import { User } from "../entities/user";
+// import { User } from "../entities/user";
 import { Topic } from "../entities/topic";
 
-
-
-
-// Typical Express Promise (Ceejay Written)
-// app.get("url path", (req, res) => {
-    // console.log(res)
-//}).catch(e => console.log(e))
 
 export class PaperController {
 
@@ -25,7 +16,7 @@ export class PaperController {
     //creates a new paper in database
     async createPaper(request: Request, response: Response) {
 
-        //TODO: include fetching organisation id so that the organisation can be attached to the conference
+        //TODO: include fetching organisation id so that the organisation can be attached to the paper
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
@@ -80,7 +71,7 @@ export class PaperController {
             //store a reference to the paper repository
             const repo = connection.getRepository(Paper);
 
-            //new conference entry
+            //new paper entry
             const newPaper = new Paper();
 
             //set the name for the paper
@@ -95,11 +86,11 @@ export class PaperController {
             //set the user for the paper
 
 
-            //save the new conference to DB
+            //save the new paper to DB
             const newSavedPaper = await repo.save(newPaper);
 
-            //send a copy of the new conference to the server
-            //TODO: remove sending newconference to client when its created
+            //send a copy of the new paper to the server
+            //TODO: remove sending newpaper to client when its created
             return response.status(200).send(newSavedPaper);
         }
 
@@ -110,10 +101,10 @@ export class PaperController {
 
 
     //READ
-    //TODO: fetch all conferences for organisation
+    //TODO: fetch all papers for organisation
 
 
-    //returns all the conferences from the database
+    //returns all the papers from the database
     async getPapers(request: Request, response: Response) {
 
         try {
@@ -124,23 +115,20 @@ export class PaperController {
             //store reference to paper repository
             const repository = connection.getRepository(Paper);
 
-            //store all the conferences
-            var allConferences: Paper[];
+            //store all the papers
+            var allPapers: Paper[];
 
-            //populate conference array with all conferences
-            allConferences = await repository.createQueryBuilder('paper')
+            //populate paper array with all conferences
+            allPapers = await repository.createQueryBuilder('paper')
 
                 //select all columns
                 .select()
-
-                //order by conference name asc
-                // .orderBy("paper.conferenceName", "ASC")
 
                 //get more than one
                 .getMany();
 
             //send the conferences array to client with success code
-            return response.status(200).send(allConferences);
+            return response.status(200).send(allPapers);
             
         } catch (error) {
             return handleError(response, error);
@@ -152,12 +140,12 @@ export class PaperController {
     //     console.log("Get conferences");
     // }
 
-    //return single conference matching conference ID
+    //return single paper matching paper ID
     async getSpecificPaper(request: Request, response: Response) {
 
-        //get the conference id from request parameters
+        //get the paper id from request parameters
         const { paperID } = request.params;
-        console.log("Fetching details for conference: " + paperID);
+        console.log("Fetching details for paper: " + paperID);
 
         //send error msg if no conferenceID was provided
         if (!paperID) {
@@ -187,7 +175,7 @@ export class PaperController {
     //UPDATE
     async updatePaper(request: Request, response: Response) {
                 
-        //get the conference id from request parameters
+        //get the paper id from request parameters
         const { paperID } = request.params;
         console.log("Fetching details for paper: " + paperID);
 
@@ -238,7 +226,7 @@ export class PaperController {
             //create reference to paper repository
             const repository = conneciton.getRepository(Paper);
 
-            //store the fetched conference to update
+            //store the fetched paper to update
             const fetchedPaper = await repository.findOne(paperID);
 
             //update the paper properties
@@ -248,10 +236,10 @@ export class PaperController {
 
             fetchedPaper.topic = fetchedTopic
 
-            //save the conference back to db
+            //save the paper back to db
             const updatedPaper = await repository.save(fetchedPaper);
 
-            //send success to client with copy of update conference
+            //send success to client with copy of update paper
             return response.status(200).send(updatedPaper);
 
         } catch (error) {
@@ -265,7 +253,7 @@ export class PaperController {
 
         //get the paper id from request parameters
         const { paperID } = request.params;
-        console.log("Fetching details for conference: " + paperID);
+        console.log("Fetching details for paper: " + paperID);
 
         //send error msg if no conferenceID was provided
         if (!paperID) {
@@ -280,7 +268,7 @@ export class PaperController {
                 //create reference to paper repository
                 const repository = conneciton.getRepository(Paper);
 
-                //store the fetched conference to update
+                //store the fetched paper to update
                 const fetchedPaper = await repository.findOne(paperID);
 
                 //delete the paper
