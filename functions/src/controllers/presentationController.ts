@@ -6,25 +6,57 @@ import { connect } from "../config";
 
 //entities
 import { Presentation } from "../entities/presentation";
+import { User } from "../entities/user";
+import { Paper } from "../entities/paper";
+import { Conference } from "../entities/conference";
 
+/*
+    create presentations
+        responsible for also creating papers
+    
+    get presentations
+        need to get all for conferenceID for admin
+        need to get all for user
+    
+    get specific presentation
+        need to get any for admin
+        need to get if only the presentation does belong to the user
+    
+    delete specific presentation
+        need to delete any if requested by admin
+        need to delete only ones owned by user
+*/
 
 export class PresentationController {
 
     //CREATE
-    //creates a new conference in database
-    async createconference(request: Request, response: Response) {
+    //creates a new presentation in database
+    //this is also responsible for creating papers as the relationship is one to one which means its just easier to create it here than to pass in a paperID
+    async createconPresentation(request: Request, response: Response) {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, submissionDeadline } = request.body;
         
-        //no name in body
-        if(!name) {
-            return response.status(400).send({ message: "Missing name for conference"});
+        //first we need the required paper details - name, publisher
+        //second we need the required topic for paper - topicID
+        //third we need the required conference for presentation - conferenceID
+        const { paperName, paperPublisher, topicID, conferenceID } = request.body;
+        
+        //if any of the key value pairs from the body is missing, return a 400 status and error
+        if(!paperName) {
+            return response.status(400).send({ message: "Missing paper name for paper"});
         }
         
-        if(!submissionDeadline) {
-            return response.status(400).send({ message: "Missing conference submission deadline"});
+        if(!paperPublisher) {
+            return response.status(400).send({ message: "Missing paper publisher for paper"});
+        }
+        
+        if(!topicID) {
+            return response.status(400).send({ message: "Missing topic ID for paper"});
+        }
+        
+        if(!conferenceID) {
+            return response.status(400).send({ message: "Missing conference ID for presentation"});
         }
 
         try {
@@ -32,20 +64,50 @@ export class PresentationController {
             //store an instance of connect for db interaction
             const connection = await connect();
 
-            //store a reference to the conference repository
-            const repo = connection.getRepository(Conference);
+            //store a reference to the requires repositories
+            const conferenceRepo = connection.getRepository(Conference);
+            const topicRepo = connection.getRepository(Topic);
+            const paperRepo = connection.getRepository(Paper);
+            const presentationRepo = connection.getRepository(Presentation);
+            const userRepo = connection.getRepository(User);
+            
+            //fetch the matching conference
+            const fetchedConference = await conferenceRepo.find(conferenceID);
+            
+            //fetch the matching topic
+            const fetchedTopic = await topicRepo.find(topicID);
+            
+            //fetch the matching user from firebase auth passed in from res
 
-            //new conference entry
-            const newConference = new Conference();
+            //new paper entry
+            const newPaper = new Paper();
 
-            //set the name for the conference
-            newConference.conferenceName = name;
-
-            //convert the json date to proper date and store on conference cutoff
-            newConference.conferenceSubmissionDeadline = new Date(Date.parse(submissionDeadline));
+            //set the name for the paper
+            newPaper.paperTitle = paperName;
+            
+            //set the publisher for the paper
+            newPaper.paperPublisher = paperPublisher;
+            
+            //set the topic for the paper
+            newPaper.topic = fetchedTopic;
 
             //save the new conference to DB
-            const newSavedconference = await repo.save(newConference);
+            await paperRepo.save(newPaper);
+            
+            //create the presentation
+            const newPresentation = new Presentation();
+            
+            //set conference on presentation
+            newPresentation.conference = fetchedConference;
+            
+            //set paper on presentation
+            newPresentation.paper = newPaper;
+            
+            //set user on presentation
+            //newPresentation.user = fetchedUser;
+            
+            const savedNewPresentation = await presentationRepo.save(newPresentation);
+            
 
             //send a copy of the new conference to the server
             //TODO: remove sending newconference to client when its created
