@@ -5,6 +5,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "t
 //import the related entities
 import { Topic } from "../entities/topic";
 import { User } from "../entities/user";
+// import { Presentation } from "./presentation";
 
 //models the paper table and relationships
 @Entity()
@@ -33,5 +34,8 @@ export class Paper extends BaseEntity {
     //foreign key - referenced by user class
     @ManyToOne(type => User, user => user.papers)
     author: User;
+
+    // @OneToOne(type => Presentation, presentation => presentation.paper)
+    // presentation: Presentation;
 
 }

@@ -5,6 +5,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMan
 //import related entities
 import { Paper } from "../entities/paper";
 import { Organisation } from "./organisation";
+// import { Presentation } from "./presentation"
 
 @Entity()
 export class Topic extends BaseEntity {
@@ -25,4 +26,7 @@ export class Topic extends BaseEntity {
     //associated organisation
     @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics)
     organisation: Organisation;
+
+    // @OneToMany(type => Presentation, presentation => presentation.topic)
+    // presentations: Presentation[]
 }

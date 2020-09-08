@@ -6,6 +6,7 @@ import { connect } from "../config";
 
 //entities
 import { Conference } from "../entities/conference";
+import { Organisation } from "../entities/organisation";
 
 
 
@@ -24,7 +25,7 @@ export class ConferenceController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, submissionDeadline } = request.body;
+        const { name, submissionDeadline, organisationID } = request.body;
         
         //no name in body
         if(!name) {
@@ -35,10 +36,26 @@ export class ConferenceController {
             return response.status(400).send({ message: "Missing conference submission deadline"});
         }
 
+        if(!organisationID) {
+            return response.status(400).send({ message: "Missing organisation id"});
+        }
+
         try {
 
             //store an instance of connect for db interaction
             const connection = await connect();
+
+            //also get the conference repository
+            const organisationRepository = connection.getRepository(Organisation)
+
+            //find the matching organisaiton by id from repository
+            const fetchedOrganisation = await organisationRepository.findOne(organisationID)
+
+            //if the fetched organisaiton is null or undefined due to it not existing
+            //send error message to client stating that it doesnt exist
+            if (fetchedOrganisation == undefined || fetchedOrganisation == null) {
+                return response.status(400).send({ message: "No organisation exists that matched organisation id: " + organisationID})
+            }
 
             //store a reference to the conference repository
             const repo = connection.getRepository(Conference);
@@ -51,6 +68,10 @@ export class ConferenceController {
 
             //convert the json date to proper date and store on conference cutoff
             newConference.conferenceSubmissionDeadline = new Date(Date.parse(submissionDeadline));
+
+
+            //set the organisation on the new conference
+            newConference.organisation = fetchedOrganisation;
 
             //save the new conference to DB
             const newSavedconference = await repo.save(newConference);
@@ -88,7 +109,7 @@ export class ConferenceController {
             allConferences = await repository.createQueryBuilder('conference')
 
                 //select all columns
-                .select()
+                .leftJoinAndSelect('conference.organisation', 'Organisation')
 
                 //order by conference name asc
                 .orderBy("conference.conferenceName", "ASC")

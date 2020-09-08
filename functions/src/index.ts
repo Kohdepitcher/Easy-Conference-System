@@ -21,16 +21,17 @@ import { conferenceRoutesConfig } from './routes/conferenceRoutesConfig'
 
 //refence to the service account private key
 //use this for local testing
-var serviceAccount = require("/Users/kohdepitcher/Downloads/easyconferencescheduling-firebase-adminsdk-h4pyr-5769f98ea6.json");
+//change the file path to where you stored this file
+//var serviceAccount = require("/Users/kohdepitcher/Downloads/easyconferencescheduling-firebase-adminsdk-h4pyr-5769f98ea6.json");
 
 //initialise admin with private key
 admin.initializeApp({
 
   //this is used when deploying
-  // credential: admin.credential.applicationDefault(),
+  credential: admin.credential.applicationDefault(),
 
   //this is used when testing locally
-  credential: admin.credential.cert(serviceAccount),
+  // credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://easyconferencescheduling.firebaseio.com"
 });
 
@@ -73,3 +74,8 @@ export const api = functions.https.onRequest(app);
 exports.setUpUser = functions.auth.user().onCreate((user) => {
 
 });
+
+
+
+//edit the user in db when account information is changed
+

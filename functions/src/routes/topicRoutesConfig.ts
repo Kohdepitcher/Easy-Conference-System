@@ -41,6 +41,13 @@ export function topicRoutesConfig(app: Application) {
         new TopicController().getSpecificTopic
     ]);
 
+    //get topics for organisationID
+    app.get('/topics-for-organisation/:organisationID', [
+        new TopicController().getTopicsForOrganisation
+    ]);
+
+
+
     //UPDATE
     app.patch('/topics/:topicID', [
         new TopicController().updateTopic

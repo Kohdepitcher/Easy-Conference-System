@@ -1,9 +1,10 @@
 
 //imports
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 
 //import the related entities
-
+import { Presentation } from "./presentation";
+import { Conference } from "./conference"
 
 //models the session time table and relationships
 @Entity()
@@ -31,7 +32,12 @@ export class Session extends BaseEntity {
     @Column()
     endTime: Date;
 
+
     
+    //Relations
+    @OneToMany(type => Presentation, presentation => presentation.session)
+    presentations: Presentation[];
 
-
+    @ManyToOne(type => Conference, conference => conference.sessions)
+    conference: Conference;
 }

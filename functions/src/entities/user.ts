@@ -4,6 +4,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, BeforeInsert, Befor
 
 //import related entities
 import { Paper } from "../entities/paper";
+import { Presentation } from "../entities/presentation";
 
 @Entity()
 export class User extends BaseEntity {
@@ -45,6 +46,9 @@ export class User extends BaseEntity {
     //foreign key - referenced by paper class
     @OneToMany(type => Paper, paper => paper.author)
     papers: Paper[];
+
+    @OneToMany(type => Presentation, presentation => presentation.user)
+    presentations: Presentation[];
 
     //setup default values
     @BeforeInsert()
