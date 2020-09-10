@@ -23,6 +23,52 @@ export class userController {
     
     
     //CREATE
+    async createUserInDB(req: Request, res: Response) {
+
+        try {
+
+            //create a constant to store the request body
+            const { uid, name, email, country, timeZone } = req.body
+
+            //create new connection to DB
+            const connection = await connect();
+            
+            //get the user repository
+            const repo = connection.getRepository(User);
+            
+            //create a new user
+            const newUser = new User();
+            
+            //parse data from func parameters
+            //uuid from fireauth
+            newUser.UUID = uid;
+            
+            //name is the display name
+            newUser.name = name;
+
+            newUser.email = email;
+
+            newUser.country = country;
+
+            newUser.timeZone = timeZone;
+
+            
+            
+            
+            //save the user in DB
+            const savedUser = await repo.save(newUser);
+            
+            
+            //send success message to cleint
+            return res.status(201).send({ uid, savedUser })
+
+        } catch (error) {
+            return handleError(res,error);
+        }
+        
+    }
+
+
     //creates a new user account and in database
     //requres a name, password, email, country, and timezone
     async createUser(req: Request, res: Response) {
