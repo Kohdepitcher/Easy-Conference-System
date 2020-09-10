@@ -15,6 +15,8 @@ import { connect } from "./config";
 //import the user entity
 import { User } from "./entities/user";
 
+import { AuthRoles } from "./globals";
+
 
 
 
@@ -90,10 +92,13 @@ exports.setUpUser = functions.auth.user().onCreate(async (user) => {
   //get the user's attributes
   const {uid, email} = user;
 
+  //store the default role in a variable
+  const role = AuthRoles.presenter
+
   try {
 
       //set the custom role claim
-      // await admin.auth().setCustomUserClaims(uid, { 'user' })
+      await admin.auth().setCustomUserClaims(uid, { role })
 
       //create new connection to DB
       const connection = await connect();
@@ -130,7 +135,6 @@ exports.setUpUser = functions.auth.user().onCreate(async (user) => {
   }
 
 });
-
 
 
 //edit the user in db when account information is changed
