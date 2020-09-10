@@ -63,7 +63,7 @@ export class userController {
             return res.status(201).send({ uid, savedUser })
 
         } catch (error) {
-            return handleError(res,error);
+            return handleError(res,error)
         }
         
     }
