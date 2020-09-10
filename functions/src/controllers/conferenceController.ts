@@ -151,7 +151,7 @@ export class ConferenceController {
             const repository = connection.getRepository(Conference);
 
             //get single row from conference table if IDs match
-            const matchingIDConference = await repository.findOne(conferenceID);
+            const matchingIDConference = await repository.findOne(conferenceID, { relations: ["organisation"] });
 
             //return fetched conference from db to client
             return response.status(200).send(matchingIDConference);
