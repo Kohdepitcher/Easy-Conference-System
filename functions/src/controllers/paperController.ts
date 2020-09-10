@@ -101,7 +101,21 @@ export class PaperController {
 
 
     //READ
-    //TODO: fetch all papers for organisation
+    //TODO: fetch all papers for user
+    // async getPapersForUser(request: Request, response: Response) {
+
+    //     // get the conference id from request parameters
+    //     const { conferenceID } = request.params;
+    //     console.log("Fetching presentations for confereceID: " + conferenceID);
+
+    //     //send error msg if no conferenceID was provided
+    //     if (!conferenceID) {
+    //         return response.status(400).send({ message: "presentation ID is missing from request paramters"});
+    //     }
+
+
+
+    // }
 
 
     //returns all the papers from the database
