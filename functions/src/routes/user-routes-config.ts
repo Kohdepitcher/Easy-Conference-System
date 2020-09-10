@@ -2,7 +2,7 @@
 import { Application } from "express";
 
 //import the authentication and authorization functions
-// import { isAuthenticated } from "../auth/authenticated";
+import { isAuthenticated } from "../auth/authenticated";
 // import { isAuthorized } from "../auth/authorized";
 
 //import the user controller
@@ -16,6 +16,13 @@ export function userRoutesConfig(app: Application) {
         //isAuthorized({ hasRole: ['admin', 'manager'] }),
         new userController().createUser
      ]);
+
+     //DONT USE - FOR TESTING ONLY
+     app.post('/user-in-db/', [
+        //isAuthenticated,
+        //isAuthorized({ hasRole: ['admin', 'manager'], allowSameUser: true }),
+        new userController().createUserInDB
+    ]);
  
      // lists all users
      app.get('/users', [
@@ -28,7 +35,7 @@ export function userRoutesConfig(app: Application) {
      // get :id user
      //requires the alpha-numeric UID from firebase not the database's userID primary key
      app.get('/users/:uid', [
-         //isAuthenticated,
+         isAuthenticated,
          //isAuthorized({ hasRole: ['admin', 'manager'], allowSameUser: true }),
          new userController().get
      ]);
@@ -41,6 +48,10 @@ export function userRoutesConfig(app: Application) {
          //isAuthorized({ hasRole: ['admin', 'manager'], allowSameUser: true }),
          new userController().patch
      ]);
+
+     
+
+
      // deletes :id user
      //requires the alpha-numeric UID from firebase not the database's userID primary key
      app.delete('/users/:uid', [
