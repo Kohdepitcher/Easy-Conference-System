@@ -9,6 +9,8 @@ import { Presentation } from "../entities/presentation";
 import { User } from "../entities/user";
 import { Paper } from "../entities/paper";
 import { Conference } from "../entities/conference";
+import { Topic } from "../entities/topic"
+import { Session } from "../entities/session"
 
 /*
     create presentations
@@ -21,6 +23,9 @@ import { Conference } from "../entities/conference";
     get specific presentation
         need to get any for admin
         need to get if only the presentation does belong to the user
+
+    update a specific presentation
+        only allow update if same user
     
     delete specific presentation
         need to delete any if requested by admin
@@ -32,7 +37,7 @@ export class PresentationController {
     //CREATE
     //creates a new presentation in database
     //this is also responsible for creating papers as the relationship is one to one which means its just easier to create it here than to pass in a paperID
-    async createconPresentation(request: Request, response: Response) {
+    async createPresentation(request: Request, response: Response) {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
@@ -40,7 +45,7 @@ export class PresentationController {
         //first we need the required paper details - name, publisher
         //second we need the required topic for paper - topicID
         //third we need the required conference for presentation - conferenceID
-        const { paperName, paperPublisher, topicID, conferenceID } = request.body;
+        const { paperName, paperPublisher, topicID, conferenceID, userID } = request.body;
         
         //if any of the key value pairs from the body is missing, return a 400 status and error
         if(!paperName) {
@@ -59,6 +64,10 @@ export class PresentationController {
             return response.status(400).send({ message: "Missing conference ID for presentation"});
         }
 
+        if(!userID) {
+            return response.status(400).send({ message: "Missing user ID for presentation"});
+        }
+
         try {
 
             //store an instance of connect for db interaction
@@ -72,12 +81,25 @@ export class PresentationController {
             const userRepo = connection.getRepository(User);
             
             //fetch the matching conference
-            const fetchedConference = await conferenceRepo.find(conferenceID);
+            const fetchedConference = await conferenceRepo.findOne(conferenceID);
+
+            if (fetchedConference == undefined || fetchedConference == null) {
+                return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+            }
             
             //fetch the matching topic
-            const fetchedTopic = await topicRepo.find(topicID);
+            const fetchedTopic = await topicRepo.findOne(topicID);
+
+            if (fetchedTopic == undefined || fetchedTopic == null) {
+                return response.status(400).send({ message: "No topics exists that matched topic id: " + topicID})
+            }
             
             //fetch the matching user from firebase auth passed in from res
+            const fetchedUser = await userRepo.findOne(userID)
+
+            if (fetchedUser == undefined || fetchedUser == null) {
+                return response.status(400).send({ message: "No user exists that matched user id: " + userID})
+            }
 
             //new paper entry
             const newPaper = new Paper();
@@ -90,6 +112,9 @@ export class PresentationController {
             
             //set the topic for the paper
             newPaper.topic = fetchedTopic;
+
+            //set the user on the paper
+            newPaper.author = fetchedUser;
 
             //save the new conference to DB
             await paperRepo.save(newPaper);
@@ -104,14 +129,14 @@ export class PresentationController {
             newPresentation.paper = newPaper;
             
             //set user on presentation
-            //newPresentation.user = fetchedUser;
+            newPresentation.user = fetchedUser;
             
             const savedNewPresentation = await presentationRepo.save(newPresentation);
             
 
-            //send a copy of the new conference to the server
+            //send a copy of the new presentation to the server
             //TODO: remove sending newconference to client when its created
-            return response.status(200).send(newSavedconference);
+            return response.status(200).send(savedNewPresentation);
         }
 
         catch (error) {
@@ -124,8 +149,8 @@ export class PresentationController {
     //TODO: fetch all presentations for user
     async getPresentationsForUser(request: Request, response: Response) {
         
-        //get the user id from request parameters
-        const { userID } = request.params.UUID;
+        // get the user id from request parameters
+        const { userID } = request.params;
         console.log("Fetching presentations for userID: " + userID);
 
         //send error msg if no userID was provided
@@ -140,23 +165,29 @@ export class PresentationController {
             
             //store references to the required repositories
             const presentationRepo = connection.getRepository(Presentation);
-            const userRepo = connection.getRepository(User);
+            //const userRepo = connection.getRepository(User);
             
             //all presentations for user
             var allPresentationsForUser: Presentation[];
             
             //create a query to join the required tables together for the specific user
-            allPresentationsForUser = presentationRepo.createQueryBuilder('presentation') 
-            
+            allPresentationsForUser = await presentationRepo.createQueryBuilder('presentation')
+
                 .select()
-            
+
                 //join the relevant paper to the presentation
-                .leftJoinAndSelect("presentation.paper, "paper")
-                                   
-                //select only those that match the user's UUID
-                
-                //return all
-               .getMany();
+                .leftJoinAndSelect("presentation.paper", "Paper")
+
+                //join the session to the presentation
+                .leftJoinAndSelect("presentation.session", "Session")
+
+                //left join the user so that we only get presentations that match the user uuid
+                .leftJoin("presentation.user", "User")
+                .where("User.UUID = :id", { id: userID })
+
+                .getMany();
+        
+
             
             //send the array to the client
             return response.status(200).send(allPresentationsForUser);
@@ -168,124 +199,196 @@ export class PresentationController {
     }
 
 
-    //returns all the conferences from the database
-    async getconferences(request: Request, response: Response) {
+    //returns all the presentations from the database
+    async getPresentationsForConference(request: Request, response: Response) {
 
+        // get the conference id from request parameters
+        const { conferenceID } = request.params;
+        console.log("Fetching presentations for confereceID: " + conferenceID);
+
+        //send error msg if no conferenceID was provided
+        if (!conferenceID) {
+            return response.status(400).send({ message: "presentation ID is missing from request paramters"});
+        }
+        
         try {
+            
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const presentationRepo = connection.getRepository(Presentation);
+            //const userRepo = connection.getRepository(User);
+            
+            //all presentations for user
+            var allPresentationsForConference: Presentation[];
+            
+            //create a query to join the required tables together for the specific user
+            allPresentationsForConference = await presentationRepo.createQueryBuilder('presentation')
 
-            //create connection to database
-            const connection = await connect();
+            .select()
 
-            //store reference to conference repository
-            const repository = connection.getRepository(Conference);
+            //join the relevant paper to the presentation
+            .leftJoinAndSelect("presentation.paper", "Paper")
 
-            //store all the conferences
-            var allConferences: Conference[];
+            //join the session to the presentation
+            .leftJoinAndSelect("presentation.session", "Session")
 
-            //populate conference array with all conferences
-            allConferences = await repository.createQueryBuilder('conference')
+            //left join the user so that we only get presentations that match the user uuid
+            .leftJoinAndSelect("presentation.conference", "Conference")
+            .where("Conference.conferenceID = :id", { id: conferenceID })
 
-                //select all columns
-                .select()
+            .getMany();
+        
 
-                //order by conference name asc
-                .orderBy("conference.conferenceName", "ASC")
-
-                //get more than one
-                .getMany();
-
-            //send the conferences array to client with success code
-            return response.status(200).send(allConferences);
+            
+            //send the array to the client
+            return response.status(200).send(allPresentationsForConference);
             
         } catch (error) {
-            return handleError(response, error);
+               return handleError(response, error);
         }
 
     }
 
-    // getconferences(request: Request, response: Response) {
-    //     console.log("Get conferences");
-    // }
 
     //return single conference matching conference ID
-    async getSpecificconference(request: Request, response: Response) {
+    async getSpecificPresentation(request: Request, response: Response) {
 
-        //get the conference id from request parameters
-        const { conferenceID } = request.params;
-        console.log("Fetching details for conference: " + conferenceID);
+        // get the conference id from request parameters
+        const { presentationID } = request.params;
+        console.log("Fetching presentation for presentationID: " + presentationID);
 
         //send error msg if no conferenceID was provided
-        if (!conferenceID) {
-            return response.status(400).send({ message: "conference ID is missing from request paramters"});
+        if (!presentationID) {
+            return response.status(400).send({ message: "presentation ID is missing from request paramters"});
         }
-
+        
         try {
             
-            //create connection to database
-            const connection = await connect();
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const presentationRepo = connection.getRepository(Presentation);
+            //const userRepo = connection.getRepository(User);
+            
+            //all presentations for user
+            var fetchedPresentation: Presentation;
+            
+            //create a query to join the required tables together for the specific user
+            fetchedPresentation = await presentationRepo.createQueryBuilder('presentation')
 
-            //store reference to conference repository
-            const repository = connection.getRepository(Conference);
+            .select()
 
-            //get single row from conference table if IDs match
-            const matchingIDConference = await repository.findOne(conferenceID);
+            //join the relevant paper to the presentation
+            .leftJoinAndSelect("presentation.paper", "Paper")
 
-            //return fetched conference from db to client
-            return response.status(200).send(matchingIDConference);
+            //join the session to the presentation
+            .leftJoinAndSelect("presentation.session", "Session")
 
+            .leftJoinAndSelect("presentation.conference", "Conference")
+
+            
+            .where("presentation.presentationID = :id", { id: presentationID })
+
+            .getOne();
+        
+
+            
+            //send the array to the client
+            return response.status(200).send(fetchedPresentation);
+            
         } catch (error) {
-            return handleError(response, error)
+               return handleError(response, error);
         }
 
     }
 
     //UPDATE
-    async updateconference(request: Request, response: Response) {
+    //TODO: only allow admin to assign session, users shouldnt be able to
+    //TODO: user can only update their own
+    async updatePresentation(request: Request, response: Response) {
                 
         //get the conference id from request parameters
-        const { conferenceID } = request.params;
-        console.log("Fetching details for conference: " + conferenceID);
+        const { presentationID } = request.params;
 
         //send error msg if no conferenceID was provided
-        if (!conferenceID) {
-            return response.status(400).send({ message: "conference ID is missing from request paramters"});
+        if (!presentationID) {
+            return response.status(400).send({ message: "presentation ID is missing from request paramters"});
         }
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, submissionDeadline } = request.body;
+        const { conferenceID, paperID, sessionID } = request.body;
         
         //no name in body
-        if(!name) {
-            return response.status(400).send({ message: "Missing name for conference"});
+        if(!conferenceID) {
+            return response.status(400).send({ message: "Missing conference ID for presentation"});
         }
 
-        if(!submissionDeadline) {
-            return response.status(400).send({ message: "Missing conference submission deadline"});
+        if(!paperID) {
+            return response.status(400).send({ message: "Missing paper ID for presentation"});
+        }
+
+        if(!sessionID) {
+            return response.status(400).send({ message: "Missing session ID for presentation"});
         }
 
         try {
             
             //create connection to database
-            const conneciton = await connect()
+            const connection = await connect()
 
-            //create reference to conference repository
-            const repository = conneciton.getRepository(Conference);
+            //store a reference to the requires repositories
+            const conferenceRepo = connection.getRepository(Conference);
+            const paperRepo = connection.getRepository(Paper);
+            const presentationRepo = connection.getRepository(Presentation);
+            const sessionRepo = connection.getRepository(Session);
 
-            //store the fetched conference to update
-            const fetchedConference = await repository.findOne(conferenceID);
 
-            //update the conference properties
-            fetchedConference.conferenceName = name;
+            //fetch the matching conference
+            const fetchedConference: Conference = await conferenceRepo.findOne(conferenceID);
 
-            //update the conference submission deadline
-            fetchedConference.conferenceSubmissionDeadline = new Date(Date.parse(submissionDeadline));
+            if (fetchedConference == undefined || fetchedConference == null) {
+                return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+            }
+
+            //fetch the matching paper
+            const fetchedPaper: Paper = await paperRepo.findOne(paperID);
+
+            if (fetchedPaper == undefined || fetchedPaper == null) {
+                return response.status(400).send({ message: "No paper exists that matched paper id: " + paperID})
+            }
+
+            //fetch the matching presentation
+            const fetchedPresentation: Presentation = await presentationRepo.findOne(presentationID);
+
+            if (fetchedPresentation == undefined || fetchedPresentation == null) {
+                return response.status(400).send({ message: "No presentation exists that matched presentation id: " + presentationID})
+            }
+
+            //fetch the matching session
+            const fetchedSession: Session = await sessionRepo.findOne(sessionID);
+
+            if (fetchedSession == undefined || fetchedSession == null) {
+                return response.status(400).send({ message: "No session exists that matched session id: " + sessionID})
+            }
+
+            //update the conference for presentation
+            fetchedPresentation.conference = fetchedConference;
+
+            //update the paper for presentation
+            fetchedPresentation.paper = fetchedPaper
+
+            //update the session for presentation
+            fetchedPresentation.session = fetchedSession;
 
             //save the conference back to db
-            const updatedconference = await repository.save(fetchedConference);
+            const updatedPresentation = await presentationRepo.save(fetchedPresentation);
 
             //send success to client with copy of update conference
-            return response.status(200).send(updatedconference);
+            return response.status(200).send(updatedPresentation);
 
         } catch (error) {
             return handleError(response, error);
@@ -294,7 +397,8 @@ export class PresentationController {
     }
 
     //DELETE
-    async deleteconference(response: Response, request: Request) {
+    //TODO: make this work
+    async deletePresentation(response: Response, request: Request) {
 
         //get the conference id from request parameters
         const { conferenceID } = request.params;
