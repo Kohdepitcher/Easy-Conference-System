@@ -3,7 +3,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinCo
 
 //import related entities
 import { Paper } from "../entities/paper";
-import { Organisation } from "./organisation";
+// import { Organisation } from "./organisation";
 import { Conference } from "./conference";
 import { Session } from "./session";
 // import { Topic } from "./topic";
@@ -24,9 +24,9 @@ export class Presentation extends BaseEntity {
     paper: Paper;
 
 
-    //associated organisation
-    @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics)
-    organisation: Organisation;
+    // //associated organisation
+    // @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics)
+    // organisation: Organisation;
 
     @ManyToOne(type => Conference, conference => conference.presentations)
     conference: Conference;
