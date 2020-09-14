@@ -2,8 +2,10 @@
 import { Application } from "express";
 
 //import the authentication and authorization functions
-// import { isAuthenticated } from "../auth/authenticated";
-// import { isAuthorized } from "../auth/authorized";
+import { isAuthenticated } from "../auth/authenticated";
+import { isAuthorized } from "../auth/authorized";
+
+import { AuthRoles } from "../globals"
 
 //import the topic controller
 import { PresentationController } from "../controllers/presentationController";
@@ -15,24 +17,24 @@ export function presentationRoutesConfig(app: Application) {
     //CREATE
     //creates a presentation
     app.post('/presentations', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.presenter] }),
         new PresentationController().createPresentation
     ])
 
     //READ
     //get all presentations for user
-    app.get('/presentations/:userID', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+    app.get('/presentations-for-user/:userID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new  PresentationController().getPresentationsForUser
         
     ])
 
     //get all presentations for conference
-    app.get('/presentations-for-user/:conferenceID', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+    app.get('/presentations-for-conference/:conferenceID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new  PresentationController().getPresentationsForConference
         
     ])
@@ -44,6 +46,8 @@ export function presentationRoutesConfig(app: Application) {
 
     //UPDATE
     app.patch('/presentations/:presentationID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new  PresentationController().updatePresentation
     ])
 

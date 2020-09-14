@@ -20,32 +20,36 @@ export function sessionRoutesConfig(app: Application) {
         new SessionController().createSession
     ])
 
-    // //READ
-    // //get all presentations for user
-    // app.get('/presentations/:userID', [
+    // READ
+    //get all sessions for user
+    // app.get('/sessions/:userID', [
     //     // isAuthenticated,
     //     // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
-    //     new  PresentationController().getPresentationsForUser
+    //     new  SessionController().getSessionsForUser
         
     // ])
 
-    // //get all presentations for conference
-    // app.get('/presentations-for-user/:conferenceID', [
-    //     // isAuthenticated,
-    //     // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
-    //     new  PresentationController().getPresentationsForConference
+    //get all sessions for conference
+    app.get('/sessions-for-conferece/:conferenceID', [
+        // isAuthenticated,
+        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        new  SessionController().getSessionsForConference
         
-    // ])
+    ])
 
-    // //get specific presentation
-    // app.get('/specific-presentation/:presentationID', [
-    //     new  PresentationController().getSpecificPresentation
-    // ])
+    //gets all presenters and paper for session
+    app.get('/presenters-for-session/:sessionID', [
+        // isAuthenticated,
+        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        new  SessionController().getPresentationsWithinSession
+        
+    ])
 
-    // //UPDATE
-    // app.patch('/presentations/:presentationID', [
-    //     new  PresentationController().updatePresentation
-    // ])
+
+    //UPDATE
+    app.patch('/sessions/:sessionID', [
+        new  SessionController().updateSession
+    ])
 
     // //DELETE
     // app.delete('/presentations/:presentationID', [

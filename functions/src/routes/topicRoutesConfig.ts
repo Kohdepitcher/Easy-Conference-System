@@ -3,8 +3,10 @@
 import { Application } from "express";
 
 //import the authentication and authorization functions
-// import { isAuthenticated } from "../auth/authenticated";
-// import { isAuthorized } from "../auth/authorized";
+import { isAuthenticated } from "../auth/authenticated";
+import { isAuthorized } from "../auth/authorized";
+
+import { AuthRoles } from "../globals";
 
 //import the topic controller
 import { TopicController } from "../controllers/topicController";
@@ -16,33 +18,33 @@ export function topicRoutesConfig(app: Application) {
     //CREATE
     //creates a topic
     app.post('/topics', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new TopicController().createTopic
     ]);
 
     //READ
     //get all topics
     app.get('/topics', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new TopicController().getTopics
         
     ]);
 
-    // lmao never mind, cant put a catch on that
-    // app.get("/topics", (req, res) => {
-    //     console.log("Get Topics")
-    //     res.send("Get Topics")
-    // })
+
 
     //get specific topic
     app.get('/topics/:topicID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new TopicController().getSpecificTopic
     ]);
 
     //get topics for organisationID
     app.get('/topics-for-organisation/:organisationID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new TopicController().getTopicsForOrganisation
     ]);
 
@@ -50,13 +52,17 @@ export function topicRoutesConfig(app: Application) {
 
     //UPDATE
     app.patch('/topics/:topicID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new TopicController().updateTopic
         //new TopicController().test
     ]);
 
     //DELETE
-    app.delete('/topics/:topicID', [
-        new TopicController().deleteTopic
-    ]);
+    // app.delete('/topics/:topicID', [
+    //     isAuthenticated,
+    //     isAuthorized({ hasRole: [AuthRoles.Admin] }),
+    //     new TopicController().deleteTopic
+    // ]);
 
 }
