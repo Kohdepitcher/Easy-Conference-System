@@ -38,11 +38,11 @@ export function isAuthorized(opts: { hasRole: Array<'admin' | 'manager' | 'user'
            return next();
 
        if (!role)
-           return res.status(403).send();
+           return res.status(403).send({ message: "error - you don't have a role, contact system admin to correct this"});
 
        if (opts.hasRole.includes(role))
            return next();
-
-       return res.status(403).send();
+2
+       return res.status(403).send({ message: "You dont have the required role, you need these roles: " + opts.hasRole});
    }
 }
