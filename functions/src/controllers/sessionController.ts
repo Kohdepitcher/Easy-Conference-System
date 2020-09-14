@@ -8,7 +8,7 @@ import { connect } from "../config";
 import { Session } from "../entities/session";
 // import { User } from "../entities/user";
 // import { Paper } from "../entities/paper";
-// import { Conference } from "../entities/conference";
+import { Conference } from "../entities/conference";
 // import { Topic } from "../entities/topic"
 
 /*
@@ -17,11 +17,15 @@ import { Session } from "../entities/session";
     
     get sessions
         need to get all for conferenceID for admin
-        need to get all for user and show the other 5 users as well
+        need to get all for user 
+        need to show all users in session and show the other 5 users as well
     
     get specific session
         need to get any for admin
         need to get if only the session does belong to the user
+
+    Update Specific Session
+        only admins can update
     
     delete specific session
         need to delete any if requested by admin
@@ -38,7 +42,7 @@ export class SessionController {
         //each word inside is a key to a matching value in the body json
         
         //first we need the required session details - name, date, start time, and end time
-        const { sessionName, date, startTime, endTime } = request.body;
+        const { sessionName, date, startTime, endTime, conferenceID } = request.body;
         
         //if any of the key value pairs from the body is missing, return a 400 status and error
         if(!sessionName) {
@@ -57,6 +61,10 @@ export class SessionController {
             return response.status(400).send({ message: "Missing end time for session"});
         }
 
+        if(!conferenceID) {
+            return response.status(400).send({ message: "Missing conference id for session"});
+        }
+
 
         try {
 
@@ -65,33 +73,15 @@ export class SessionController {
 
             //store a reference to the requires repositories
             const sessionRepo = connection.getRepository(Session);
-
-            // const conferenceRepo = connection.getRepository(Conference);
-            // const topicRepo = connection.getRepository(Topic);
-            // const paperRepo = connection.getRepository(Paper);
-            // const sessionRepo = connection.getRepository(Presentation);
-            // const userRepo = connection.getRepository(User);
+            const conferenceRepo = connection.getRepository(Conference);
             
-            //fetch the matching conference
-            // const fetchedConference = await conferenceRepo.findOne(conferenceID);
+            // fetch the matching conference
+            const fetchedConference = await conferenceRepo.findOne(conferenceID);
 
-            // if (fetchedConference == undefined || fetchedConference == null) {
-            //     return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
-            // }
+            if (fetchedConference == undefined || fetchedConference == null) {
+                return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+            }
             
-            // //fetch the matching topic
-            // const fetchedTopic = await topicRepo.findOne(topicID);
-
-            // if (fetchedTopic == undefined || fetchedTopic == null) {
-            //     return response.status(400).send({ message: "No topics exists that matched topic id: " + topicID})
-            // }
-            
-            // //fetch the matching user from firebase auth passed in from res
-            // const fetchedUser = await userRepo.findOne(userID)
-
-            // if (fetchedUser == undefined || fetchedUser == null) {
-            //     return response.status(400).send({ message: "No user exists that matched user id: " + userID})
-            // }
 
             //new paper entry
             const newSession = new Session();
@@ -107,6 +97,9 @@ export class SessionController {
 
             //assign end time
             newSession.endTime = endTime;
+
+            //assign the conference to the session
+            newSession.conference = fetchedConference
 
         
             //save the new conference to DB
@@ -124,239 +117,234 @@ export class SessionController {
     }
 
 
-    // //READ
-    // //TODO: fetch all sessions for user
-    // async getPresentationsForUser(request: Request, response: Response) {
+    //READ
+  
+    //returns all the sessions from the database for a conferece
+    async getSessionsForConference(request: Request, response: Response) {
+
+        // get the conference id from request parameters
+        const { conferenceID } = request.params;
+        console.log("Fetching sessions for confereceID: " + conferenceID);
+
+        //send error msg if no conferenceID was provided
+        if (!conferenceID) {
+            return response.status(400).send({ message: "conference ID is missing from request paramters"});
+        }
         
-    //     // get the user id from request parameters
-    //     const { userID } = request.params;
-    //     console.log("Fetching sessions for userID: " + userID);
-
-    //     //send error msg if no userID was provided
-    //     if (!userID) {
-    //         return response.status(400).send({ message: "user ID is missing from request paramters"});
-    //     }
-        
-    //     try {
+        try {
             
-    //         //store an instance of connect for db interaction
-    //         const connection = await connect()
+            //store an instance of connect for db interaction
+            const connection = await connect()
             
-    //         //store references to the required repositories
-    //         const sessionRepo = connection.getRepository(Presentation);
-    //         //const userRepo = connection.getRepository(User);
+            //store references to the required repositories
+            const sessionRepo = connection.getRepository(Session);
+            //const userRepo = connection.getRepository(User);
             
-    //         //all sessions for user
-    //         var allPresentationsForUser: Presentation[];
+            //all sessions for user
+            var allSessionsForConference: Session[];
             
-    //         //create a query to join the required tables together for the specific user
-    //         allPresentationsForUser = await sessionRepo.createQueryBuilder('session')
+            //create a query to join the required tables together for the specific user
+            allSessionsForConference = await sessionRepo.createQueryBuilder('session')
 
-    //             .select()
+            .select()
 
-    //             //join the relevant paper to the session
-    //             .leftJoinAndSelect("session.paper", "Paper")
+            // //join the relevant paper to the session
+            // .leftJoinAndSelect("session.paper", "Paper")
 
-    //             //join the session to the session
-    //             .leftJoinAndSelect("session.session", "Session")
+            // //join the session to the session
+            // .leftJoinAndSelect("session.session", "Session")
 
-    //             //left join the user so that we only get sessions that match the user uuid
-    //             .leftJoin("session.user", "User")
-    //             .where("User.UUID = :id", { id: userID })
+            //need to also join the presentations to the session
+            .leftJoinAndSelect("session.presentations", "Presentation")
 
-    //             .getMany();
-        
+            //need to also join the paper to each presentation
+            .leftJoinAndSelect("Presentation.paper", "Paper")
+
+            //need to also join the author to each paper
+            .leftJoinAndSelect("Presentation.user", "User")
+            // .leftJoinAndSelect("Presentation", "presentation", "presentation.sessionSessionID = session.sessionID")
+
+            // .leftJoinAndSelect("session.presentations.presentation.paper", "Paper")
+            // .leftJoinAndSelect("presentation.paper", "Paper")
+            // .where("Paper.paperID = Presentation.paperPaperID")
+
+            //need to also join the paper to the presentation
+            // .leftJoinAndSelect("paper", "Paper", "Paper.paperID = Presentation.paperPaperID")
+            // .leftJoinAndMapMany("presentation.paperPaperID", "paper.paperID", "Paper")
+
+            // .leftJoinAndSelect(Paper, "paper", "paper.paperID = Presentation.paperPaperID")
+            // .leftJoinAndMapOne("Presentation.paperPaperID", "Paper.PaperID", "paper")
+
+            //left join the conference to the session so that we only get sessions that match the conference id
+            .leftJoinAndSelect("session.conference", "Conference")
+            .where("Conference.conferenceID = :id", { id: conferenceID })
+
+            //order by date asc
+            .orderBy("session.date", "ASC")
+
+            //then order by start time
+            .addOrderBy("session.startTime", "ASC")
 
             
-    //         //send the array to the client
-    //         return response.status(200).send(allPresentationsForUser);
+
+            .printSql()
+
+            .getMany();
             
-    //     } catch (error) {
-    //            return handleError(response, error);
-    //     }
-        
-    // }
-
-
-    // //returns all the sessions from the database
-    // async getPresentationsForConference(request: Request, response: Response) {
-
-    //     // get the conference id from request parameters
-    //     const { conferenceID } = request.params;
-    //     console.log("Fetching sessions for confereceID: " + conferenceID);
-
-    //     //send error msg if no conferenceID was provided
-    //     if (!conferenceID) {
-    //         return response.status(400).send({ message: "session ID is missing from request paramters"});
-    //     }
-        
-    //     try {
-            
-    //         //store an instance of connect for db interaction
-    //         const connection = await connect()
-            
-    //         //store references to the required repositories
-    //         const sessionRepo = connection.getRepository(Presentation);
-    //         //const userRepo = connection.getRepository(User);
-            
-    //         //all sessions for user
-    //         var allPresentationsForConference: Presentation[];
-            
-    //         //create a query to join the required tables together for the specific user
-    //         allPresentationsForConference = await sessionRepo.createQueryBuilder('session')
-
-    //         .select()
-
-    //         //join the relevant paper to the session
-    //         .leftJoinAndSelect("session.paper", "Paper")
-
-    //         //join the session to the session
-    //         .leftJoinAndSelect("session.session", "Session")
-
-    //         //left join the user so that we only get sessions that match the user uuid
-    //         .leftJoinAndSelect("session.conference", "Conference")
-    //         .where("Conference.conferenceID = :id", { id: conferenceID })
-
-    //         .getMany();
         
 
             
-    //         //send the array to the client
-    //         return response.status(200).send(allPresentationsForConference);
+            //send the array to the client
+            return response.status(200).send(allSessionsForConference);
             
-    //     } catch (error) {
-    //            return handleError(response, error);
-    //     }
+        } catch (error) {
+               return handleError(response, error);
+        }
 
-    // }
+    }
 
+    //TODO: need to show other users in a session
+    async getPresentationsWithinSession(request: Request, response: Response) {
 
-    // //return single conference matching conference ID
-    // async getSpecificPresentation(request: Request, response: Response) {
+        // get the session id from request parameters
+        const { sessionID } = request.params;
+        console.log("Fetching other presentations for sessionID: " + sessionID);
 
-    //     // get the conference id from request parameters
-    //     const { sessionID } = request.params;
-    //     console.log("Fetching session for sessionID: " + sessionID);
-
-    //     //send error msg if no conferenceID was provided
-    //     if (!sessionID) {
-    //         return response.status(400).send({ message: "session ID is missing from request paramters"});
-    //     }
+        //send error msg if no conferenceID was provided
+        if (!sessionID) {
+            return response.status(400).send({ message: "session ID is missing from request paramters"});
+        }
         
-    //     try {
+        try {
             
-    //         //store an instance of connect for db interaction
-    //         const connection = await connect()
+            //store an instance of connect for db interaction
+            const connection = await connect()
             
-    //         //store references to the required repositories
-    //         const sessionRepo = connection.getRepository(Presentation);
-    //         //const userRepo = connection.getRepository(User);
+            //store references to the required repositories
+            const sessionRepo = connection.getRepository(Session);
+            //const userRepo = connection.getRepository(User);
             
-    //         //all sessions for user
-    //         var fetchedPresentation: Presentation;
+            //all sessions for user
+            var presentersForSession: Session;
             
-    //         //create a query to join the required tables together for the specific user
-    //         fetchedPresentation = await sessionRepo.createQueryBuilder('session')
+            //create a query to join the required tables together for the specific user
+            presentersForSession = await sessionRepo.createQueryBuilder('session')
 
-    //         .select()
+            //select everything
+            .select()
 
-    //         //join the relevant paper to the session
-    //         .leftJoinAndSelect("session.paper", "Paper")
+            //need to also join the presentations to the session
+            .leftJoinAndSelect("session.presentations", "Presentation")
 
-    //         //join the session to the session
-    //         .leftJoinAndSelect("session.session", "Session")
+            // //need to also join the paper to each presentation
+            .leftJoinAndSelect("Presentation.paper", "Paper")
 
-    //         .leftJoinAndSelect("session.conference", "Conference")
+            // //need to also join the author to each paper
+            .leftJoinAndSelect("Paper.author", "User")
 
+            //only return session that matches the session ID
+            .where("session.sessionID = :id", { id: sessionID })
+
+            //order by the presentation id
+            .orderBy("Presentation.presentationID")
+
+            .getOne();
+
+            //send the session to the client
+            return response.status(200).send(presentersForSession);
             
-    //         .where("session.sessionID = :id", { id: sessionID })
+        } catch (error) {
+               return handleError(response, error);
+        }
 
-    //         .getOne();
-        
+    }
 
-            
-    //         //send the array to the client
-    //         return response.status(200).send(fetchedPresentation);
-            
-    //     } catch (error) {
-    //            return handleError(response, error);
-    //     }
-
-    // }
 
     // //UPDATE
-    // async updatePresentation(request: Request, response: Response) {
-                
-    //     //get the conference id from request parameters
-    //     const { sessionID } = request.params;
+    async updateSession(request: Request, response: Response) {
 
-    //     //send error msg if no conferenceID was provided
-    //     if (!sessionID) {
-    //         return response.status(400).send({ message: "session ID is missing from request paramters"});
-    //     }
+        const { sessionID } = request.params;
 
-    //     //get the contents of the body and set to a constant
-    //     //each word inside is a key to a matching value in the body json
-    //     const { conferenceID, paperID } = request.body;
+        //error message if sesionID is missing
+        if(!sessionID) {
+            return response.status(400).send({ message: "session ID is missing from request paramters"});
+        }
         
-    //     //no name in body
-    //     if(!conferenceID) {
-    //         return response.status(400).send({ message: "Missing conference ID for session"});
-    //     }
+        //first we need the required session details - name, date, start time, and end time
+        const { sessionName, date, startTime, endTime, conferenceID } = request.body;
+        
+        //if any of the key value pairs from the body is missing, return a 400 status and error
+        if(!sessionName) {
+            return response.status(400).send({ message: "Missing session name"});
+        }
+        
+        if(!date) {
+            return response.status(400).send({ message: "Missing session date"});
+        }
+        
+        if(!startTime) {
+            return response.status(400).send({ message: "Missing start time for session"});
+        }
+        
+        if(!endTime) {
+            return response.status(400).send({ message: "Missing end time for session"});
+        }
 
-    //     if(!paperID) {
-    //         return response.status(400).send({ message: "Missing paper ID for session"});
-    //     }
+        if(!conferenceID) {
+            return response.status(400).send({ message: "Missing conference id for session"});
+        }
 
-    //     try {
+
+        try {
+
+            //store an instance of connect for db interaction
+            const connection = await connect();
+
+            //store a reference to the requires repositories
+            const sessionRepo = connection.getRepository(Session);
+            const conferenceRepo = connection.getRepository(Conference);
+
             
-    //         //create connection to database
-    //         const connection = await connect()
+            // fetch the matching conference
+            const fetchedConference = await conferenceRepo.findOne(conferenceID);
 
-    //         //store a reference to the requires repositories
-    //         const conferenceRepo = connection.getRepository(Conference);
-    //         const paperRepo = connection.getRepository(Paper);
-    //         const sessionRepo = connection.getRepository(Presentation);
+            if (fetchedConference == undefined || fetchedConference == null) {
+                return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+            }
+            
 
+            //new paper entry
+            const fetchedSession = await sessionRepo.findOne(sessionID)
 
-    //         //fetch the matching conference
-    //         const fetchedConference: Conference = await conferenceRepo.findOne(conferenceID);
+            //asign name of session
+            fetchedSession.sessionName = sessionName;
 
-    //         if (fetchedConference == undefined || fetchedConference == null) {
-    //             return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
-    //         }
+            //assign date for session
+            fetchedSession.date = date;
 
-    //         //fetch the matching paper
-    //         const fetchedPaper: Paper = await paperRepo.findOne(paperID);
+            //assign start time
+            fetchedSession.startTime = startTime;
 
-    //         if (fetchedPaper == undefined || fetchedPaper == null) {
-    //             return response.status(400).send({ message: "No paper exists that matched paper id: " + paperID})
-    //         }
+            //assign end time
+            fetchedSession.endTime = endTime;
 
-    //         //fetch the matching session
-    //         const fetchedPresentation: Presentation = await sessionRepo.findOne(sessionID);
+            //assign the conference to the session
+            fetchedSession.conference = fetchedConference
 
-    //         if (fetchedPresentation == undefined || fetchedPresentation == null) {
-    //             return response.status(400).send({ message: "No session exists that matched session id: " + sessionID})
-    //         }
+        
+            //save the new conference to DB
+            const savedNewSession = await sessionRepo.save(fetchedSession);
+        
 
-    //         //update the conference for session
-    //         fetchedPresentation.conference = fetchedConference;
+            //send a copy of the new session to the server
+            //TODO: remove sending newconference to client when its created
+            return response.status(200).send(savedNewSession);
+        }
 
-    //         //update the paper for session
-    //         fetchedPresentation.paper = fetchedPaper
-
-    //         //save the conference back to db
-    //         const updatedPresentation = await sessionRepo.save(fetchedPresentation);
-
-    //         //send success to client with copy of update conference
-    //         return response.status(200).send(updatedPresentation);
-
-    //     } catch (error) {
-    //         return handleError(response, error);
-    //     }
-
-    // }
+        catch (error) {
+            return handleError(response, error);
+        }
+    }
 
     // //DELETE
     // //TODO: make this work
