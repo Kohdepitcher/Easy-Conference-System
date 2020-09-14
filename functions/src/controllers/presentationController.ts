@@ -45,7 +45,7 @@ export class PresentationController {
         //first we need the required paper details - name, publisher
         //second we need the required topic for paper - topicID
         //third we need the required conference for presentation - conferenceID
-        const { paperName, paperPublisher, topicID, conferenceID, userID } = request.body;
+        const { paperName, paperPublisher, topicID, conferenceID } = request.body;
         
         //if any of the key value pairs from the body is missing, return a 400 status and error
         if(!paperName) {
@@ -64,9 +64,9 @@ export class PresentationController {
             return response.status(400).send({ message: "Missing conference ID for presentation"});
         }
 
-        if(!userID) {
-            return response.status(400).send({ message: "Missing user ID for presentation"});
-        }
+        // if(!userID) {
+        //     return response.status(400).send({ message: "Missing user ID for presentation"});
+        // }
 
         try {
 
@@ -95,10 +95,18 @@ export class PresentationController {
             }
             
             //fetch the matching user from firebase auth passed in from res
-            const fetchedUser = await userRepo.findOne(userID)
+            const fetchedUser = await userRepo.findOne({UUID: response.locals.uid})
 
             if (fetchedUser == undefined || fetchedUser == null) {
-                return response.status(400).send({ message: "No user exists that matched user id: " + userID})
+                return response.status(400).send({ message: "No user exists that matched user id: " + response.locals.uid})
+            }
+
+            //check if submission is before the deadline
+            const deadLine = fetchedConference.conferenceSubmissionDeadline;
+
+            //if the current UTC time and date is past the UTC deadline, deny the submission
+            if (new Date(new Date().toUTCString()) > deadLine ) {
+                return response.status(400).send({ message: "Submission denied - past submission deadline" })
             }
 
             //new paper entry
@@ -181,6 +189,8 @@ export class PresentationController {
                 //join the session to the presentation
                 .leftJoinAndSelect("presentation.session", "Session")
 
+                .leftJoinAndSelect("presentation.conference", "Conference")
+
                 //left join the user so that we only get presentations that match the user uuid
                 .leftJoin("presentation.user", "User")
                 .where("User.UUID = :id", { id: userID })
@@ -233,6 +243,9 @@ export class PresentationController {
 
             //join the session to the presentation
             .leftJoinAndSelect("presentation.session", "Session")
+
+            //join the users to the presentation
+            .leftJoinAndSelect("presentation.user", "User")
 
             //left join the user so that we only get presentations that match the user uuid
             .leftJoinAndSelect("presentation.conference", "Conference")
