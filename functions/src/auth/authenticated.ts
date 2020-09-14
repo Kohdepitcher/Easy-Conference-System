@@ -6,18 +6,18 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
 
     //no header
     if (!authorization)
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized - missing auth token header' });
 
     //header doesnt start with Bearer
     if (!authorization.startsWith('Bearer'))
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized - malformed auth token header' });
 
     //split the bearer token string by space character
     const split = authorization.split('Bearer ')
 
     //if the length of the split string isnt 2
     if (split.length !== 2)
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized - malformed auth token header' });
 
     //store the token from the split string
     const token = split[1]
@@ -30,7 +30,7 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
         
         //set the locals to the fetched information from firebase
         res.locals = { ...res.locals, uid: decodedToken.uid, role: decodedToken.role, email: decodedToken.email }
-
+3
         //console.log(res.locals);
 
         return next();
@@ -39,6 +39,6 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
     //if any error occurrs - throw back an 401 error saying unauthorised
     catch (err) {
         console.error(`${err.code} -  ${err.message}`)
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized: ' + err.code + " " + err.message });
     }
 }
