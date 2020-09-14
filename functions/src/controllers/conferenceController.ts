@@ -8,6 +8,8 @@ import { connect } from "../config";
 import { Conference } from "../entities/conference";
 import { Organisation } from "../entities/organisation";
 
+import { dateFromUTCString } from "../globals";
+
 
 
 // Typical Express Promise (Ceejay Written)
@@ -67,7 +69,9 @@ export class ConferenceController {
             newConference.conferenceName = name;
 
             //convert the json date to proper date and store on conference cutoff
-            newConference.conferenceSubmissionDeadline = new Date(Date.parse(submissionDeadline));
+            newConference.conferenceSubmissionDeadline = dateFromUTCString(submissionDeadline); //new Date(Date.parse(submissionDeadline));
+
+            
 
 
             //set the organisation on the new conference
