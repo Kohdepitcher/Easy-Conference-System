@@ -4,9 +4,11 @@ import { Request, Response } from "express";
 //import database connection
 import { connect } from "../config";
 
+import { AuthRoles } from "../globals"
+
 //entities
 import { Paper } from "../entities/paper";
-// import { User } from "../entities/user";
+import { User } from "../entities/user";
 import { Topic } from "../entities/topic";
 
 
@@ -102,20 +104,75 @@ export class PaperController {
 
     //READ
     //TODO: fetch all papers for user
-    // async getPapersForUser(request: Request, response: Response) {
+    async getPapersForUser(request: Request, response: Response) {
 
-    //     // get the conference id from request parameters
-    //     const { conferenceID } = request.params;
-    //     console.log("Fetching presentations for confereceID: " + conferenceID);
+        // get the user id from request parameters
+        // const { userID } = request.params;
+        // console.log("Fetching papers for userID: " + userID);
 
-    //     //send error msg if no conferenceID was provided
-    //     if (!conferenceID) {
-    //         return response.status(400).send({ message: "presentation ID is missing from request paramters"});
-    //     }
+        //temp store a UID that will be set soon
+        var specifiedUID: string;
 
+        //if a user is a presenter
+        if (response.locals.role == AuthRoles.presenter) {
 
+            //fetch the uid from the token instead
+            specifiedUID = response.locals.userID;
 
-    // }
+        } 
+        
+        //user is a admin
+        else if (response.locals.role == AuthRoles.Admin) {
+
+            //if the uid is not set on the parameter when called by an admin
+            if (!request.params.userID) {
+                return response.status(400).send({ message: 'Missing user UID when updating details by admin' })
+            }
+
+            //set the temp uid to be the one retrieved from the header
+            specifiedUID = request.params.userID;
+        }
+
+        //send error msg if no conferenceID was provided
+        // if (!userID) {
+        //     return response.status(400).send({ message: "user ID is missing from request paramters"});
+        // }
+
+        try {
+
+        //store an instance of connect for db interaction
+        const connection = await connect();
+
+        //store a reference to the requires repositories
+        const paperRepo = connection.getRepository(Paper);
+        const userRepo = connection.getRepository(User);
+
+        //fetch the matching user from firebase auth passed in from res
+        const fetchedUser = await userRepo.findOne({UUID: specifiedUID})
+
+        
+
+        if (fetchedUser == undefined || fetchedUser == null) {
+            return response.status(400).send({ message: "No user exists that matched user id: " + specifiedUID})
+        }
+
+        const fetchedPapers = await paperRepo.createQueryBuilder("paper")
+
+            .select()
+
+            //need to also join the author to each paper
+            .leftJoinAndSelect("paper.author", "User")
+
+            .where("User.UUID = :id", { id: specifiedUID })
+
+            .getMany();
+
+            return response.status(200).send(fetchedPapers);
+
+        } catch (error) {
+            return handleError(response, error);
+        }
+    }
 
 
     //returns all the papers from the database
@@ -299,7 +356,6 @@ export class PaperController {
 
     //helper functions
     //handles an error and returns a response to the client
-
 
 }
 
