@@ -94,6 +94,7 @@ const loadActiveConferences = async () => {
 
 // Load current groups for presenter
 // Needs to be pretty much rebuilt, as its acting like the active conferences function
+// Need to check presenter's paper id to then show the paper id's group
 const loadCurrentGroups = async () => {
     document.querySelector(".current-groupings-presenter-text").innerHTML = "";
     fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("UserID"), {
@@ -106,44 +107,54 @@ const loadCurrentGroups = async () => {
             console.log(res1)
 
             for(var x in res1) {
-                var tableNode = document.createElement("div")
-                var cNode = document.createElement("div")
-                var sNode = document.createElement("div")
-                var pNode = document.createElement("div")
-                var tNode = document.createElement("div")
+                //Check if date has passed
+                var date = res1[x]["session"]["startTime"]
 
-                tableNode.className = "indiv-report-entry"
-                cNode.className = "indiv-report-part"
-                sNode.className = "indiv-report-part"
-                pNode.className = "indiv-report-part"
-                tNode.className = "indiv-report-part"
+                if (date < Date.now()) {
+                    console.log("date has passed")
+                } 
+                else {
+                    console.log("date has not passed")
+                
+                    var tableNode = document.createElement("div")
+                    var cNode = document.createElement("div")
+                    var sNode = document.createElement("div")
+                    var pNode = document.createElement("div")
+                    var tNode = document.createElement("div")
 
-                tableNode.id = res1[x]["conferenceID"]
-                cNode.id = res1[x]["conferenceID"]
-                sNode.id = res1[x]["conferenceID"]
-                pNode.id = res1[x]["conferenceID"]
-                tNode.id = res1[x]["conferenceID"]
+                    tableNode.className = "indiv-report-entry"
+                    cNode.className = "indiv-report-part"
+                    sNode.className = "indiv-report-part"
+                    pNode.className = "indiv-report-part"
+                    tNode.className = "indiv-report-part"
 
-                cNode.innerHTML = res1[x]["conference"]["conferenceName"]
-                sNode.innerHTML = res1[x]["session"]["sessionName"]
-                pNode.innerHTML = res1.length
-                tNode.innerHTML = res1[x]["paper"]["paperTitle"]
+                    tableNode.id = res1[x]["conferenceID"]
+                    cNode.id = res1[x]["conferenceID"]
+                    sNode.id = res1[x]["conferenceID"]
+                    pNode.id = res1[x]["conferenceID"]
+                    tNode.id = res1[x]["conferenceID"]
 
-                tableNode.onclick = (event) => {
-                    console.log(event.target.id)
-                    sessionStorage.setItem("confID", event.target.id);
-                    window.location.replace("indiv-conference.html");
-                }
+                    cNode.innerHTML = res1[x]["conference"]["conferenceName"]
+                    sNode.innerHTML = res1[x]["session"]["sessionName"]
+                    pNode.innerHTML = res1.length
+                    tNode.innerHTML = res1[x]["paper"]["paperTitle"]
 
-                tableNode.appendChild(cNode)
-                tableNode.appendChild(sNode)
-                tableNode.appendChild(pNode)
-                tableNode.appendChild(tNode)
+                    tableNode.onclick = (event) => {
+                        console.log(event.target.id)
+                        sessionStorage.setItem("confID", event.target.id);
+                        window.location.replace("indiv-conference.html");
+                    }
 
-                document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+                    tableNode.appendChild(cNode)
+                    tableNode.appendChild(sNode)
+                    tableNode.appendChild(pNode)
+                    tableNode.appendChild(tNode)
 
-                if(x + 1 == res1.length) {
-                    document.querySelector(".loading-box").style.display = "none"
+                    document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+
+                    if(x + 1 == res1.length) {
+                        document.querySelector(".loading-box").style.display = "none"
+                    }
                 }
             }
             
