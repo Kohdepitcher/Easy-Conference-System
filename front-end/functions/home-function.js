@@ -53,7 +53,7 @@ const loadActiveConferences = async () => {
                 console.log(res[x]["conferenceName"])
                 cNode.innerHTML = res[x]["conferenceName"]
                 sNode.innerHTML = "Unknown (For Now)"
-                pNode.innerHTML = "p length "
+                pNode.innerHTML = res.length
                 var deadlineDate = new Date(res[x]["conferenceSubmissionDeadline"])
                 var deadlineMoment = moment(deadlineDate.toString())
                 dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
@@ -110,26 +110,24 @@ const loadCurrentGroups = async () => {
                 var cNode = document.createElement("div")
                 var sNode = document.createElement("div")
                 var pNode = document.createElement("div")
-                var dNode = document.createElement("div")
+                var tNode = document.createElement("div")
 
                 tableNode.className = "indiv-report-entry"
                 cNode.className = "indiv-report-part"
                 sNode.className = "indiv-report-part"
                 pNode.className = "indiv-report-part"
-                dNode.className = "indiv-report-part"
+                tNode.className = "indiv-report-part"
 
                 tableNode.id = res1[x]["conferenceID"]
                 cNode.id = res1[x]["conferenceID"]
                 sNode.id = res1[x]["conferenceID"]
                 pNode.id = res1[x]["conferenceID"]
-                dNode.id = res1[x]["conferenceID"]
+                tNode.id = res1[x]["conferenceID"]
 
-                cNode.innerHTML = res1[x]["conferenceName"]
-                sNode.innerHTML = "Unknown (For Now)"
+                cNode.innerHTML = res1[x]["conference"]["conferenceName"]
+                sNode.innerHTML = res1[x]["session"]["sessionName"]
                 pNode.innerHTML = res1.length
-                var deadlineDate = new Date(res1[x]["conferenceSubmissionDeadline"])
-                var deadlineMoment = moment(deadlineDate.toString())
-                dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
+                tNode.innerHTML = res1[x]["paper"]["paperTitle"]
 
                 tableNode.onclick = (event) => {
                     console.log(event.target.id)
@@ -140,7 +138,7 @@ const loadCurrentGroups = async () => {
                 tableNode.appendChild(cNode)
                 tableNode.appendChild(sNode)
                 tableNode.appendChild(pNode)
-                tableNode.appendChild(dNode)
+                tableNode.appendChild(tNode)
 
                 document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
