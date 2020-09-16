@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Account</title>
+        <link rel="stylesheet" type="text/css" href="styles/style.css" />
+        <link rel="stylesheet" type="text/css" href="styles/account.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="menu-box">
+                <div class="logo-box">
+                    Easy-Conference
+                </div>
+                <div class="menu-buttons-box">
+                    <div id="homeButton" class="menu-button">Home</div>
+                    <div id="conferencesButton" class="menu-button">Conferences</div>
+                    <div id="accountButton" class="menu-button">My Account</div>
+                    <div id="signOutButton" class="menu-button">Sign Out</div>
+                </div>
+            </div>
+            <div class="main-area">
+                <div class="account-icon"></div>
+                <div class="change-details">
+                    <div class="change-title">Change Account Details</div>
+                    <div id="changeUser" class="change-input">
+                        <div class="change-input-title">Change Username:</div>
+                        <div class="change-input-field">
+                            <input type="text" name="changedUser" />
+                            <button id="changeUserButton">Change</button>
+                        </div>
+                    </div>
+                    <div id="changePass" class="change-input">
+                        <div class="change-input-title">Change Password:</div>
+                        <div class="change-input-field">
+                            <input type="text" name="changedPass" />
+                            <button id="changePassButton">Change</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="past-conferences">
+                    <div class="past-title">Past Conferences</div>
+                    <div class="past-conferences-list disable-scrolls"><p>You haven't been in any conferences yet :(</p></div>
+                </div>
+            </div>
+            <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
+        </div>
+        <script src="functions/functions.js"></script>
+        <script src="functions/my-account.js"></script>
+    </body>
+</html>

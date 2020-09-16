@@ -1,0 +1,99 @@
+/* border-radius: 10px; */
+/* make height and width in percentages */
+/* box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5); */
+
+.inner-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Welcome */
+.welcome-box {
+    width: 60%;
+    height: 28%;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+    position: absolute;
+    top: 10%;
+    right: 20%;
+    display: flex;
+    flex-direction: row;
+    order: 1;
+}
+
+.welcome-text {
+    order: 1;
+    height: 60%;
+    margin-top: 7%;
+}
+
+.welcome-label {
+    text-align: center;
+    color: white;
+    font-size: 180%;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.account-button {
+    color: dodgerblue;
+    font-size: 100%;
+    text-align: left;
+    order: 2;
+    cursor: pointer;
+}
+
+.account-icon {
+    height: 10vw;
+    width: 10vw;
+    border-radius: 100%;
+    background: #CCC;
+    order: 1;
+    margin-right: 3%;
+    margin-top: 3%;
+    margin-left: 20%;
+    text-align: center;
+    line-height: 10vw;
+    font-size: 180%;
+}
+
+/* Current Groupings */
+.current-groupings-label {
+    text-align: left;
+    color: white;
+    font-size: 180%;
+    margin-top: 17%;
+    margin-left: 20%;
+    order: 2;
+}
+
+.current-groupings-box {
+    height: 40%;
+    width: 60%;
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+    order: 3;
+}
+
+.current-groupings-headers {
+    height: 15%;
+    width: 100%;
+    background: dodgerblue;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+    line-height: 5%;
+}
+
+.current-groupings-text {
+    color: white;
+    overflow: auto;
+}
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Conferences</title>
+        <link rel="stylesheet" type="text/css" href="styles/style.css" />
+        <link rel="stylesheet" type="text/css" href="styles/home.css" />
+        <link rel="stylesheet" type="text/css" href="styles/conferences.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
+
+        <style>
+
+            .box {
+                box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+                background: rgb(59, 59, 59);
+                border-radius: 10px;
+            }
+
+
+            .button {
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+
+            .button-action {background-color: #4CAF50;} /* Green */
+            .button-action-2 {background-color: #008CBA;} /* Blue */
+            .button-warning {background-color: #AD0000;} /* Red */
+
+
+            table {
+                color: white;
+                width: 100%;
+            }
+
+            tr {
+                color: #ffffff;
+            }
+
+            /* tr :nth-child(even) {
+                color: #ffffff;
+                background-color: rgb(59, 59, 59);
+            }
+
+            tr :nth-child(odd) {
+                color: #ffffff;
+                background-color: rgb(27, 27, 27);
+            } */
+            
+
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="menu-box">
+                <div class="logo-box">
+                    Easy-Conference
+                </div>
+                <div class="menu-buttons-box">
+                    <div id="homeButton" class="menu-button">Home</div>
+                    <div id="conferencesButton" class="menu-button">Conferences</div>
+                    <div id="accountButton" class="menu-button">My Account</div>
+                    <div id="signOutButton" class="menu-button">Sign Out</div>
+                </div>
+            </div>
+
+            <!-- box -->
+            <div class="box" style="margin-left: 3em; margin-right: 3em; margin-top: 1.5em;;">
+
+                <h2 style="color: #ffffff; margin: 1em;">Upcoming Conferences</h2>
+
+                <table class="">
+                    <thead>
+                      <tr>
+                        <th class="">Conference</th>
+                        <th class="">Organisation</th>
+                        <th class="">Date</th>
+                        <th class="">Submission Deadline</th>
+                        <th class="">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="">ICCMS 2020</td>
+                        <td class="">ICCM</td>
+                        <td class="">5th September 2020</td>
+                        <td class="">16th October 2020 (show in local time zone)</td>
+                        <td class="">
+
+                            <button class="button button-action">Nominate</button>
+                            <button class="button button-action-2">Edit</button>
+                            <button class="button button-warning">Delete</button>      
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="">ICCMS 2020</td>
+                        <td class="">ICCM</td>
+                        <td class="">5th September 2020</td>
+                        <td class="">16th October 2020 (show in local time zone)</td>
+                        <td class="">
+
+                            <button class="button button-action">Nominate</button>
+                            <button class="button button-action-2">Edit</button>
+                            <button class="button button-warning">Delete</button>      
+
+                        </td>
+                      </tr>
+                    </tbody>
+                    </table>
+
+            </div>
+            
+        </div>
+        <script src="functions/functions.js"></script>
+    </body>
+</html>

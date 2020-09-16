@@ -1,0 +1,100 @@
+.account-icon {
+    height: 10vw;
+    width: 10vw;
+    border-radius: 100%;
+    background: #CCC;
+    margin-left: 45%;
+    margin-top: 2%;
+}
+
+.change-details {
+    height: 60%;
+    width: 50%;
+    margin-left: 3.5%;
+    margin-top: 2%;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+    background: rgb(59, 59, 59);
+    position: absolute;
+}
+
+.change-title {
+    height: 10%;
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+    background: dodgerblue;
+    color: white;
+    line-height: 6vh;
+    text-indent: 10px;
+}
+
+.change-input {
+    height: 20%;
+    width: 100%;
+    background: rgb(0,0,0,0.5);
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.change-input-title {
+    height: 50%;
+    width: 100%;
+    text-indent: 10px;
+    order: 1;
+    line-height: 6vh;
+}
+
+.change-input-field {
+    height: 30%;
+    width: 100%;
+    order: 2;
+    display: flex;
+}
+
+.change-input-field label {
+    order: 1;
+    width: 30%;
+    margin-left: 5%;
+    line-height: 6vh;
+}
+
+.change-input-field input {
+    order: 2;
+    width: 60%;
+    margin-right: 5%;
+    height: 80%;
+}
+
+.past-conferences {
+    height: 60%;
+    width: 39.5%;
+    margin-left: 57%;
+    margin-top: 2%;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+    background: rgb(59, 59, 59);
+    position: absolute;
+}
+
+.past-conferences-list {
+    height: 90%;
+    width: 100%;
+    overflow: auto;
+}
+
+.past-conferences-list p {
+    line-height: 5vh;
+    width: 100%;
+    text-align: center;
+}
+
+.past-title {
+    height: 10%;
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+    background: dodgerblue;
+    color: white;
+    line-height: 6vh;
+    text-indent: 10px;
+}

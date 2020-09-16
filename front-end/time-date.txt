@@ -1,0 +1,13 @@
+- Check to see if the deadline is passed
+- if the deadline hasnt been passed, they can add a paper
+- if it has been passed, the add button needs to be greyed out/disabled
+- check the timezone of the user
+- check the time for the user
+- convert from database timezone to the users timezone
+- convert from users timezone to database timezone
+- check to see if a presentation date is already past, if so, store past presentations for a user on the my account.
+- possibly implement a feature to countdown how long until a user has a presentation
+- Group Timezones together
+
+// FOR BACKEND
+- Implement a function that will check to see how many days remaining, then return something as a reminder for specific intervals

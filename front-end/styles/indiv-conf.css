@@ -1,0 +1,238 @@
+.main-area {
+    height: 92vh;
+    width: 100vw;
+}
+
+.deadline-countdown {
+    height: 10%;
+    width: 100%;
+    background: rgb(0,0,0,0.2);
+    color: white;
+    line-height: 9.2vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.conf-title {
+    height: 100%;
+    width: 25%;
+    order: 1;
+    font-size: 130%;
+    margin-left: 5%;
+}
+
+.time-til-deadline-title {
+    height: 100%;
+    width: 15%;
+    order: 2;
+}
+
+.time-til-dead-timer {
+    height: 100%;
+    width: 25%;
+    order: 3;
+    text-align: left;
+}
+
+.add-paper {
+    height: 100%;
+    width: 25%;
+    margin-right: 5%;
+    order: 4;
+}
+
+.add-paper button {
+    float: right;
+    height: 50%;
+    line-height: 4.6vh;
+    width: 30%;
+    position: relative;
+    margin-top: 5%;
+    border-radius: 10px;
+    background: dodgerblue;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.add-paper button:hover {
+    background: rgb(0,0,0,0.4);
+}
+
+.table-of-sessions {
+    height: 80%;
+    width: 90%;
+    margin-top: 1%;
+    margin-left: 5%;
+    background: rgb(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+}
+
+.listing-sessions {
+    height: 90%;
+    width: 100%;
+    overflow: auto;
+}
+
+.session-table-header {
+    height: 10%;
+    width: 100%;
+    color: white;
+    background: dodgerblue;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.indiv-session-table-header {
+    height: 100%;
+    flex-grow: 1;
+    text-align: center;
+    line-height: 7.36vh;
+    width: 25%;
+}
+
+.indiv-session {
+    height: 10%;
+    width: 100%;
+    background: rgb(0,0,0,0.2);
+    margin-top: 2px;
+    display: flex;
+    flex-direction: row;
+    line-height: 6.624vh;  
+    cursor: pointer;  
+}
+
+.indiv-session:hover {
+    background: rgb(0,0,0,0.4);
+}
+
+.indiv-session-section {
+    flex-grow: 1;
+    height: 100%;
+    color: white;
+    text-align: center;
+    width: 25%;
+}
+
+.indiv-session-list-area {
+    height: 0%;
+    opacity: 0;
+    width: 100%;
+    background: rgb(0,0,0,0.3);
+    transition: 1s;
+    overflow-y: auto;
+}
+
+.indiv-pres {
+    height: 6.624vh;
+    width: 100%;
+    background: rgb(0,0,0,0.4);
+    margin-top: 2px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    line-height: 6.624vh;  
+}
+
+.indiv-pres-section {
+    flex-grow: 1;
+    width: 25%;
+    height: 100%;
+    text-align: center;
+}
+
+.create-backing {
+    height: 100vh;
+    width: 100vw;
+    background: rgb(0,0,0,0.8);
+    filter: blur(1000px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.create-box {
+    height: 60%;
+    width: 30%;
+    background: #333;
+    color: white;
+    position: absolute;
+    top: 20%;
+    left: 35%;
+    display: none;
+    border-radius: 10px;
+}
+
+.create-heading-area {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.create-heading {
+    height: 100%;
+    width: 90%;
+    order: 1;
+    text-align: center;
+    line-height: 6vh;
+    font-size: 130%;
+    border-radius: 10px 0px 0px 0px;
+}
+
+.close-create-button {
+    height: 100%;
+    width: 10%;
+    order: 2;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    line-height: 6vh;
+    border-radius: 0px 10px 0px 0px
+}
+
+.close-create-button:hover {
+    background: dodgerblue;
+}
+
+.create-main {
+    height: 70%;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 5%;
+    border-bottom: 1px solid rgb(0,0,0,0.2);
+}
+
+.create-submit-area {
+    height: 10%;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 2.5%;
+}
+
+.create-submit-area button {
+    background: dodgerblue;
+    color: white;
+    height: 100%;
+    width: 20%;
+    line-height: 6vh;
+    float: right;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+}
+
+.create-submit-area button:hover {
+    background: rgb(0,0,0,0.4);
+}
+
+.form-row {
+    margin-bottom: 10px !important;
+}
