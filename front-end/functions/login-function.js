@@ -58,7 +58,7 @@ const login = async () => {
 
 function checkIfLogged() {
     if(sessionStorage.getItem("Username") != null && sessionStorage.getItem("Role") != null) {
-        if(sessionStorage.getItem("Role") == "Admin") {
+        if(sessionStorage.getItem("Role") == "admin") {
             window.location.replace("admin-home.html");
         }
         else {
@@ -101,8 +101,7 @@ const firebaseLogin = async (email, password) => {
                 sessionStorage.setItem("Role", res["user"]["role"])
                 sessionStorage.setItem("BearerAuth", bearerAuth)
                 sessionStorage.setItem("UserID", res["user"]["uid"])
-                // checkIfLogged();
-                console.log(sessionStorage)
+                checkIfLogged();
             }
         })
     }).catch((error) => {
