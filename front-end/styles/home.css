@@ -97,3 +97,9 @@
     overflow: auto;
 }
 
+.current-groupings-presenter-text {
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+}
+

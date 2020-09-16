@@ -93,9 +93,10 @@ const loadActiveConferences = async () => {
 }
 
 // Load current groups for presenter
+// Needs to be pretty much rebuilt, as its acting like the active conferences function
 const loadCurrentGroups = async () => {
     document.querySelector(".current-groupings-presenter-text").innerHTML = "";
-    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("userID"), {
+    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("UserID"), {
                 method: "GET",
                 headers: new Headers({
                     Authorization: sessionStorage.getItem("BearerAuth"),
@@ -141,7 +142,7 @@ const loadCurrentGroups = async () => {
                 tableNode.appendChild(pNode)
                 tableNode.appendChild(dNode)
 
-                document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+                document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
                 if(x + 1 == res1.length) {
                     document.querySelector(".loading-box").style.display = "none"

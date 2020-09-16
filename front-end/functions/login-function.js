@@ -101,7 +101,8 @@ const firebaseLogin = async (email, password) => {
                 sessionStorage.setItem("Role", res["user"]["role"])
                 sessionStorage.setItem("BearerAuth", bearerAuth)
                 sessionStorage.setItem("UserID", res["user"]["uid"])
-                checkIfLogged();
+                // checkIfLogged();
+                console.log(sessionStorage)
             }
         })
     }).catch((error) => {
