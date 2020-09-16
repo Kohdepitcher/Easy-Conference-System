@@ -10,37 +10,37 @@ passwordTouched = false;
 
 checkIfLogged();
 
-const loadConferences = async () => {
+// const loadConferences = async () => {
 
-    await fetch("http://localhost:3000/viewconferences").then(response => response.json()).then(res => {
-        for(var x in res) {
-            var tableNode = document.createElement("div")
-            var cNode = document.createElement("div")
-            var gNode = document.createElement("div")
-            var dNode = document.createElement("div")
-            var paNode = document.createElement("div")
+//     await fetch("http://localhost:3000/viewconferences").then(response => response.json()).then(res => {
+//         for(var x in res) {
+//             var tableNode = document.createElement("div")
+//             var cNode = document.createElement("div")
+//             var gNode = document.createElement("div")
+//             var dNode = document.createElement("div")
+//             var paNode = document.createElement("div")
         
-            tableNode.className = "indiv-report-entry"
-            cNode.className = "indiv-report-part"
-            gNode.className = "indiv-report-part"
-            dNode.className = "indiv-report-part"
-            paNode.className = "indiv-report-part"
+//             tableNode.className = "indiv-report-entry"
+//             cNode.className = "indiv-report-part"
+//             gNode.className = "indiv-report-part"
+//             dNode.className = "indiv-report-part"
+//             paNode.className = "indiv-report-part"
         
-            cNode.innerHTML = res[x]["Conference"]
-            gNode.innerHTML = res[x]["Group"]
-            dNode.innerHTML = res[x]["Date"]
-            paNode.innerHTML = res[x]["Paper"]
+//             cNode.innerHTML = res[x]["Conference"]
+//             gNode.innerHTML = res[x]["Group"]
+//             dNode.innerHTML = res[x]["Date"]
+//             paNode.innerHTML = res[x]["Paper"]
         
-            tableNode.appendChild(cNode)
-            tableNode.appendChild(gNode)
-            tableNode.appendChild(dNode)
-            tableNode.appendChild(paNode)
-            document.querySelector(".report-box-entry-list").appendChild(tableNode)
-        }
-    }).catch(e => {
-        console.log(e);
-    })
-}
+//             tableNode.appendChild(cNode)
+//             tableNode.appendChild(gNode)
+//             tableNode.appendChild(dNode)
+//             tableNode.appendChild(paNode)
+//             document.querySelector(".report-box-entry-list").appendChild(tableNode)
+//         }
+//     }).catch(e => {
+//         console.log(e);
+//     })
+// }
 
 const login = async () => {
     await fetch("http://localhost:3000/usercheck?user=" + usernameText.value + "&pass=" + passwordText.value).then(response => response.json()).then(res => {
@@ -96,7 +96,7 @@ const firebaseLogin = async (email, password) => {
             }
             else {
                 document.querySelector(".loading-box").style.display = "none"
-               console.log(res)
+                console.log(res)
                 sessionStorage.setItem("Username", res["user"]["displayName"])
                 sessionStorage.setItem("Role", res["user"]["role"])
                 sessionStorage.setItem("BearerAuth", bearerAuth)
@@ -113,7 +113,7 @@ const firebaseLogin = async (email, password) => {
     })
 }
 
-loadConferences();
+// loadConferences();
 
 loginButton.addEventListener("click", () => {
     // login();

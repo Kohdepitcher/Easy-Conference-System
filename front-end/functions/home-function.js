@@ -103,48 +103,51 @@ const loadCurrentGroups = async () => {
                 })
             }).then(response1 => response1.json()).then(res1 => {
             console.log(res1)
-            conferenceData.push(res[x])
-            var tableNode = document.createElement("div")
-            var cNode = document.createElement("div")
-            var sNode = document.createElement("div")
-            var pNode = document.createElement("div")
-            var dNode = document.createElement("div")
 
-            tableNode.className = "indiv-report-entry"
-            cNode.className = "indiv-report-part"
-            sNode.className = "indiv-report-part"
-            pNode.className = "indiv-report-part"
-            dNode.className = "indiv-report-part"
+            for(var x in res1) {
+                var tableNode = document.createElement("div")
+                var cNode = document.createElement("div")
+                var sNode = document.createElement("div")
+                var pNode = document.createElement("div")
+                var dNode = document.createElement("div")
 
-            tableNode.id = res[x]["conferenceID"]
-            cNode.id = res[x]["conferenceID"]
-            sNode.id = res[x]["conferenceID"]
-            pNode.id = res[x]["conferenceID"]
-            dNode.id = res[x]["conferenceID"]
+                tableNode.className = "indiv-report-entry"
+                cNode.className = "indiv-report-part"
+                sNode.className = "indiv-report-part"
+                pNode.className = "indiv-report-part"
+                dNode.className = "indiv-report-part"
 
-            cNode.innerHTML = res[x]["conferenceName"]
-            sNode.innerHTML = "Unknown (For Now)"
-            pNode.innerHTML = res1.length
-            var deadlineDate = new Date(res[x]["conferenceSubmissionDeadline"])
-            var deadlineMoment = moment(deadlineDate.toString())
-            dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
+                tableNode.id = res1[x]["conferenceID"]
+                cNode.id = res1[x]["conferenceID"]
+                sNode.id = res1[x]["conferenceID"]
+                pNode.id = res1[x]["conferenceID"]
+                dNode.id = res1[x]["conferenceID"]
 
-            tableNode.onclick = (event) => {
-            console.log(event.target.id)
-            sessionStorage.setItem("confID", event.target.id);
-            window.location.replace("indiv-conference.html");
-        }
+                cNode.innerHTML = res1[x]["conferenceName"]
+                sNode.innerHTML = "Unknown (For Now)"
+                pNode.innerHTML = res1.length
+                var deadlineDate = new Date(res1[x]["conferenceSubmissionDeadline"])
+                var deadlineMoment = moment(deadlineDate.toString())
+                dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
 
-        tableNode.appendChild(cNode)
-        tableNode.appendChild(sNode)
-        tableNode.appendChild(pNode)
-        tableNode.appendChild(dNode)
+                tableNode.onclick = (event) => {
+                    console.log(event.target.id)
+                    sessionStorage.setItem("confID", event.target.id);
+                    window.location.replace("indiv-conference.html");
+                }
 
-        document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+                tableNode.appendChild(cNode)
+                tableNode.appendChild(sNode)
+                tableNode.appendChild(pNode)
+                tableNode.appendChild(dNode)
 
-        if(x + 1 == res.length) {
-            document.querySelector(".loading-box").style.display = "none"
-        }
+                document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+
+                if(x + 1 == res1.length) {
+                    document.querySelector(".loading-box").style.display = "none"
+                }
+            }
+            
     }).catch(e => {
         console.log(e);
     })
