@@ -12,7 +12,7 @@ function checkIfLogged() {
 }
 
 homeButton.addEventListener("click", () => {
-    if(sessionStorage.getItem("Role") == "Admin") {
+    if(sessionStorage.getItem("Role") == "admin") {
         window.location.replace("admin-home.html");
     }
     else {

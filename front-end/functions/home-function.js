@@ -154,7 +154,7 @@ const loadCurrentGroups = async () => {
     })
 }
 
-if(sessionStorage.getItem("Role") == "Admin") {
+if(sessionStorage.getItem("Role") == "admin") {
     loadActiveConferences();
 }
 else {

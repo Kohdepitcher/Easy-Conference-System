@@ -10,6 +10,12 @@ function countdown(deadline) {
         minsDiff = conferenceDeadline.diff(moment(), "minutes") - (24 * 60 * dateDiff) - (60 * hoursDiff)
     }
 
+    if(minsDiff < 0) {
+        dateDiff = 0;
+        hoursDiff = 0;
+        minsDiff = 0;
+    }
+
     return dateDiff + " days, " + hoursDiff + " hours, " + minsDiff + " mins"
 }
 
