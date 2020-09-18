@@ -70,8 +70,10 @@ const loadPastGroups = async () => {
             }
              
             if (passed == false) {
-                //insert code to say "No conferences yet :("
-                //and fix formatting
+                console.log("no conferences") //DOESNT SEEM TO BE RUNNING
+                var message = "Haven't been in any conferences yet :("
+                document.querySelector(".current-groupings-presenter-text").appendChild(message)
+                //document.getElementsByClassname("past-groupings-presenter-text").innerHTML = "Haven't been in any conferences yet :(";
             }
             
     }).catch(e => {
