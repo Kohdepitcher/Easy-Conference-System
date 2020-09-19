@@ -1,3 +1,15 @@
+// class topic {
+//     constructor(topicID, topicName) {
+//         this.topicID = topicID;
+//         this.topicName = topicName;
+//     }
+// }
+
+function Topic(topicID, topicName) {
+    this.topicID = topicID;
+    this.topicName = topicName;
+}
+
 var sessionsList = document.querySelector(".listing-sessions");
 var countdownAndTitle = document.querySelector(".deadline-countdown")
 var conferenceNameSection = document.querySelector(".conf-title")
@@ -13,6 +25,7 @@ var subimtCreateButton = document.querySelector("#submitCreateButton")
 
 var sessions = []
 var unassignedPresentations = []
+var topics = []
 
 paperNameField.value = ""
 paperPubField.value = ""
@@ -31,7 +44,59 @@ const loadConference = async () => {
         var deadlineDate = new Date(res["conferenceSubmissionDeadline"])
         var deadlineMoment = moment(deadlineDate.toString())
         countdownTimer.innerHTML = countdown(deadlineMoment.format("DD/MM/YYYY HH:mm"))
+
+        //populate the topics array
+        loadTopics(res["organisation"]["organisationID"])
     })
+}
+
+//fetches the topics for an organisation
+const loadTopics = async (organisationID) => {
+
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/topics-for-organisation/" + organisationID, {
+        method: "GET",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            cache: "no-cache"
+        })
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+        
+        //populate the topics array
+        if (res.length != 0) {
+
+            //for each element in the reponse array, loop and push
+            for (var topicResponse in res) {
+
+                //create a new instance of topic and fill it with the required data
+                var newTopic = new Topic(res[topicResponse]["topicID"], res[topicResponse]["topicName"]);
+
+                //puah the topic onto the Topics array
+                topics.push(newTopic)
+            }
+
+            // console.log(topics)
+
+
+            //populate the topic options list
+            for (var i in topics) {
+
+                var topicFromIndex = topics[i]
+                var option = document.createElement("option")
+
+                    option.textContent = topicFromIndex.topicName;
+                    option.value = topicFromIndex.topicID;
+                    
+                inputTopic.appendChild(option)
+
+            }
+
+        }
+
+
+        
+    })
+
 }
 
 const loadSessions = async () => {
@@ -202,9 +267,9 @@ const sendNewPaper = async (name, pub, topic) => {
         body: JSON.stringify({
             "paperName": name,
             "paperPublisher": pub,
-            "topicID": 1,
+            "topicID": topic,
             "conferenceID": parseInt(sessionStorage.getItem("confID")),
-            "userID": 1
+            //no longer needed "userID": 1
         })
     }).then(response => response.json()).then(res => {
         console.log(res)
