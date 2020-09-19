@@ -16,7 +16,15 @@ const loadPastGroups = async () => {
 
             for(var x in res1) {
                 //Check if date has passed
-                var date = res1[x]["session"]["startTime"]
+                console.log(res1[x]["session"])
+
+                try {
+                   var date = res1[x]["session"]["startTime"] 
+                }
+                catch {
+                    var date = Date.now();
+                }
+                
                 var passed = false;
 
                 if (date < Date.now()) {
@@ -69,10 +77,10 @@ const loadPastGroups = async () => {
                 }
             }
              
-            if (passed == false) {
+            if (!passed) {
                 console.log("no conferences") //DOESNT SEEM TO BE RUNNING
                 var message = "Haven't been in any conferences yet :("
-                document.querySelector(".current-groupings-presenter-text").appendChild(message)
+                document.querySelector(".past-groupings-presenter-text").innerHTML = message
                 //document.getElementsByClassname("past-groupings-presenter-text").innerHTML = "Haven't been in any conferences yet :(";
             }
             
@@ -80,3 +88,5 @@ const loadPastGroups = async () => {
         console.log(e);
     })
 }
+
+loadPastGroups();
