@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" href="styles/style.css" />
         <link rel="stylesheet" type="text/css" href="styles/account.css" />
         <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
     </head>
     <body>
         <div class="wrapper">
@@ -22,35 +23,36 @@
             </div>
             <div class="main-area">
                 <div class="account-icon"></div>
-                <div class="change-details">
-                    <div class="change-title">Change Account Details</div>
-                    <div id="changeUser" class="change-input">
-                        <div class="change-input-title">Change Username:</div>
-                        <div class="change-input-field">
-                            <input type="text" name="changedUser" />
-                            <button id="changeUserButton">Change</button>
+                <div class="inner-area">
+                    <div class="change-details">
+                        <div class="change-title">Change Account Details</div>
+                        <div id="changeUser" class="change-input">
+                            <div class="change-input-title">Change Username:</div>
+                            <div class="change-input-field">
+                                <input type="text" name="changedUser" />
+                                <button id="changeUserButton">Change</button>
+                            </div>
+                        </div>
+                        <div id="changePass" class="change-input">
+                            <div class="change-input-title">Change Password:</div>
+                            <div class="change-input-field">
+                                <input type="text" name="changedPass" />
+                                <button id="changePassButton">Change</button>
+                            </div>
                         </div>
                     </div>
-                    <div id="changePass" class="change-input">
-                        <div class="change-input-title">Change Password:</div>
-                        <div class="change-input-field">
-                            <input type="text" name="changedPass" />
-                            <button id="changePassButton">Change</button>
-                        </div>
+                    <div id="past-conferences" class="past-conferences">
+                        <div class="past-title">Past Conferences</div>
+                        <div class="past-groupings-box">
+                            <div class="past-groupings-headers">
+                                <div class="indiv-header">Conference</div>
+                                <div class="indiv-header">Organisation</div>
+                                <div class="indiv-header">Year</div>
+                            </div>
+                            <div class="past-groupings-presenter-text disable-scrolls">
+        
+                            </div>
                     </div>
-                </div>
-                <div class="past-conferences">
-                    <div class="past-title">Past Conferences</div>
-                    <div class="past-groupings-box">
-                        <div class="past-groupings-headers">
-                            <div class="indiv-header">Conference</div>
-                            <div class="indiv-header">Group</div>
-                            <div class="indiv-header">Participants</div>
-                            <div class="indiv-header">Paper</div>
-                        </div>
-                        <div class="past-groupings-presenter-text disable-scrolls">
-    
-                        </div>
                 </div>
             </div>
             <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>

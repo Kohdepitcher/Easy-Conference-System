@@ -10,18 +10,31 @@
     font-size: 180%;
 }
 
-.change-details {
+.inner-area {
+    width: 93%;
     height: 50%;
-    width: 50%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
     margin-left: 3.5%;
+    margin-right: 3.5%;
     margin-top: 2%;
+}
+
+.change-details, .enter-details {
+    order: 1;
+    height: 100%;
+    width: 50%;
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
-    position: absolute;
+    /* position: absolute; */
+    position: relative;
+    flex-grow: 1;
 }
 
-.change-title {
+.change-title, .enter-title {
     height: 10%;
     width: 100%;
     border-radius: 10px 10px 0px 0px;
@@ -32,7 +45,7 @@
     font-weight: bold;
 }
 
-.change-input {
+.change-input, .enter-input {
     height: 20%;
     width: 100%;
     margin-top: 5%;
@@ -40,7 +53,7 @@
     flex-direction: column;
 }
 
-.change-input-title {
+.change-input-title, .enter-input-title {
     height: 50%;
     width: 100%;
     text-indent: 10px;
@@ -49,21 +62,21 @@
     color: white;
 }
 
-.change-input-field {
+.change-input-field, .enter-input-field {
     height: 30%;
     width: 100%;
     order: 2;
     display: flex;
 }
 
-.change-input-field label {
+.change-input-field label, .enter-input-field label {
     order: 1;
     width: 30%;
     margin-left: 5%;
     line-height: 6vh;
 }
 
-.change-input-field input {
+.change-input-field input, .enter-input-field input {
     order: 2;
     width: 60%;
     margin-left: 1%;
@@ -73,7 +86,7 @@
     text-indent: 10px;
 }
 
-.change-input-field button {
+.change-input-field button, #signUpButton {
     order: 3;
     margin-left: 1%;
     outline: none;
@@ -85,19 +98,20 @@
     color: white;
 }
 
-.change-input-field button:hover {
+.change-input-field button:hover, #signUpButton button:hover {
     background: rgb(0,0,0,0.6);
 }
 
 .past-conferences {
-    height: 50%;
-    width: 39.5%;
-    margin-left: 57%;
-    margin-top: 2%;
+    order: 2;
+    height: 100%;
+    width: 30.5%;
+    margin-left: 2.5%;
+    flex-grow: 1;
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
-    position: absolute;
+    /* position: absolute; */
 }
 
 .past-conferences-list {
@@ -135,9 +149,11 @@
     line-height: 5%;
 }
 
-.current-groupings-presenter-text {
+.past-groupings-presenter-text {
     overflow-y: auto;
     height: 85%;
     width: 100%;
+    color: white;
+    text-align: center;
 }
 

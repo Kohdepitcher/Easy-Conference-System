@@ -5,7 +5,7 @@ accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 // Load past groups for presenter
 const loadPastGroups = async () => {
     document.querySelector(".past-groupings-presenter-text").innerHTML = "";
-    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("UserID"), {
+    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/past-conferences/", {
                 method: "GET",
                 headers: new Headers({
                     Authorization: sessionStorage.getItem("BearerAuth"),
@@ -15,50 +15,50 @@ const loadPastGroups = async () => {
             console.log(res1)
 
             for(var x in res1) {
-                //Check if date has passed
-                var date = res1[x]["session"]["startTime"]
+                
+                try {
+                    //Check if date has passed
+                    var date = res1[x]["conferenceSubmissionDeadline"]
+                 }
+                 catch {
+                     var date = Date.now().toLocaleDateString();
+                 }
+
+                var deadlineDate = new Date(date)
+                var deadlineMoment = moment(deadlineDate.toString())
+                console.log(deadlineMoment.format("DD/MM/YYYY")) // Printing Deadline
+                console.log(moment(new Date().toString()).format("DD/MM/YYYY")) // Printing Today
                 var passed = false;
 
-                if (date < Date.now()) {
+                if (deadlineMoment < Date.now()) {
                     console.log("date has passed")
 
-                    passed = true; //TEST THIS
+                    passed = true;
 
                     var tableNode = document.createElement("div")
                     var cNode = document.createElement("div")
-                    var sNode = document.createElement("div")
-                    var pNode = document.createElement("div")
-                    var tNode = document.createElement("div")
+                    var oNode = document.createElement("div")
+                    var dNode = document.createElement("div")
 
                     tableNode.className = "indiv-report-entry"
                     cNode.className = "indiv-report-part"
-                    sNode.className = "indiv-report-part"
-                    pNode.className = "indiv-report-part"
-                    tNode.className = "indiv-report-part"
+                    oNode.className = "indiv-report-part"
+                    dNode.className = "indiv-report-part"
 
                     tableNode.id = res1[x]["conferenceID"]
                     cNode.id = res1[x]["conferenceID"]
-                    sNode.id = res1[x]["conferenceID"]
-                    pNode.id = res1[x]["conferenceID"]
-                    tNode.id = res1[x]["conferenceID"]
+                    oNode.id = res1[x]["conferenceID"]
+                    dNode.id = res1[x]["conferenceID"]
 
-                    cNode.innerHTML = res1[x]["conference"]["conferenceName"]
-                    sNode.innerHTML = res1[x]["session"]["sessionName"]
-                    pNode.innerHTML = res1.length
-                    tNode.innerHTML = res1[x]["paper"]["paperTitle"]
-
-                    tableNode.onclick = (event) => {
-                        console.log(event.target.id)
-                        sessionStorage.setItem("confID", event.target.id);
-                        window.location.replace("indiv-conference.html");
-                    }
+                    cNode.innerHTML = res1[x]["conferenceName"]
+                    oNode.innerHTML = res1[x]["organisation"]["organisationName"]
+                    dNode.innerHTML = deadlineMoment.format("YYYY")
 
                     tableNode.appendChild(cNode)
-                    tableNode.appendChild(sNode)
-                    tableNode.appendChild(pNode)
-                    tableNode.appendChild(tNode)
+                    tableNode.appendChild(oNode)
+                    tableNode.appendChild(dNode)
 
-                    document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+                    document.querySelector(".past-groupings-presenter-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
                         document.querySelector(".loading-box").style.display = "none"
@@ -69,14 +69,27 @@ const loadPastGroups = async () => {
                 }
             }
              
-            if (passed == false) {
-                console.log("no conferences") //DOESNT SEEM TO BE RUNNING
+            if (!passed) {
+                console.log("no conferences") 
                 var message = "Haven't been in any conferences yet :("
-                document.querySelector(".current-groupings-presenter-text").appendChild(message)
-                //document.getElementsByClassname("past-groupings-presenter-text").innerHTML = "Haven't been in any conferences yet :(";
+                document.querySelector(".past-groupings-presenter-text").innerHTML = message
             }
             
     }).catch(e => {
         console.log(e);
     })
+}
+
+if(sessionStorage.getItem("Role") == "admin") {
+    //hide the past group table
+    hidePastConferences();
+}
+else {
+    //populate the past group table
+    loadPastGroups();
+}
+
+function hidePastConferences() {
+    var hide = document.getElementById("past-conferences");
+    hide.style.display = "none";
 }

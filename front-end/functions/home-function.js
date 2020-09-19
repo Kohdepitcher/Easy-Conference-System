@@ -108,11 +108,20 @@ const loadCurrentGroups = async () => {
                 })
             }).then(response1 => response1.json()).then(res1 => {
             console.log(res1)
-
-            for(var x in res1) {
-
+                var takenGroups = [];
+                for(var x in res1) {
+                    if(takenGroups.includes(res1[x])) {
+                        // Do nothing
+                        console.log("Already here")
+                        console.log(takenGroups)
+                    }
+                    else {
+                        takenGroups.push(res1[x])
+                    }
+                }
+            for(var x in takenGroups) {
                 //Check if date has passed for each session
-                var date = res1[x]["session_startTime"]
+                var date = takenGroups[x]["session_startTime"]
 
                 if (date < Date.now()) {
                     console.log("date has passed")
@@ -122,10 +131,6 @@ const loadCurrentGroups = async () => {
                 
                     //create a table row node
                     var tableNode = document.createElement("div")
-                    // var cNode = document.createElement("div")
-                    // var sNode = document.createElement("div")
-                    // var pNode = document.createElement("div")
-                    // var tNode = document.createElement("div")
 
                     //create each column for the new row
                     var conferenceNode = document.createElement("div")
@@ -137,11 +142,6 @@ const loadCurrentGroups = async () => {
 
                     //set the CSS classes on the new table row elements
                     tableNode.className = "indiv-report-entry"
-                    // cNode.className = "indiv-report-part"
-                    // sNode.className = "indiv-report-part"
-                    // pNode.className = "indiv-report-part"
-                    // tNode.className = "indiv-report-part"
-
                     conferenceNode.className = "indiv-report-part"
                     sessionNode.className = "indiv-report-part"
                     dateNode.className = "indiv-report-part"
@@ -150,37 +150,27 @@ const loadCurrentGroups = async () => {
                     paperNode.className = "indiv-report-part"
 
                     //set the ids on the nodes
-                    tableNode.id = res1[x]["Conference_conferenceID"]
+                    tableNode.id = takenGroups[x]["Conference_conferenceID"]
 
-                    conferenceNode.id = res1[x]["Conference_conferenceID"]
-                    sessionNode.id = res1[x]["session_sessionID"]
-                    dateNode.id = res1[x]["Conference_conferenceID"]
-                    startTimeNode.id = res1[x]["Conference_conferenceID"]
-                    endTimeNode.id = res1[x]["Conference_conferenceID"]
-                    paperNode.id = res1[x]["Paper_paperID"]
-                    // cNode.id = res1[x]["conferenceID"]
-                    // sNode.id = res1[x]["conferenceID"]
-                    // pNode.id = res1[x]["conferenceID"]
-                    // tNode.id = res1[x]["conferenceID"]
-                    
+                    conferenceNode.id = takenGroups[x]["Conference_conferenceID"]
+                    sessionNode.id = takenGroups[x]["session_sessionID"]
+                    dateNode.id = takenGroups[x]["Conference_conferenceID"]
+                    startTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                    endTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                    paperNode.id = takenGroups[x]["Paper_paperID"]
 
                     //set the inner contents of the new row elements
-                    conferenceNode.innerHTML = res1[x]["Conference_conferenceName"]
-                    sessionNode.innerHTML = res1[x]["session_sessionName"]
-                    dateNode.innerHTML = new Date(res1[x]["session_date"]).toDateString()
-                    startTimeNode.innerHTML = new Date(res1[x]["session_startTime"]).toLocaleTimeString()
-                    endTimeNode.innerHTML = new Date(res1[x]["session_endTime"]).toLocaleTimeString()
-                    paperNode.innerHTML = res1[x]["Paper_paperTitle"]
-
-                    // cNode.innerHTML = res1[x]["conference"]["conferenceName"]
-                    // sNode.innerHTML = res1[x]["session"]["sessionName"]
-                    // pNode.innerHTML = res1.length
-                    // tNode.innerHTML = res1[x]["paper"]["paperTitle"]
+                    conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
+                    sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
+                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toDateString()
+                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString()
+                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString()
+                    paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
 
                     tableNode.onclick = (event) => {
                         console.log(event.target.id)
-                        sessionStorage.setItem("confID", event.target.id);
-                        window.location.replace("indiv-conference.html");
+                        sessionStorage.setItem("sessID", event.target.id);
+                        // window.location.replace("indiv-session.html");
                     }
 
                     //set the new nodes to the table
@@ -190,14 +180,10 @@ const loadCurrentGroups = async () => {
                     tableNode.appendChild(startTimeNode)
                     tableNode.appendChild(endTimeNode)
                     tableNode.appendChild(paperNode)
-                    // tableNode.appendChild(cNode)
-                    // tableNode.appendChild(sNode)
-                    // tableNode.appendChild(pNode)
-                    // tableNode.appendChild(tNode)
 
                     document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
-                    if(x + 1 == res1.length) {
+                    if(x + 1 == takenGroups.length) {
                         document.querySelector(".loading-box").style.display = "none"
                     }
                 }
