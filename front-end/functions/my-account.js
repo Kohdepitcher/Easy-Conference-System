@@ -78,10 +78,9 @@ const loadPastGroups = async () => {
             }
              
             if (!passed) {
-                console.log("no conferences") //DOESNT SEEM TO BE RUNNING
+                console.log("no conferences") 
                 var message = "Haven't been in any conferences yet :("
                 document.querySelector(".past-groupings-presenter-text").innerHTML = message
-                //document.getElementsByClassname("past-groupings-presenter-text").innerHTML = "Haven't been in any conferences yet :(";
             }
             
     }).catch(e => {

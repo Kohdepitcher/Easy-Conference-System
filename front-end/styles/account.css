@@ -135,9 +135,11 @@
     line-height: 5%;
 }
 
-.current-groupings-presenter-text {
+.past-groupings-presenter-text {
     overflow-y: auto;
     height: 85%;
     width: 100%;
+    color: white;
+    text-align: center;
 }
 
