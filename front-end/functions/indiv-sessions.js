@@ -4,7 +4,7 @@ const loadSessions = async () => {
   document.querySelector(".loading-box").style.display = "block";
   await fetch(
     "https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presenters-for-session/" +
-      1,
+      sessionStorage.getItem("sessID"),
     {
       method: "GET",
       headers: new Headers({

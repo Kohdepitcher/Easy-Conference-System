@@ -11,19 +11,26 @@
 }
 
 .inner-area {
+    width: 93%;
+    height: 50%;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
+    margin-left: 3.5%;
+    margin-right: 3.5%;
+    margin-top: 2%;
 }
 
 .change-details {
-    height: 50%;
+    order: 1;
+    height: 100%;
     width: 50%;
-    margin-left: 3.5%;
-    margin-top: 2%;
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
-    position: absolute;
+    /* position: absolute; */
+    position: relative;
     flex-grow: 1;
 }
 
@@ -96,14 +103,15 @@
 }
 
 .past-conferences {
-    height: 50%;
-    width: 39.5%;
-    margin-left: 57%;
-    margin-top: 2%;
+    order: 2;
+    height: 100%;
+    width: 30.5%;
+    margin-left: 2.5%;
+    flex-grow: 1;
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
-    position: absolute;
+    /* position: absolute; */
 }
 
 .past-conferences-list {
