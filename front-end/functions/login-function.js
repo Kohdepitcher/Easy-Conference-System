@@ -2,13 +2,19 @@ var loginButton = document.querySelector("#signInButton")
 var usernameText = document.querySelector("#usernameText")
 var passwordText = document.querySelector("#passText")
 
+var signUpButton = document.getElementById("signUpButton");
+
 usernameText.value = ""
 passwordText.value = ""
 
 usernameTouched = false;
 passwordTouched = false;
 
-checkIfLogged();
+var page = location.href.split('/').pop()
+console.log(page)
+if (page != "sign-up.html") {
+    checkIfLogged();
+}
 
 // const loadConferences = async () => {
 
@@ -144,4 +150,9 @@ passwordText.addEventListener("focus", () => {
             }
         })
     }
+})
+
+signUpButton.addEventListener("click", () => {
+    window.location.replace("sign-up.html");
+    checkIfLogged()
 })
