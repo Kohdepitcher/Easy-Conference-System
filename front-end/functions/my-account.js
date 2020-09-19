@@ -98,6 +98,6 @@ else {
 }
 
 function hidePastConferences() {
-    var hide = document.getElementId("past-conferences");
+    var hide = document.getElementById("past-conferences");
     hide.style.display = "none";
 }

@@ -24,6 +24,7 @@
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
     position: absolute;
+    flex-grow: 1;
 }
 
 .change-title {
