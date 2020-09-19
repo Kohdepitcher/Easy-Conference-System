@@ -119,7 +119,7 @@ const loadCurrentGroups = async () => {
                     //Check if date has passed for each session
                     var date = res1[x]["session_startTime"]
 
-                    if (date < Date.now()) {
+                    if (date < Date.now().toLocaleDateString()) {
                         console.log("date has passed")
                     } 
                     else {

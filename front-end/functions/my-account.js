@@ -5,7 +5,7 @@ accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 // Load past groups for presenter
 const loadPastGroups = async () => {
     document.querySelector(".past-groupings-presenter-text").innerHTML = "";
-    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/past-conferences/" + sessionStorage.getItem("UserID"), {
+    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/past-conferences/", {
                 method: "GET",
                 headers: new Headers({
                     Authorization: sessionStorage.getItem("BearerAuth"),
@@ -15,22 +15,23 @@ const loadPastGroups = async () => {
             console.log(res1)
 
             for(var x in res1) {
-                //Check if date has passed
-                console.log(res1[x]["session"])
-
-                try {
-                   var date = res1[x]["session"]["startTime"] 
-                }
-                catch {
-                    var date = Date.now();
-                }
                 
-                var passed = false;
+                try {
+                    //Check if date has passed
+                    var date = res1[x]["conferenceSubmissionDeadline"]
+                 }
+                 catch {
+                     var date = Date.now().toLocaleDateString();
+                 }
+
+                 console.log(date)
+                 console.log(new Date(Date.now()).toLocaleDateString())
+                 var passed = false;
 
                 if (date < Date.now()) {
                     console.log("date has passed")
 
-                    passed = true; //TEST THIS
+                    passed = true;
 
                     var tableNode = document.createElement("div")
                     var cNode = document.createElement("div")
@@ -40,31 +41,21 @@ const loadPastGroups = async () => {
 
                     tableNode.className = "indiv-report-entry"
                     cNode.className = "indiv-report-part"
-                    sNode.className = "indiv-report-part"
-                    pNode.className = "indiv-report-part"
-                    tNode.className = "indiv-report-part"
+                    oNode.className = "indiv-report-part"
+                    dNode.className = "indiv-report-part"
 
                     tableNode.id = res1[x]["conferenceID"]
                     cNode.id = res1[x]["conferenceID"]
-                    sNode.id = res1[x]["conferenceID"]
-                    pNode.id = res1[x]["conferenceID"]
-                    tNode.id = res1[x]["conferenceID"]
+                    oNode.id = res1[x]["conferenceID"]
+                    dNode.id = res1[x]["conferenceID"]
 
                     cNode.innerHTML = res1[x]["conference"]["conferenceName"]
-                    sNode.innerHTML = res1[x]["session"]["sessionName"]
-                    pNode.innerHTML = res1.length
-                    tNode.innerHTML = res1[x]["paper"]["paperTitle"]
-
-                    tableNode.onclick = (event) => {
-                        console.log(event.target.id)
-                        sessionStorage.setItem("confID", event.target.id);
-                        window.location.replace("indiv-conference.html");
-                    }
+                    oNode.innerHTML = res1[x]["organisation"]
+                    dNode.innerHTML = res1[x]["conferenceSubmissionDeadline"]
 
                     tableNode.appendChild(cNode)
-                    tableNode.appendChild(sNode)
-                    tableNode.appendChild(pNode)
-                    tableNode.appendChild(tNode)
+                    tableNode.appendChild(oNode)
+                    tableNode.appendChild(dNode)
 
                     document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
