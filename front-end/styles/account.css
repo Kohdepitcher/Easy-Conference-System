@@ -10,6 +10,11 @@
     font-size: 180%;
 }
 
+.inner-area {
+    display: flex;
+    flex-direction: row;
+}
+
 .change-details {
     height: 50%;
     width: 50%;

@@ -5,7 +5,7 @@ accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 // Load past groups for presenter
 const loadPastGroups = async () => {
     document.querySelector(".past-groupings-presenter-text").innerHTML = "";
-    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("UserID"), {
+    fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/past-conferences/" + sessionStorage.getItem("UserID"), {
                 method: "GET",
                 headers: new Headers({
                     Authorization: sessionStorage.getItem("BearerAuth"),
@@ -88,4 +88,16 @@ const loadPastGroups = async () => {
     })
 }
 
-loadPastGroups();
+if(sessionStorage.getItem("Role") == "admin") {
+    //hide the past group table
+    hidePastConferences();
+}
+else {
+    //populate the past group table
+    loadPastGroups();
+}
+
+function hidePastConferences() {
+    var hide = document.getElementId("past-conferences");
+    hide.style.display = "none";
+}
