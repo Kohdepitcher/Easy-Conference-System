@@ -1,61 +1,50 @@
 function groupSessionsToTimezone(sessions, days) {
-    var createdSessions = []
     var sortedSessions = sessions.sort((a, b) => {
         return a - b
     })
-    
+
+    var arrangedSessions = []
+
+    // Works 
     var range = sortedSessions[sortedSessions.length - 1] - sortedSessions[0]
-    var numberOfSplits = Math.ceil(range / days)
-    var sizeOfSplits = Math.ceil(range / numberOfSplits)
-
-    console.log(sortedSessions)
     console.log("Range: " + range)
-    console.log("Number of Splits: " + numberOfSplits)
-    console.log("Size of splits: " + sizeOfSplits)
 
-    for(var x = 0; x < numberOfSplits; x++) {
-        var singleSession = []
-        for(var y in sortedSessions) {
-            var startingValue = 0
-            if(x == 0) {
-                startingValue = sortedSessions[0]
-            }
-            else {
-                startingValue = sortedSessions[0] + (sizeOfSplits * (x)) + 1
-            }
-            
-            var increaseAmount = sizeOfSplits
-            var increasedVar = startingValue + increaseAmount
+    // Works
+    var splits = Math.ceil(range / days)
+    console.log("Splits: " + splits)
 
-            console.log("start: " + startingValue)
-            console.log("Increase: " + increasedVar)
-            console.log("Number: " + sortedSessions[y])
+    // Works
+    var hourDiff = Math.ceil(range / splits)
+    console.log("Hours Per Split: " + hourDiff)
 
-            if(sortedSessions[y] >= startingValue && sortedSessions[y] <= increasedVar) {
-                singleSession.push(sortedSessions[y])
-                // var removed = sortedSessions.splice(y, 0)
-                var result = removeFromArray(sortedSessions, sortedSessions[y])
-                console.log(result)
+    for(var x = 0; x < splits; x++) {
+        var newSession = []
+        var splitStart = 0
 
-                if(singleSession.length == 6) {
-                    createdSessions.push(singleSession)
-                    singleSession = []
-                }
-            }
+        if(x == 0) {
+            splitStart = sortedSessions[0]
+        }
+        else {
+            splitStart = sortedSessions[0] + (hourDiff * x) + 1
         }
 
-        if(singleSession.length >= 1) {
-            createdSessions.push(singleSession)
+        var splitIncrease = hourDiff
+        var splitLimit = sortedSessions[0] + (hourDiff * x) + splitIncrease
+
+        newSession = sortedSessions.filter(sess => sess <= splitLimit && sess >= splitStart);
+        var numberOfSessions = Math.ceil(newSession.length / 6)
+
+        for(var z = 0; z < numberOfSessions; z++) {
+            var addableSession = newSession.splice(0, 6);
+            arrangedSessions.push(addableSession);
         }
-        
     }
-    console.log("created: ")
-    console.log(createdSessions)
-} 
 
-function removeFromArray(arr, value) {
-    return arr.filter(ele => ele != value)
+    console.log("Sessions in number order: ")
+    console.log(sortedSessions)
+    console.log("Sessions split into timezones: ");
+    console.log(arrangedSessions)
 }
 
-groupSessionsToTimezone([-3, -4, 10, 10, 5, 6, -1, -7, 4, 10, 10, 10, 10, 9, 8, 9, 10, 11], 3)
+groupSessionsToTimezone([10, 10, 10, 4, 10, 10, 10], 3)
 // Group(SessionTimezones, How Many Days in the Conference)
