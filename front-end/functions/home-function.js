@@ -107,13 +107,15 @@ const loadCurrentGroups = async () => {
                     cache: "no-cache"
                 })
             }).then(response1 => response1.json()).then(res1 => {
-            console.log(res1)
+                console.log(res1)
                 var takenGroups = [];
             for(var x in res1) {
-                if(takenGroups.includes(res1[x])) {
-                    // do nothing
+                if(takenGroups == []) {
+                    //
                 }
                 else {
+                    takenGroups.push(res1[x])
+                    console.log(takenGroups)
                     //Check if date has passed for each session
                     var date = res1[x]["session_startTime"]
 
