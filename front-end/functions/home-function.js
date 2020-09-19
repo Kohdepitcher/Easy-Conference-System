@@ -177,11 +177,11 @@ const loadCurrentGroups = async () => {
                     // pNode.innerHTML = res1.length
                     // tNode.innerHTML = res1[x]["paper"]["paperTitle"]
 
-                    tableNode.onclick = (event) => {
-                        console.log(event.target.id)
-                        sessionStorage.setItem("confID", event.target.id);
-                        window.location.replace("indiv-conference.html");
-                    }
+                    // tableNode.onclick = (event) => {
+                    //     console.log(event.target.id)
+                    //     sessionStorage.setItem("confID", event.target.id);
+                    //     window.location.replace("indiv-conference.html");
+                    // }
 
                     //set the new nodes to the table
                     tableNode.appendChild(conferenceNode)
