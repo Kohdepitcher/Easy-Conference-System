@@ -24,20 +24,21 @@ const loadPastGroups = async () => {
                      var date = Date.now().toLocaleDateString();
                  }
 
-                 console.log(date)
-                 console.log(new Date(Date.now()).toLocaleDateString())
-                 var passed = false;
+                var deadlineDate = new Date(date)
+                var deadlineMoment = moment(deadlineDate.toString())
+                console.log(deadlineMoment.format("DD/MM/YYYY")) // Printing Deadline
+                console.log(moment(new Date().toString()).format("DD/MM/YYYY")) // Printing Today
+                var passed = false;
 
-                if (date < Date.now()) {
+                if (deadlineMoment < Date.now()) {
                     console.log("date has passed")
 
                     passed = true;
 
                     var tableNode = document.createElement("div")
                     var cNode = document.createElement("div")
-                    var sNode = document.createElement("div")
-                    var pNode = document.createElement("div")
-                    var tNode = document.createElement("div")
+                    var oNode = document.createElement("div")
+                    var dNode = document.createElement("div")
 
                     tableNode.className = "indiv-report-entry"
                     cNode.className = "indiv-report-part"
@@ -49,15 +50,15 @@ const loadPastGroups = async () => {
                     oNode.id = res1[x]["conferenceID"]
                     dNode.id = res1[x]["conferenceID"]
 
-                    cNode.innerHTML = res1[x]["conference"]["conferenceName"]
-                    oNode.innerHTML = res1[x]["organisation"]
-                    dNode.innerHTML = res1[x]["conferenceSubmissionDeadline"]
+                    cNode.innerHTML = res1[x]["conferenceName"]
+                    oNode.innerHTML = res1[x]["organisation"]["organisationName"]
+                    dNode.innerHTML = deadlineMoment.format("YYYY")
 
                     tableNode.appendChild(cNode)
                     tableNode.appendChild(oNode)
                     tableNode.appendChild(dNode)
 
-                    document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+                    document.querySelector(".past-groupings-presenter-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
                         document.querySelector(".loading-box").style.display = "none"
