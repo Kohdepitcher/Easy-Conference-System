@@ -107,84 +107,86 @@ const loadCurrentGroups = async () => {
                     cache: "no-cache"
                 })
             }).then(response1 => response1.json()).then(res1 => {
-                console.log(res1)
+            console.log(res1)
                 var takenGroups = [];
-            for(var x in res1) {
-                if(takenGroups == []) {
-                    //
-                }
-                else {
-                    takenGroups.push(res1[x])
-                    console.log(takenGroups)
-                    //Check if date has passed for each session
-                    var date = res1[x]["session_startTime"]
-
-                    if (date < Date.now().toLocaleDateString()) {
-                        console.log("date has passed")
-                    } 
+                for(var x in res1) {
+                    if(takenGroups.includes(res1[x])) {
+                        // Do nothing
+                        console.log("Already here")
+                        console.log(takenGroups)
+                    }
                     else {
-                        console.log("date has not passed")
-                    
-                        //create a table row node
-                        var tableNode = document.createElement("div")
-
-                        //create each column for the new row
-                        var conferenceNode = document.createElement("div")
-                        var sessionNode = document.createElement("div")
-                        var dateNode = document.createElement("div")
-                        var startTimeNode = document.createElement("div")
-                        var endTimeNode = document.createElement("div")
-                        var paperNode = document.createElement("div")
-
-                        //set the CSS classes on the new table row elements
-                        tableNode.className = "indiv-report-entry"
-                        conferenceNode.className = "indiv-report-part"
-                        sessionNode.className = "indiv-report-part"
-                        dateNode.className = "indiv-report-part"
-                        startTimeNode.className = "indiv-report-part"
-                        endTimeNode.className = "indiv-report-part"
-                        paperNode.className = "indiv-report-part"
-
-                        //set the ids on the nodes
-                        tableNode.id = res1[x]["Conference_conferenceID"]
-
-                        conferenceNode.id = res1[x]["Conference_conferenceID"]
-                        sessionNode.id = res1[x]["session_sessionID"]
-                        dateNode.id = res1[x]["Conference_conferenceID"]
-                        startTimeNode.id = res1[x]["Conference_conferenceID"]
-                        endTimeNode.id = res1[x]["Conference_conferenceID"]
-                        paperNode.id = res1[x]["Paper_paperID"]
-
-                        //set the inner contents of the new row elements
-                        conferenceNode.innerHTML = res1[x]["Conference_conferenceName"]
-                        sessionNode.innerHTML = res1[x]["session_sessionName"]
-                        dateNode.innerHTML = new Date(res1[x]["session_date"]).toDateString()
-                        startTimeNode.innerHTML = new Date(res1[x]["session_startTime"]).toLocaleTimeString()
-                        endTimeNode.innerHTML = new Date(res1[x]["session_endTime"]).toLocaleTimeString()
-                        paperNode.innerHTML = res1[x]["Paper_paperTitle"]
-
-                        tableNode.onclick = (event) => {
-                            console.log(event.target.id)
-                            sessionStorage.setItem("sessID", event.target.id);
-                            // window.location.replace("indiv-session.html");
-                        }
-
-                        //set the new nodes to the table
-                        tableNode.appendChild(conferenceNode)
-                        tableNode.appendChild(sessionNode)
-                        tableNode.appendChild(dateNode)
-                        tableNode.appendChild(startTimeNode)
-                        tableNode.appendChild(endTimeNode)
-                        tableNode.appendChild(paperNode)
-
-                        document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
-
-                        if(x + 1 == res1.length) {
-                            document.querySelector(".loading-box").style.display = "none"
-                        }
+                        takenGroups.push(res1[x])
                     }
                 }
+            for(var x in takenGroups) {
+                //Check if date has passed for each session
+                var date = takenGroups[x]["session_startTime"]
+
+                if (date < Date.now()) {
+                    console.log("date has passed")
+                } 
+                else {
+                    console.log("date has not passed")
                 
+                    //create a table row node
+                    var tableNode = document.createElement("div")
+
+                    //create each column for the new row
+                    var conferenceNode = document.createElement("div")
+                    var sessionNode = document.createElement("div")
+                    var dateNode = document.createElement("div")
+                    var startTimeNode = document.createElement("div")
+                    var endTimeNode = document.createElement("div")
+                    var paperNode = document.createElement("div")
+
+                    //set the CSS classes on the new table row elements
+                    tableNode.className = "indiv-report-entry"
+                    conferenceNode.className = "indiv-report-part"
+                    sessionNode.className = "indiv-report-part"
+                    dateNode.className = "indiv-report-part"
+                    startTimeNode.className = "indiv-report-part"
+                    endTimeNode.className = "indiv-report-part"
+                    paperNode.className = "indiv-report-part"
+
+                    //set the ids on the nodes
+                    tableNode.id = takenGroups[x]["Conference_conferenceID"]
+
+                    conferenceNode.id = takenGroups[x]["Conference_conferenceID"]
+                    sessionNode.id = takenGroups[x]["session_sessionID"]
+                    dateNode.id = takenGroups[x]["Conference_conferenceID"]
+                    startTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                    endTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                    paperNode.id = takenGroups[x]["Paper_paperID"]
+
+                    //set the inner contents of the new row elements
+                    conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
+                    sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
+                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toDateString()
+                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString()
+                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString()
+                    paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
+
+                    tableNode.onclick = (event) => {
+                        console.log(event.target.id)
+                        sessionStorage.setItem("sessID", event.target.id);
+                        // window.location.replace("indiv-session.html");
+                    }
+
+                    //set the new nodes to the table
+                    tableNode.appendChild(conferenceNode)
+                    tableNode.appendChild(sessionNode)
+                    tableNode.appendChild(dateNode)
+                    tableNode.appendChild(startTimeNode)
+                    tableNode.appendChild(endTimeNode)
+                    tableNode.appendChild(paperNode)
+
+                    document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+
+                    if(x + 1 == takenGroups.length) {
+                        document.querySelector(".loading-box").style.display = "none"
+                    }
+                }
             }
             
     }).catch(e => {
