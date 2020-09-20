@@ -11,7 +11,8 @@
 
 .button {
 
-    margin: 8px, 8px, 8px, 0;
+    /* margin: 8px, 8px, 8px, 0; */
+    margin: 8px;
 
     line-height: 36px;
 
@@ -44,7 +45,7 @@
 .button-warning {background-color: #F44336;} /* Red */
 
 
-table {
+.material-table {
     color: white;
     width: 100%;
     background: #424242;
@@ -52,7 +53,7 @@ table {
     border-spacing: 0;
 }
 
-thead {
+.material-thead {
     background: inherit;
 }
 
@@ -64,7 +65,7 @@ thead {
     padding: 0;
 }
 
-th {
+.material-th {
     
     /* padding: 0; */
     border-bottom-width: 1px;
@@ -79,7 +80,7 @@ th {
     border-bottom-color: hsla(0,0%,100%,.12);
 }
 
-tr {
+.material-tr {
     color: #ffffff;
     height: 56px;
     background: inherit;
@@ -92,12 +93,12 @@ tr {
     border-left-color: inherit;
 }
 
-tbody {
+.material-tbody {
     background: inherit;
     display: table-row-group;
 }
 
-td {
+.material-td {
     padding: 0;
     border-bottom-width: 1px;
     border-bottom-style: solid;
