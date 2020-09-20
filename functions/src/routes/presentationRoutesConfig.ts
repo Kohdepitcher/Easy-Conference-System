@@ -31,6 +31,14 @@ export function presentationRoutesConfig(app: Application) {
         
     ])
 
+    //get all presentations without assigned sessions for user
+    app.get('/presentations-without-sessions-for-user/:userID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
+        new  PresentationController().getPresentationsWithUnassignedSessionsForUser
+        
+    ])
+
     //get all presentations for conference
     app.get('/presentations-for-conference/:conferenceID', [
         isAuthenticated,
