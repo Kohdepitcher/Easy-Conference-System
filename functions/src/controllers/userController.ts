@@ -181,7 +181,7 @@ export class userController {
             
             
             //send success message to cleint
-            return res.status(201).send({ uid, savedUser })
+            return res.status(200).send({ uid, savedUser })
         } catch (err) {
             return handleError(res, err)
         }
@@ -194,12 +194,35 @@ export class userController {
     async all(req: Request, res: Response) {
         try {
 
-            //NOTE: only gets max 1000 users
-            const listUsers = await admin.auth().listUsers()
+            //create new connection to DB
+            const connection = await connect();
 
-            //console.log(listUsers);
+            //get the user repository
+            const userRepo = connection.getRepository(User);
 
-            const users = listUsers.users.map(mapUser)
+            const users = [];
+
+
+            //fetch the matching user from firebase auth passed in from res
+            const fetchedUsers: User[] = await userRepo.find();
+
+            for (const index in fetchedUsers) {  
+                
+                const user = await admin.auth().getUser(fetchedUsers[index].UUID)
+
+                users.push({"user": mapUser(user), "db": fetchedUsers[index]})
+
+            }
+
+            
+
+
+            // //NOTE: only gets max 1000 users
+            // const listUsers = await admin.auth().listUsers()
+
+            // //console.log(listUsers);
+
+            // const users = listUsers.users.map(mapUser)
             return res.status(200).send(users)
         } catch (err) {
             return handleError(res, err)
@@ -213,9 +236,21 @@ export class userController {
     //TODO: also return other specific user details like country
     async get(req: Request, res: Response) {
         try {
+
+            //create new connection to DB
+            const connection = await connect();
+            
+            //get the user repository
+            const userRepo = connection.getRepository(User);
+
             const { uid } = req.params
+
+            //fetch the matching user from firebase auth passed in from res
+            const fetchedUser = await userRepo.findOne({UUID: uid})
+
+            //get the user from firebase
             const user = await admin.auth().getUser(uid)
-            return res.status(200).send({ user: mapUser(user) })
+            return res.status(200).send({ user: mapUser(user), db: fetchedUser })
         } catch (err) {
             return handleError(res, err)
         }
@@ -385,18 +420,18 @@ function handleError(res: Response, err: any) {
     return res.status(500).send({ message: `${err.code} - ${err.message}` });
 }
 
-    function mapUser(user: admin.auth.UserRecord) {
-        const customClaims = (user.customClaims || { role: '' }) as { role?: string }
-        const role = customClaims.role ? customClaims.role : 'Role Not Set'
-        return {
-            uid: user.uid,
-            email: user.email || '',
-            displayName: user.displayName || '',
-            role,
-            lastSignInTime: user.metadata.lastSignInTime,
-            creationTime: user.metadata.creationTime
-        }
+function mapUser(user: admin.auth.UserRecord) {
+    const customClaims = (user.customClaims || { role: '' }) as { role?: string }
+    const role = customClaims.role ? customClaims.role : 'Role Not Set'
+    return {
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        role,
+        lastSignInTime: user.metadata.lastSignInTime,
+        creationTime: user.metadata.creationTime
     }
+}
 
 
     /*
