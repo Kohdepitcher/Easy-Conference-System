@@ -11,22 +11,63 @@
         <div class="wrapper">
                     <div class="sign-up">
                         <div class="enter-title">Enter Account Details</div>
-                        <div id="enterUser" class="enter-input">
+                        <div id="email" class="enter-input">
+                            <div class="enter-input-title">Enter Email:</div>
+                            <div class="enter-input-field">
+                                <input type="text" id="enterEmail" name="enterEmail" />
+                            </div>
+                        </div>
+                        <div id="user" class="enter-input">
                             <div class="enter-input-title">Enter Username:</div>
                             <div class="enter-input-field">
-                                <input type="text" name="enterUser" />
+                                <input type="text" id="enterUser" name="enterUser" />
                             </div>
                         </div>
-                        <div id="enterPass" class="enter-input">
+                        <div id="pass" class="enter-input">
                             <div class="enter-input-title">Enter Password:</div>
                             <div class="enter-input-field">
-                                <input type="text" name="enterPass" />
+                                <input type="password" id="enterPass" name="enterPass" />
                             </div>
                         </div>
+                        <div id="confirmPass" class="enter-input">
+                            <div class="enter-input-title">Confirm Password:</div>
+                            <div class="enter-input-field">
+                                <input type="password" id="enterConfirmPass" name="enterConfirmPass" />
+                            </div>
+                        </div>
+                        <div class="country-box">
+                            <label class="country-input-title">
+                                Country: 
+                                <select id="country-dropdown" data-input-style="box" >
+                                    <option value="Australia">Australia</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="United States">Unites States</option>
+                                    <option value="Sweden">Sweden</option>
+                                    <option value="China">China</option>
+                                    <option value="Africa">Africa</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="France">France</option>
+                                    <option value="Italy">Italy</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="message"></div>
                         <button id="signUpButton">Sign up</button>
+                        <button id="signInButton">Sign In</button>
                     </div>
             <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
         </div>
-        <script src="functions/login-function.js"></script>
+        <script src="functions/sign-up.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+        
+        <script src="functions/firebase-init.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     </body>
 </html>

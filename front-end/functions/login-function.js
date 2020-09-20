@@ -1,3 +1,4 @@
+
 var loginButton = document.querySelector("#signInButton")
 var usernameText = document.querySelector("#usernameText")
 var passwordText = document.querySelector("#passText")
@@ -15,6 +16,42 @@ console.log(page)
 if (page != "sign-up.html") {
     checkIfLogged();
 }
+
+loginButton.addEventListener("click", () => {
+    // login();
+    firebaseLogin(usernameText.value, passwordText.value);
+})
+
+usernameText.addEventListener("focus", () => {
+    usernameTouched = true;
+
+    if(usernameTouched && passwordTouched) {
+        document.addEventListener("keydown", (event) => {
+            if(event.keyCode == 13) {
+                // login();
+                firebaseLogin(usernameText.value, passwordText.value);
+            }
+        })
+    }
+})
+
+passwordText.addEventListener("focus", () => {
+    passwordTouched = true;
+
+    if(usernameTouched && passwordTouched) {
+        document.addEventListener("keydown", (event) => {
+            if(event.keyCode == 13) {
+                // login();
+                firebaseLogin(usernameText.value, passwordText.value);
+            }
+        })
+    }
+})
+
+signUpButton.addEventListener("click", () => {
+    window.location.replace("sign-up.html");
+    checkIfLogged()
+})
 
 // const loadConferences = async () => {
 
@@ -121,38 +158,4 @@ const firebaseLogin = async (email, password) => {
 
 // loadConferences();
 
-loginButton.addEventListener("click", () => {
-    // login();
-    firebaseLogin(usernameText.value, passwordText.value);
-})
 
-usernameText.addEventListener("focus", () => {
-    usernameTouched = true;
-
-    if(usernameTouched && passwordTouched) {
-        document.addEventListener("keydown", (event) => {
-            if(event.keyCode == 13) {
-                // login();
-                firebaseLogin(usernameText.value, passwordText.value);
-            }
-        })
-    }
-})
-
-passwordText.addEventListener("focus", () => {
-    passwordTouched = true;
-
-    if(usernameTouched && passwordTouched) {
-        document.addEventListener("keydown", (event) => {
-            if(event.keyCode == 13) {
-                // login();
-                firebaseLogin(usernameText.value, passwordText.value);
-            }
-        })
-    }
-})
-
-signUpButton.addEventListener("click", () => {
-    window.location.replace("sign-up.html");
-    checkIfLogged()
-})
