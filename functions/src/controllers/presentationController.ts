@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 //import database connection
 import { connect } from "../config";
 
+import { AuthRoles, dateFromUTCString } from "../globals"
+
 //entities
 import { Presentation } from "../entities/presentation";
 import { User } from "../entities/user";
@@ -208,6 +210,85 @@ export class PresentationController {
         
     }
 
+    async getPresentationsWithUnassignedSessionsForUser(request: Request, response: Response) {
+
+        //temp store a UID that will be set soon
+        var specifiedUID: string;
+
+        //if a user is a presenter
+        if (response.locals.role == AuthRoles.presenter) {
+
+            //fetch the uid from the token instead
+            specifiedUID = response.locals.uid;
+
+        } 
+        
+        //user is a admin
+        else if (response.locals.role == AuthRoles.Admin) {
+
+            //if the uid is not set on the parameter when called by an admin
+            if (!request.params.userID) {
+                return response.status(400).send({ message: 'Missing user ID when updating details by admin' })
+            }
+
+            //set the temp uid to be the one retrieved from the header
+            specifiedUID = request.params.userID;
+        }
+
+        
+        // get the user id from request parameters
+        // const { userID } = request.params;
+        // console.log("Fetching presentations for userID: " + userID);
+
+        //send error msg if no userID was provided
+        // if (!userID) {
+        //     return response.status(400).send({ message: "user ID is missing from request paramters"});
+        // }
+        
+        try {
+            
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const presentationRepo = connection.getRepository(Presentation);
+            //const userRepo = connection.getRepository(User);
+            
+            //all presentations for user
+            var allPresentationsForUser: Presentation[];
+            
+            //create a query to join the required tables together for the specific user
+            allPresentationsForUser = await presentationRepo.createQueryBuilder('presentation')
+
+                .select()
+
+                //join the relevant paper to the presentation
+                .leftJoinAndSelect("presentation.paper", "Paper")
+
+                //join the session to the presentation
+                .leftJoinAndSelect("presentation.session", "Session")
+
+                .leftJoinAndSelect("presentation.conference", "Conference")
+
+                //left join the user so that we only get presentations that match the user uuid
+                .leftJoin("presentation.user", "User")
+                .where("presentation.sessionSessionID IS NULL")
+                .andWhere("User.UUID = :id", { id: specifiedUID })
+
+
+                .getMany();
+        
+
+            
+            //send the array to the client
+            return response.status(200).send(allPresentationsForUser);
+            
+        } catch (error) {
+               return handleError(response, error);
+        }
+        
+    }
+
 
     //returns all the presentations from the database
     async getPresentationsForConference(request: Request, response: Response) {
@@ -333,7 +414,7 @@ export class PresentationController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { conferenceID, paperID, sessionID } = request.body;
+        const { conferenceID, paperID, sessionID, time } = request.body;
         
         //no name in body
         if(!conferenceID) {
@@ -396,6 +477,11 @@ export class PresentationController {
 
             //update the session for presentation
             fetchedPresentation.session = fetchedSession;
+
+            //if time was included
+            if (time) {
+                fetchedPresentation.presentationTime = dateFromUTCString(time);
+            }
 
             //save the conference back to db
             const updatedPresentation = await presentationRepo.save(fetchedPresentation);

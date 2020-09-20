@@ -1,5 +1,5 @@
 //imports
-import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, Column } from "typeorm";
 
 //import related entities
 import { Paper } from "../entities/paper";
@@ -14,6 +14,9 @@ export class Presentation extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     presentationID: number;
+
+    @Column({ nullable: true })
+    presentationTime: Date
 
 
     //relationships
