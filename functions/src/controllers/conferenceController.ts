@@ -27,11 +27,15 @@ export class ConferenceController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, submissionDeadline, organisationID } = request.body;
+        const { name, date, submissionDeadline, organisationID } = request.body;
         
         //no name in body
         if(!name) {
             return response.status(400).send({ message: "Missing name for conference"});
+        }
+
+        if(!date) {
+            return response.status(400).send({ message: "Missing conference submission deadline"});
         }
         
         if(!submissionDeadline) {
@@ -67,6 +71,9 @@ export class ConferenceController {
 
             //set the name for the conference
             newConference.conferenceName = name;
+
+            //set the conference date from the submission deadline
+            newConference.conferenceDate = dateFromUTCString(date);
 
             //convert the json date to proper date and store on conference cutoff
             newConference.conferenceSubmissionDeadline = dateFromUTCString(submissionDeadline); //new Date(Date.parse(submissionDeadline));
@@ -116,7 +123,46 @@ export class ConferenceController {
                 .leftJoinAndSelect('conference.organisation', 'Organisation')
 
                 //order by conference name asc
+                .orderBy("conference.conferenceDate", "DESC")
+
+                //get more than one
+                .getMany();
+
+            //send the conferences array to client with success code
+            return response.status(200).send(allConferences);
+            
+        } catch (error) {
+            return handleError(response, error);
+        }
+
+    }
+
+    //returns all the conferences from the database
+    async getPastConferences(request: Request, response: Response) {
+
+        try {
+
+            //create connection to database
+            const connection = await connect();
+
+            //store reference to conference repository
+            const repository = connection.getRepository(Conference);
+
+            //store all the conferences
+            var allConferences: Conference[];
+
+            //populate conference array with all conferences
+            allConferences = await repository.createQueryBuilder('conference')
+
+                //select all columns
+                .leftJoinAndSelect('conference.organisation', 'Organisation')
+
+                //order by conference name asc
                 .orderBy("conference.conferenceName", "ASC")
+
+                .where("conference.conferenceDate < :date", { date: new Date(new Date().toUTCString()) })
+
+                // .where("Conference.conferenceID = :id", { id: conferenceID })
 
                 //get more than one
                 .getMany();
@@ -180,10 +226,14 @@ export class ConferenceController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, submissionDeadline } = request.body;
+        const { name, date, submissionDeadline } = request.body;
         
         //no name in body
         if(!name) {
+            return response.status(400).send({ message: "Missing name for conference"});
+        }
+
+        if(!date) {
             return response.status(400).send({ message: "Missing name for conference"});
         }
 
@@ -205,8 +255,10 @@ export class ConferenceController {
             //update the conference properties
             fetchedConference.conferenceName = name;
 
+            fetchedConference.conferenceDate = dateFromUTCString(date);//new Date(Date.parse(submissionDeadline))
+
             //update the conference submission deadline
-            fetchedConference.conferenceSubmissionDeadline = new Date(Date.parse(submissionDeadline));
+            fetchedConference.conferenceSubmissionDeadline = dateFromUTCString(submissionDeadline);//new Date(Date.parse(submissionDeadline));
 
             //save the conference back to db
             const updatedconference = await repository.save(fetchedConference);
@@ -257,8 +309,6 @@ export class ConferenceController {
 
     //helper functions
     //handles an error and returns a response to the client
-
-
 }
 
 function handleError(res: Response, err: any) {

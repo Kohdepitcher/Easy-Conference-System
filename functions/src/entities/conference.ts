@@ -18,9 +18,14 @@ export class Conference extends BaseEntity {
     @Column()
     conferenceName: string;
 
+    @Column()
+    conferenceDate: Date;
+
     //cutoff date for submission
     @Column()
     conferenceSubmissionDeadline: Date;
+
+    
 
     //related organisation
     @ManyToOne( type => Organisation, organisation => organisation.conferences)
