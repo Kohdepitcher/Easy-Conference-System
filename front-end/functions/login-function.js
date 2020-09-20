@@ -1,19 +1,58 @@
-var loginButton = document.querySelector("#signInButton")
-var usernameText = document.querySelector("#usernameText")
-var passwordText = document.querySelector("#passText")
 
-var signUpButton = document.getElementById("signUpButton");
-
-usernameText.value = ""
-passwordText.value = ""
-
-usernameTouched = false;
-passwordTouched = false;
-
+//Sign up page needs functions from this file but doesnt share the same elements
+//Therefore, this checks if on the login page to do login stuff
 var page = location.href.split('/').pop()
 console.log(page)
 if (page != "sign-up.html") {
+    var loginButton = document.querySelector("#signInButton")
+    var usernameText = document.querySelector("#usernameText")
+    var passwordText = document.querySelector("#passText")
+
+    var signUpButton = document.getElementById("signUpButton");
+
+    usernameText.value = ""
+    passwordText.value = ""
+
+    usernameTouched = false;
+    passwordTouched = false;
+
     checkIfLogged();
+
+    loginButton.addEventListener("click", () => {
+        // login();
+        firebaseLogin(usernameText.value, passwordText.value);
+    })
+    
+    usernameText.addEventListener("focus", () => {
+        usernameTouched = true;
+    
+        if(usernameTouched && passwordTouched) {
+            document.addEventListener("keydown", (event) => {
+                if(event.keyCode == 13) {
+                    // login();
+                    firebaseLogin(usernameText.value, passwordText.value);
+                }
+            })
+        }
+    })
+    
+    passwordText.addEventListener("focus", () => {
+        passwordTouched = true;
+    
+        if(usernameTouched && passwordTouched) {
+            document.addEventListener("keydown", (event) => {
+                if(event.keyCode == 13) {
+                    // login();
+                    firebaseLogin(usernameText.value, passwordText.value);
+                }
+            })
+        }
+    })
+    
+    signUpButton.addEventListener("click", () => {
+        window.location.replace("sign-up.html");
+        checkIfLogged()
+    })
 }
 
 // const loadConferences = async () => {
@@ -121,38 +160,4 @@ const firebaseLogin = async (email, password) => {
 
 // loadConferences();
 
-loginButton.addEventListener("click", () => {
-    // login();
-    firebaseLogin(usernameText.value, passwordText.value);
-})
 
-usernameText.addEventListener("focus", () => {
-    usernameTouched = true;
-
-    if(usernameTouched && passwordTouched) {
-        document.addEventListener("keydown", (event) => {
-            if(event.keyCode == 13) {
-                // login();
-                firebaseLogin(usernameText.value, passwordText.value);
-            }
-        })
-    }
-})
-
-passwordText.addEventListener("focus", () => {
-    passwordTouched = true;
-
-    if(usernameTouched && passwordTouched) {
-        document.addEventListener("keydown", (event) => {
-            if(event.keyCode == 13) {
-                // login();
-                firebaseLogin(usernameText.value, passwordText.value);
-            }
-        })
-    }
-})
-
-signUpButton.addEventListener("click", () => {
-    window.location.replace("sign-up.html");
-    checkIfLogged()
-})

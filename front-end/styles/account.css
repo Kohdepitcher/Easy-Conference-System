@@ -168,18 +168,30 @@
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
 }
 
-#signUpButton button:hover {
+#signUpButton button:hover, #signInButton button:hover {
     background: rgb(0,0,0,0.6);
 }
 
 #signUpButton {
     order: 3;
-    margin-left: 40%;
+    margin-left: 30%;
     outline: none;
     border: none;
     border-radius: 10px;
     background: dodgerblue;
-    height: 100%;
+    cursor: pointer;
+    color: white;
+    height: 8%;
+    width: 15%;
+}
+
+#signInButton {
+    order: 3;
+    margin-left: 5%;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background: dodgerblue;
     cursor: pointer;
     color: white;
     height: 8%;
@@ -253,4 +265,5 @@
 
 .message {
     color: red;
+    text-align: center;
 }
