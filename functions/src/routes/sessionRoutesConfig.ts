@@ -2,8 +2,10 @@
 import { Application } from "express";
 
 //import the authentication and authorization functions
-// import { isAuthenticated } from "../auth/authenticated";
-// import { isAuthorized } from "../auth/authorized";
+import { isAuthenticated } from "../auth/authenticated";
+import { isAuthorized } from "../auth/authorized";
+
+import { AuthRoles } from "../globals"
 
 //import the session controller
 import { SessionController } from "../controllers/sessionController";
@@ -13,34 +15,34 @@ import { SessionController } from "../controllers/sessionController";
 export function sessionRoutesConfig(app: Application) {
 
     //CREATE
-    //creates a presentation
+    //creates a session
     app.post('/sessions', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new SessionController().createSession
     ])
 
     // READ
-    //get all sessions for user
-    // app.get('/sessions/:userID', [
-    //     // isAuthenticated,
-    //     // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
-    //     new  SessionController().getSessionsForUser
+    // get all sessions for user
+    app.get('/sessions/:userUID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
+        new  SessionController().getSessionsForUser
         
-    // ])
+    ])
 
     //get all sessions for conference
     app.get('/sessions-for-conferece/:conferenceID', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new  SessionController().getSessionsForConference
         
     ])
 
     //gets all presenters and paper for session
     app.get('/presenters-for-session/:sessionID', [
-        // isAuthenticated,
-        // isAuthorized({ hasRole: ['admin', 'manager', 'user'] }),
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new  SessionController().getPresentationsWithinSession
         
     ])
@@ -48,6 +50,8 @@ export function sessionRoutesConfig(app: Application) {
 
     //UPDATE
     app.patch('/sessions/:sessionID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
         new  SessionController().updateSession
     ])
 
