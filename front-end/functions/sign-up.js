@@ -25,7 +25,7 @@ signUpButton.addEventListener("click", () => {
         document.querySelector(".message").innerHTML = message
 
         //firebaseCreate(email, pass);
-        //firebaseLogin(email, pass);
+        firebaseLogin(email, pass); //for test
         //do username thingy
     }
 })
