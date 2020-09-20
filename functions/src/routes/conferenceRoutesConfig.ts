@@ -32,6 +32,13 @@ export function conferenceRoutesConfig(app: Application) {
         
     ])
 
+    //get all organisations
+    app.get('/past-conferences', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
+        new ConferenceController().getPastConferences
+        
+    ])
 
     //get specific organisation
     app.get('/conferences/:conferenceID', [
