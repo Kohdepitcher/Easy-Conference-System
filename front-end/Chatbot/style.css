@@ -1,0 +1,36 @@
+.wrapper {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.chatbot-box {
+    height: 40%;
+    width: 20%;
+    background: dodgerblue;
+}
+
+.message-area {
+    width: 100%;
+    height: 90%;
+}
+
+.sending-area {
+    height: 9%;
+    width: 100%;
+    display: flex;
+}
+
+.sending-area input[type="text"] {
+    order: 1;
+    width: 80%;
+    outline: none;
+    border: none;
+}
+
+.sending-area button {
+    width: 20%;
+    order: 2;
+}
