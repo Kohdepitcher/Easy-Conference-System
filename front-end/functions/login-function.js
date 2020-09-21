@@ -19,7 +19,15 @@ if (page != "sign-up.html") {
 
 loginButton.addEventListener("click", () => {
     // login();
-    firebaseLogin(usernameText.value, passwordText.value);
+    var user = document.getElementById("usernameText").value;
+    var pass = document.getElementById("passText").value;
+    if (user.length == 0 || pass.length == 0) {
+        var message = "Please do not leave details blank"
+        document.querySelector(".message").innerHTML = message
+    }
+    else {
+        firebaseLogin(usernameText.value, passwordText.value);
+    }
 })
 
 usernameText.addEventListener("focus", () => {
@@ -29,7 +37,15 @@ usernameText.addEventListener("focus", () => {
         document.addEventListener("keydown", (event) => {
             if(event.keyCode == 13) {
                 // login();
-                firebaseLogin(usernameText.value, passwordText.value);
+                var user = document.getElementById("usernameText").value;
+                var pass = document.getElementById("passText").value;
+                if (user.length == 0 || pass.length == 0) {
+                    var message = "Please do not leave details blank"
+                    document.querySelector(".message").innerHTML = message
+                }
+                else {
+                    firebaseLogin(usernameText.value, passwordText.value);
+                }
             }
         })
     }
@@ -42,7 +58,15 @@ passwordText.addEventListener("focus", () => {
         document.addEventListener("keydown", (event) => {
             if(event.keyCode == 13) {
                 // login();
-                firebaseLogin(usernameText.value, passwordText.value);
+                var user = document.getElementById("usernameText").value;
+                var pass = document.getElementById("passText").value;
+                if (user.length == 0 || pass.length == 0) {
+                    var message = "Please do not leave details blank"
+                    document.querySelector(".message").innerHTML = message
+                }
+                else {
+                    firebaseLogin(usernameText.value, passwordText.value);
+                }
             }
         })
     }

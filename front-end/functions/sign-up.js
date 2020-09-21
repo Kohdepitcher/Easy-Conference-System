@@ -10,7 +10,8 @@ signUpButton.addEventListener("click", () => {
     var country = countryDropDown.value; 
     var timezone = Date.now();
 
-    console.log(country)
+    console.log(country);
+    console.log(email);
 
     if (email.length == 0 || pass.length == 0 || user.length == 0 || confirmPass.length == 0) {
         var message = "Please do not leave details blank"
@@ -27,7 +28,7 @@ signUpButton.addEventListener("click", () => {
         document.querySelector(".message").innerHTML = message
 
         //firebaseCreate(email, pass);   
-        firebaseLogin(email, pass)
+        firebaseLogin(email, pass);
         setUsername(user, email, country, timezone);
         //window.location.replace("index.html");
 
@@ -80,7 +81,7 @@ const firebaseLogin = async (email, password) => {
 }
 
 const setUsername = async (name, email, country, timezone) => {
-    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/:uid", {
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + sessionStorage.getItem("UserID"), {
         method: "PATCH",
         headers: new Headers({
             Authorization: sessionStorage.getItem("BearerAuth"),
