@@ -32,9 +32,10 @@ else {
     console.log(possibleTimeDependentGreetings[2] + ", " + userName)
 }
 
-addSuggestedOption("Buy Something")
-addSuggestedOption("Sell Something")
-addSuggestedOption("Manage Something")
+addSuggestedOption("Creating a Conference")
+addSuggestedOption("Publishing a Paper")
+addSuggestedOption("When is my session?")
+addSuggestedOption("When is my conference?")
 
 function addSuggestedOption(message) {
     suggestions.push(message)
