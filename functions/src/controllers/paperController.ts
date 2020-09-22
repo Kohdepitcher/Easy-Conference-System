@@ -117,7 +117,7 @@ export class PaperController {
         if (response.locals.role == AuthRoles.presenter) {
 
             //fetch the uid from the token instead
-            specifiedUID = response.locals.userID;
+            specifiedUID = response.locals.uid;
 
         } 
         
