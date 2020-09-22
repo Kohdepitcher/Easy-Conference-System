@@ -263,11 +263,6 @@
     text-indent: 10px;
 }
 
-.message {
-    color: red;
-    text-align: center;
-}
-
 .country-input-title {
     text-indent: 10px;
     line-height: 6vh;
@@ -278,3 +273,11 @@
     margin-left: 16%;
     margin-top: 3%;
 }
+
+#country-dropdown {
+    border-radius: 10px;
+    border: none;
+    text-indent: 10px;
+}
+
+

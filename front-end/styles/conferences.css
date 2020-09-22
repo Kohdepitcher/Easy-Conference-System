@@ -3,7 +3,7 @@
     background: rgb(59, 59, 59);
     border-radius: 10px;
 
-    overflow: hidden;
+    overflow-x: hidden;
 
     background: dodgerblue;
 }
@@ -51,6 +51,7 @@
     background: #424242;
 
     border-spacing: 0;
+    overflow-y: auto;
 }
 
 .material-thead {
@@ -113,6 +114,10 @@
 
 .td-rest {
     padding: 0;
+}
+
+.conference-table-body {
+    overflow-y: auto;
 }
 
 /* tr :nth-child(even) {
