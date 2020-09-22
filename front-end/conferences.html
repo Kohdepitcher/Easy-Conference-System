@@ -24,7 +24,7 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
             <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
 
-            <style>
+            <!-- <style>
                 /* .bootstrap-datetimepicker-widget table tr th {
                                color: #000;
                 } */
@@ -47,7 +47,7 @@
 
                 
 
-            </style>
+            </style> -->
         </head>
     <body>
         <div class="wrapper">
@@ -227,6 +227,109 @@
                 </div>
               </div>
 
+
+              <!-- edit conf mode -->
+              <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Edit Conference</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newConferenceForm">
+
+                            <!-- conference name -->
+                            <div class="form-group">
+                              <label for="conferenceNameInput">Conference Name</label>
+                              <input type="text" class="form-control" id="editConferenceName" aria-describedby="emailHelp" placeholder="E.g. ICCMS 2020">
+                              <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              <div class="invalid-feedback">
+                                Please give conference a name.
+                              </div>
+                            </div>
+
+                            <!-- conference organisation -->
+                            <div class="form-group">
+                              <label for="newOrganisationSelector">Conference Organisation</label>
+                              <select class="form-control" id="editConferenceOrganisation">
+                                <option value="" disabled selected>Choose...</option>
+                              </select>
+                              <div class="invalid-feedback">
+                                Please select a organisation.
+                              </div>
+                            </div>
+
+                            <!-- conference date -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDateInput">Conference Date</label>
+                                <input type="date" class="form-control" id="newConferenceDate" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Conference Date</label>
+                            <div class="input-group date" id="editConferenceDatePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#conferenceDatePicker"/> -->
+                                <!-- <div class="input-group-append" data-target="#conferenceDatePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#editConferenceDatePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            <!-- conference submission deadline -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDeadLineInput">Conference Submission Deadline</label>
+                                <input type="datetime" class="form-control" id="newConferenceDeadLine" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted">Nominations will be rejected after this time and date</small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Submission Deadline</label>
+                              <div class="input-group date" id="editSubmissionDeadLinePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#submissionDeadLinePicker"/>
+                                <div class="input-group-append" data-target="#submissionDeadLinePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                        
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#editSubmissionDeadLinePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            
+                            <!-- <button type="button" class="btn btn-primary"  onsubmit="createConference()">Create Conferece</button> -->
+                          </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Create</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
         </div>

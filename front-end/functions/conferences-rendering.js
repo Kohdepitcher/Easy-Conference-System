@@ -4,6 +4,14 @@ function Organisation(organisationID, organisationName) {
     this.organisationName = organisationName;
 }
 
+function Conferece(conferenceID, conferenceName, conferenceDate, conferenceDeadLine, organisationID) {
+    this.conferenceID = conferenceID;
+    this.conferenceName = conferenceName;
+    this.conferenceDate = conferenceDate;
+    this.conferenceDeadLine = conferenceDeadLine;
+    this.organisationID = organisationID;
+}
+
 //refereces to dom elements
 const conferenceTable = document.querySelector(".conference-table");
 const conferenceTableRow = document.querySelector(".conference-table-row");
@@ -65,13 +73,22 @@ const loadOrganisations = async () => {
             // populate the organisations options list
             for (var i in organisations) {
 
+                //populate new modal organisation selector
                 var topicFromIndex = organisations[i]
                 var option = document.createElement("option")
 
                     option.textContent = topicFromIndex.organisationName;
                     option.value = topicFromIndex.organisationID;
                     
-                newConfOrganSelector.appendChild(option)
+                newConfOrganSelector.appendChild(option);
+
+
+                var editOption = document.createElement("option");
+                    editOption.textContent = topicFromIndex.organisationName;
+                    editOption.value = topicFromIndex.organisationID;
+
+                document.getElementById("editConferenceOrganisation").appendChild(editOption);
+
 
             }
 
@@ -100,6 +117,10 @@ const loadActiveConferences = async () => {
         
         // For every conference, call all the presentations associated with it
         for (var x in res) {
+
+            var newConf = new Conferece(res[x]["conferenceID"],res[x]["conferenceName"],res[x]["conferenceDate"],res[x]["conferenceSubmissionDeadline"], res[x]["organisation"]["organisationID"])
+            conferences.push(newConf)
+
             console.log(res[x]["conferenceName"])
 
             //create table row data
@@ -131,7 +152,7 @@ const loadActiveConferences = async () => {
             
             
             //create each action button
-            //create edit button
+            
             var nominateButton = document.createElement("button");
                 nominateButton.className = "button button-action"
                 nominateButton.innerHTML = "Nominate"
@@ -151,17 +172,35 @@ const loadActiveConferences = async () => {
                     nominateButton.disabled = true;
                 }
 
-
+            //create edit button        
             var editButton = document.createElement("button");
                 editButton.className = "button button-action-2"
                 editButton.innerHTML = "Edit"
+                editButton.id = res[x]["conferenceID"]
+                editButton.onclick = (event) => {
 
+                    
+                    //get the conference from the array that matched the same id as the button
+                    desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+                    
+                    //set the name and organisation selector values from conference
+                    document.getElementById("editConferenceName").value = desiredConf.conferenceName
+                    document.getElementById("editConferenceOrganisation").value = desiredConf.organisationID
+
+                    //set the date pickers to the conference date and deadline
+                    var conferenceDatePicker = $('#editConferenceDatePicker').datetimepicker('date', moment(desiredConf.conferenceDate));
+                    var submissionDeadLinePicker = $('#editSubmissionDeadLinePicker').datetimepicker('date', moment(desiredConf.conferenceDeadLine));
+
+                    //show the edit modal
+                    $('#editModal').modal({ show: true})
+
+                }
+
+            //create delete button
             var deleteButton = document.createElement("button")
                 deleteButton.className = "button button-warning"
                 deleteButton.innerHTML = "Delete"
-            // <button class="button button-action">Nominate</button>
-            // <button class="button button-action-2">Edit</button>
-            // <button class="button button-warning">Delete</button>"
+
 
             //if an admin, only show edit and delete buttons
             if(sessionStorage.getItem("Role") == "admin") {
@@ -185,6 +224,8 @@ const loadActiveConferences = async () => {
             conferenceTableBody.appendChild(tableRow); 
                 
             }
+
+            
         }).catch(e => {
             console.log(e);
 
@@ -202,9 +243,6 @@ async function createConference() {
     var conferenceDatePicker = $('#conferenceDatePicker').datetimepicker('viewDate');
     var submissionDeadLinePicker = $('#submissionDeadLinePicker').datetimepicker('viewDate');
 
-    // console.log(conferenceDatePicker.date())
-    
-
     //validation
     if (conferenceName.value != "" && organisation.selectedIndex != "0") {
 
@@ -219,11 +257,7 @@ async function createConference() {
 
     }
 
-    
-
-    // alert("test")
-
-    //submit the form
+    //submit the form - will refresh the page and show the new conf
     document.getElementById("newConferenceForm").submit()
 }
 
@@ -232,6 +266,28 @@ async function createConference() {
 const sendNewConferece = async (name, date, deadLine, organisationID) => {
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences", {
         method: "POST",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+            "name": name,
+            "organisationID": organisationID,
+            "date": date,
+            "submissionDeadline": deadLine
+        })
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+    }).catch(e => {
+        console.log(e)
+    })
+}
+
+//updates a conference
+const updateConferece = async (confID, name, date, deadLine, organisationID) => {
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences/" + confID, {
+        method: "PATCH",
         headers: new Headers({
             Authorization: sessionStorage.getItem("BearerAuth"),
             'Accept': 'application/json',
