@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 //import database connection
 import { connect } from "../config";
 
+import { AuthRoles } from "../globals"
+
 //entities
 import { Session } from "../entities/session";
 // import { User } from "../entities/user";
@@ -252,6 +254,115 @@ export class SessionController {
 
             //send the session to the client
             return response.status(200).send(presentersForSession);
+            
+        } catch (error) {
+               return handleError(response, error);
+        }
+
+    }
+
+    //returns all the sessions from the database for a conferece
+    async getSessionsForUser(request: Request, response: Response) {
+
+        //temp store a UID that will be set soon
+        var specifiedUID: string;
+
+        //if a user is a presenter
+        if (response.locals.role == AuthRoles.presenter) {
+
+            //fetch the uid from the token instead
+            specifiedUID = response.locals.uid;
+
+        } 
+        
+        //user is a admin
+        else if (response.locals.role == AuthRoles.Admin) {
+
+            //if the uid is not set on the parameter when called by an admin
+            if (!request.params.userUID) {
+                return response.status(400).send({ message: 'Missing user UID when updating details by admin' })
+            }
+
+            //set the temp uid to be the one retrieved from the header
+            specifiedUID = request.params.userUID;
+        }
+
+        // get the conference id from request parameters
+        // const { userUID } = request.params;
+        console.log("Fetching sessions for userUID: " + specifiedUID);
+
+        //send error msg if no conferenceID was provided
+        // if (!specifiedUID) {
+        //     return response.status(400).send({ message: "user UID is missing from request paramters"});
+        // }
+        
+        try {
+            
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const sessionRepo = connection.getRepository(Session);
+            //const userRepo = connection.getRepository(User);
+            
+            //all sessions for user
+            var allSessionsForConference: Session[];
+            
+            //create a query to join the required tables together for the specific user
+            allSessionsForConference = await sessionRepo.createQueryBuilder('session')
+
+            .select()
+
+            // //join the relevant paper to the session
+            // .leftJoinAndSelect("session.paper", "Paper")
+
+            // //join the session to the session
+            // .leftJoinAndSelect("session.session", "Session")
+
+            //need to also join the presentations to the session
+            .leftJoinAndSelect("session.presentations", "Presentation")
+
+            //need to also join the paper to each presentation
+            .leftJoinAndSelect("Presentation.paper", "Paper")
+
+            //need to also join the author to each paper
+            .leftJoinAndSelect("Presentation.user", "User")
+            // .leftJoinAndSelect("Presentation", "presentation", "presentation.sessionSessionID = session.sessionID")
+
+            // .leftJoinAndSelect("session.presentations.presentation.paper", "Paper")
+            // .leftJoinAndSelect("presentation.paper", "Paper")
+            // .where("Paper.paperID = Presentation.paperPaperID")
+
+            //need to also join the paper to the presentation
+            // .leftJoinAndSelect("paper", "Paper", "Paper.paperID = Presentation.paperPaperID")
+            // .leftJoinAndMapMany("presentation.paperPaperID", "paper.paperID", "Paper")
+
+            // .leftJoinAndSelect(Paper, "paper", "paper.paperID = Presentation.paperPaperID")
+            // .leftJoinAndMapOne("Presentation.paperPaperID", "Paper.PaperID", "paper")
+
+            //left join the conference to the session so that we only get sessions that match the conference id
+            .leftJoinAndSelect("session.conference", "Conference")
+            
+            
+            .where("User.UUID = :id", { id: specifiedUID })
+
+            //order by date asc
+            .orderBy("session.date", "ASC")
+
+            //then order by start time
+            .addOrderBy("session.startTime", "ASC")
+
+            
+
+            .printSql()
+
+            .getRawMany();
+            
+        
+
+            
+            //send the array to the client
+            return response.status(200).send(allSessionsForConference);
             
         } catch (error) {
                return handleError(response, error);
