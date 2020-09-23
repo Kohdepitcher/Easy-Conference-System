@@ -2,7 +2,6 @@ var editAccountButton = document.querySelector(".account-button");
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
-
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
 })
@@ -61,7 +60,7 @@ const loadActiveConferences = async () => {
                 tableNode.onclick = (event) => {
                     console.log(event.target.id)
                     sessionStorage.setItem("confID", event.target.id);
-                    window.location.replace("indiv-conference.html");
+                    window.location.href = "indiv-conference.html";
                 }
 
                 tableNode.appendChild(cNode)
@@ -170,7 +169,7 @@ const loadCurrentGroups = async () => {
                     tableNode.onclick = (event) => {
                         console.log(event.target.id)
                         sessionStorage.setItem("sessID", event.target.id);
-                        window.location.replace("indiv-session.html");
+                        window.location.href = "indiv-session.html"
                     }
 
                     //set the new nodes to the table
