@@ -116,12 +116,6 @@
         line-height: 7vh;
     }
 
-
-
-
-
-
-
 /* Sign-In Fields */
     .sign-in-box {
         height: 50%;
@@ -250,9 +244,9 @@
         width: 100%;
         text-align: center;
         color: white;
-        position: absolute;
+        position: fixed;
         bottom: 0;
-        background: rgb(0,0,0,0.1);
+        background: #232323;
         line-height: 5vh;
     }
 
