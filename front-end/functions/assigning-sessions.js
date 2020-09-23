@@ -62,6 +62,8 @@ function groupSessionsToTimezone(presentations, days) {
     console.log(sortedPres)
     console.log("Sessions split into timezones: ");
     console.log(arrangedSessions)
+
+    reshuffleSessions(arrangedSessions, hourDiff)
 }
 
 const loadPresentations = async () => {
@@ -77,7 +79,9 @@ const loadPresentations = async () => {
 
         // Still need maximums, minimums and durations
         for(var x in res) {
-            presList.push(res[x])
+            if(res[x]["session"] == null) {
+                presList.push(res[x])
+            }
         }
 
         presList.push({
@@ -165,6 +169,76 @@ const loadPresentations = async () => {
     }).catch(e => {
         console.log(e)
     })
+}
+
+function reshuffleSessions(sessions, gapSize) {
+    var lengths = []
+    var onesOrTwos = []
+    var reshuffled = sessions
+
+    console.log(sessions)
+
+    for(var x in sessions) {
+        lengths.push(sessions[x].length)
+    }
+
+    for(var y in sessions) {
+        if(sessions[y].length <= 2) {
+            onesOrTwos.push(sessions[y])
+            var removedElement = sessions.splice(parseInt(y), 1)
+        }
+        else {
+            while(sessions[y].length >= 3 && sessions[y].length < 6) {
+                sessions[y].push(onesOrTwos[onesOrTwos.length - 1])
+                onesOrTwos.pop()
+            }
+        }
+    }
+
+    var newArray = []
+
+    for(var z in onesOrTwos) {
+        console.log(onesOrTwos[z])
+        // newArray.push(onesOrTwos[z])
+        // console.log(newArray)
+    }
+
+    sessions.push(newArray)
+    // for(var z in onesOrTwos) {
+    //     console.log(onesOrTwos[z][0])
+    //     if(parseInt(z) == 0) {
+    //         newArray.push(onesOrTwos[onesOrTwos.length - 1][0])
+    //         onesOrTwos.pop()
+    //     }
+    //     else if(parseInt(onesOrTwos[z][0]["user"]["timeZone"]) <= parseInt(newArray[0]["user"]["timeZone"]) + gapSize && parseInt(onesOrTwos[z][0]["user"]["timeZone"]) >= parseInt(newArray[0]["user"]["timeZone"]) - gapSize) {
+    //         newArray.push(onesOrTwos[onesOrTwos.length - 1][0])
+    //         onesOrTwos.pop()
+
+    //         if(newArray.length == 6 || parseInt(z) == onesOrTwos.length - 1) {
+    //             sessions.push(newArray)
+    //             newArray = []
+    //         }
+    //     }
+    // }
+
+    // for(var y in lengths) {
+    //     if(lengths[y] < 2) {
+    //         onesOrTwos.push(sessions[y])
+    //     }
+
+    //     if(sessions[y].length >= 3 && sessions[y].length < 6) {
+    //         while(sessions[y].length > 6) {
+    //             console.log(y)
+    //             sessions[y].push(onesOrTwos[0])
+    //             var removedItem = onesOrTwos.splice(0, 1);
+    //             console.log("Removed: ")
+    //             console.log(removedItem)
+    //         }
+    //     }
+    // }
+
+    console.log(onesOrTwos)
+    console.log(sessions)
 }
 
 loadPresentations();
