@@ -2,7 +2,6 @@
 - connect to api to create papers
 - create organisation table, assign topics
 - add functionality for edit conferences
-- add functionality for a sort function
 - notifications for changes to session or group (Email)
 - notifications for upcoming session time (Email)
 - implement CHAD functionality
