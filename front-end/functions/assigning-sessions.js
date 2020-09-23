@@ -159,7 +159,8 @@ const loadPresentations = async () => {
                 "userID": 4
             }
         })
-
+        
+        // Needs to be patched so that it works out how many days there are between the start of the conference and the end
         groupSessionsToTimezone(presList, 3)
     }).catch(e => {
         console.log(e)

@@ -170,7 +170,7 @@ const loadCurrentGroups = async () => {
                     tableNode.onclick = (event) => {
                         console.log(event.target.id)
                         sessionStorage.setItem("sessID", event.target.id);
-                        // window.location.replace("indiv-session.html");
+                        window.location.replace("indiv-session.html");
                     }
 
                     //set the new nodes to the table
