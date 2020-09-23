@@ -3,26 +3,32 @@
 /* box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5); */
 
 .inner-wrapper {
+    height: 80%;
+    width: 100%;
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
+    position: absolute;
 }
 
 .inner-box {
+    order: 2;
+    height: 80%;
+    width: 100%;
     display: flex;
     flex-direction: row;
-    order: 2;
 }
 
 /* Welcome */
 .welcome-box {
     width: 60%;
-    height: 28%;
+    height: 42%;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
     border-radius: 10px;
-    position: absolute;
-    top: 10%;
-    right: 20%;
+    position: relative;
+    top: 5%;
+    left: 20%;
     display: flex;
     flex-direction: row;
     order: 1;
@@ -68,23 +74,23 @@
 /* Current Groupings */
 .current-grouping {
     order: 1;
-    width: 10%;
-    background-color: pink;
+    width: 50%;
 }
+
 .current-groupings-label {
     text-align: left;
     color: white;
     font-size: 180%;
-    margin-top: 17%;
-    margin-left: 20%;
+    margin-top: 10%;
+    margin-left: 5%;
 }
 
 .current-groupings-box {
-    height: 40%;
-    width: 60%;
-    position: absolute;
-    top: 50%;
-    right: 20%;
+    height: 60%;
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
     background: rgb(59, 59, 59);
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
@@ -98,7 +104,10 @@
     flex-direction: row;
     border-radius: 10px 10px 0px 0px;
     font-weight: bold;
-    line-height: 5%;
+}
+
+.current-groupings-headers .indiv-header {
+    line-height: 4.68vh;
 }
 
 .current-groupings-text {
@@ -121,24 +130,25 @@
 /* Awaiting Presentations */
 .presentation-awaiting {
     order: 2;
-    width: 10%;
-    background-color: green;
+    width: 50%;
 }
 
 .presentation-awaiting-label {
     text-align: left;
     color: white;
     font-size: 180%;
-    margin-top: 17%;
-    margin-left: 20%;
+    margin-top: 10%;
+    margin-left: 5%;
 }
 
 .presentation-awaiting-box {
-    height: 40%;
-    width: 60%;
-    position: absolute;
-    top: 50%;
-    right: 20%;
+    height: 60%;
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    /* top: 50%;
+    right: 20%; */
     background: rgb(59, 59, 59);
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
@@ -152,10 +162,15 @@
     flex-direction: row;
     border-radius: 10px 10px 0px 0px;
     font-weight: bold;
-    line-height: 5%;
 }
 
-.presentation-awaiting-text {
+.presentation-awaiting-headers .indiv-header {
+    line-height: 4.68vh;
+}
+
+.presentations-awaiting-text {
     color: white;
-    overflow: auto;
+    height: 85%;
+    width: 100%;
+    overflow-y: auto;
 }

@@ -162,8 +162,8 @@ const loadCurrentGroups = async () => {
                     conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
                     sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
                     dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toDateString()
-                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString()
-                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString()
+                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                     paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
 
                     tableNode.onclick = (event) => {
@@ -255,7 +255,7 @@ const loadUnassignedSessions = async () => {
                     tableNode.appendChild(sessionNode)
                     
 
-                    document.querySelector(".presentations-missing-sessions").appendChild(tableNode)
+                    document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
                         document.querySelector(".loading-box").style.display = "none"
