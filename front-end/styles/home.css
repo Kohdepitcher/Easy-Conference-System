@@ -22,7 +22,7 @@
 /* Welcome */
 .welcome-box {
     width: 60%;
-    height: 42%;
+    height: 20%;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
     border-radius: 10px;
@@ -37,7 +37,7 @@
 .welcome-text {
     order: 1;
     height: 60%;
-    margin-top: 7%;
+    margin-top: 3%;
 }
 
 .welcome-label {
@@ -58,16 +58,16 @@
 }
 
 .account-icon {
-    height: 10vw;
-    width: 10vw;
+    height: 5vw;
+    width: 5vw;
     border-radius: 100%;
     background: #CCC;
     order: 1;
     margin-right: 3%;
-    margin-top: 3%;
+    margin-top: 2.5%;
     margin-left: 20%;
     text-align: center;
-    line-height: 10vw;
+    line-height: 5vw;
     font-size: 180%;
 }
 

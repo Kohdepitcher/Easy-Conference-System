@@ -161,7 +161,7 @@ const loadCurrentGroups = async () => {
                     //set the inner contents of the new row elements
                     conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
                     sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
-                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toDateString()
+                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toLocaleDateString()
                     startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                     endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                     paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
@@ -236,7 +236,7 @@ const loadUnassignedSessions = async () => {
                     conferenceNode.innerHTML = res1[x]["conference"]["conferenceName"]
 
                     if (res1[x]["session"] == null) {
-                        sessionNode.innerHTML = "Waiting Assignment"
+                        sessionNode.innerHTML = new Date(res1[x]["conference"]["conferenceSubmissionDeadline"]).toLocaleDateString()
                     }
 
                     
