@@ -6,6 +6,7 @@
     overflow-x: hidden;
 
     background: dodgerblue;
+    margin-bottom: 5%;
 }
 
 
@@ -114,10 +115,6 @@
 
 .td-rest {
     padding: 0;
-}
-
-.conference-table-body {
-    overflow-y: auto;
 }
 
 /* tr :nth-child(even) {
