@@ -34,6 +34,9 @@ var conferences = [];
 //array to store all the organisations
 var organisations = []
 
+//track the selectedConference
+var selectedConference = null;
+
 function showSpinner(shouldShow) {
     if (shouldShow == true) {
         loadingSpinner.style.cssText = "display: flex !important"
@@ -191,6 +194,8 @@ const loadActiveConferences = async () => {
                     var conferenceDatePicker = $('#editConferenceDatePicker').datetimepicker('date', moment(desiredConf.conferenceDate));
                     var submissionDeadLinePicker = $('#editSubmissionDeadLinePicker').datetimepicker('date', moment(desiredConf.conferenceDeadLine));
 
+                    selectedConference = desiredConf.conferenceID
+
                     //show the edit modal
                     $('#editModal').modal({ show: true})
 
@@ -248,17 +253,65 @@ async function createConference() {
 
         //convert the dates to utc
         var date = new moment(conferenceDatePicker).seconds(0).milliseconds(0).utc();
-            
-
         var deadLine = new moment(submissionDeadLinePicker).seconds(0).milliseconds(0).utc();
             
-
+        //patch the edited conference
         const result = await sendNewConferece(conferenceName.value, date.format(), deadLine.format(), organisation.value)
-
     }
 
     //submit the form - will refresh the page and show the new conf
     document.getElementById("newConferenceForm").submit()
+}
+
+//edit conference
+async function updateSelectedConference() {
+
+    //get the name and organisation selector values from conference
+    const conferenceName = document.getElementById("editConferenceName")
+    const organisation = document.getElementById("editConferenceOrganisation")
+
+    //get the date pickers to the conference date and deadline
+    var conferenceDatePicker = $('#editConferenceDatePicker').datetimepicker('viewDate');
+    var submissionDeadLinePicker = $('#editSubmissionDeadLinePicker').datetimepicker('viewDate');
+
+    console.log(selectedConference)
+
+    //validation
+    if (conferenceName.value != "" && organisation.selectedIndex != "0" && selectedConference != null) {
+
+        //convert the dates to utc
+        var date = new moment(conferenceDatePicker).seconds(0).milliseconds(0).utc();
+        var deadLine = new moment(submissionDeadLinePicker).seconds(0).milliseconds(0).utc();
+            
+        
+            await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences/" + selectedConference, {
+            method: "PATCH",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                "name": conferenceName.value,
+                "organisationID": organisation.value,
+                "date": date.format(),
+                "submissionDeadline": deadLine.format()
+            })
+        }).then(response => response.json()).then(res => {
+            // console.log(res)
+
+            //set the selected conference back to null
+            selectedConference = null;
+
+            //submit the form - will refresh the page and show the new conf
+            document.getElementById("newConferenceForm").submit()
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }
+
+    
 }
 
 
@@ -300,7 +353,11 @@ const updateConferece = async (confID, name, date, deadLine, organisationID) => 
             "submissionDeadline": deadLine
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
+        // console.log(res)
+
+        //set the selected conference back to null
+        selectedConference = null;
+
     }).catch(e => {
         console.log(e)
     })
