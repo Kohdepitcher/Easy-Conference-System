@@ -139,6 +139,14 @@
 }
 
 /* Past conferences */
+.past-groupings-box {
+    height: 80%;
+    width: 100%;
+    position: relative;
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+}
+
 .past-groupings-headers {
     height: 15%;
     width: 100%;
