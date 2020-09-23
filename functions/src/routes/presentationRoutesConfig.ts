@@ -42,7 +42,7 @@ export function presentationRoutesConfig(app: Application) {
     //get all presentations for conference
     app.get('/presentations-for-conference/:conferenceID', [
         isAuthenticated,
-        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        isAuthorized({ hasRole: [AuthRoles.Admin, AuthRoles.presenter] }),
         new  PresentationController().getPresentationsForConference
         
     ])

@@ -5,3 +5,4 @@
 - notifications for changes to session or group (Email)
 - notifications for upcoming session time (Email)
 - implement CHAD functionality
+- maybe sort by conferences
