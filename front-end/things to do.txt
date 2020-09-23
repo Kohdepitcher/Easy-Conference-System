@@ -1,5 +1,5 @@
 - Connect to api to edit and create sessions {Ceejay}
-- connect to api to create papers
+- add papers to sessions once created
 - create organisation table, assign topics
 - add functionality for edit conferences
 - notifications for changes to session or group (Email)
