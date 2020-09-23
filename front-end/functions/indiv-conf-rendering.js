@@ -158,8 +158,13 @@ const loadSessions = async () => {
                                 var presentationsTime = document.createElement("div")
                                 var presentationsTopic = document.createElement("div")
                                 var presentationsAuthor = document.createElement("div")
-                
-                                presentationsTime.innerHTML = "Unknown Time"
+                                
+                                if (presentations[y]["presentationTime"] == null) {
+                                    presentationsTime.innerHTML = "Unknown Time"
+                                }
+                                else {
+                                    presentationsTime.innerHTML = moment(new Date(presentations[y]["presentationTime"]).toString()).format("HH:mm");
+                                }
                                 presentationsAuthor.innerHTML = presentations[y]["user"]["name"]
                                 presentationsTopic.innerHTML = presentations[y]["paper"]["paperTitle"]
                                         
