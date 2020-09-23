@@ -7,6 +7,12 @@
     flex-direction: column;
 }
 
+.inner-box {
+    display: flex;
+    flex-direction: row;
+    order: 2;
+}
+
 /* Welcome */
 .welcome-box {
     width: 60%;
@@ -60,13 +66,17 @@
 }
 
 /* Current Groupings */
+.current-grouping {
+    order: 1;
+    width: 10%;
+    background-color: pink;
+}
 .current-groupings-label {
     text-align: left;
     color: white;
     font-size: 180%;
     margin-top: 17%;
     margin-left: 20%;
-    order: 2;
 }
 
 .current-groupings-box {
@@ -78,7 +88,6 @@
     background: rgb(59, 59, 59);
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
-    order: 3;
 }
 
 .current-groupings-headers {
@@ -109,3 +118,44 @@
     width: 100%;
 }
 
+/* Awaiting Presentations */
+.presentation-awaiting {
+    order: 2;
+    width: 10%;
+    background-color: green;
+}
+
+.presentation-awaiting-label {
+    text-align: left;
+    color: white;
+    font-size: 180%;
+    margin-top: 17%;
+    margin-left: 20%;
+}
+
+.presentation-awaiting-box {
+    height: 40%;
+    width: 60%;
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+}
+
+.presentation-awaiting-headers {
+    height: 15%;
+    width: 100%;
+    background: dodgerblue;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+    line-height: 5%;
+}
+
+.presentation-awaiting-text {
+    color: white;
+    overflow: auto;
+}
