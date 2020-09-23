@@ -1,4 +1,4 @@
-- Connect to api to edit and create sessions {Ceejay}
+- Connect to api to edit and create sessions {Ceejay} // Maybe not
 - connect to api to create papers
 - create organisation table, assign topics
 - add functionality for edit conferences

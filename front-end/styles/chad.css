@@ -1,0 +1,120 @@
+.chad-box {
+    height: 60vh;
+    width: 25vw;
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    display: flex;
+    flex-direction: row;
+}
+
+.chad-message-area {
+    order: 1;
+    height: 0;
+    width: 0;
+    opacity: 0;
+    background: white;
+    transition: 0.2s;
+    border-radius: 10px;
+}
+
+
+.name-area {
+    height: 10%;
+    width: 100%;
+    background: dodgerblue;
+    text-align: center;
+    line-height: 4vh;
+    color: white;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.chad-icon {
+    order: 2;
+    height: 5vw;
+    width: 5vw;
+    background: lightgreen;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+
+    background-color: rgb(0,0,0,0.1);
+    background-blend-mode: soft-light;
+    background-image: url("https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782_1280.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.chad-icon:hover {
+    background-color: rgb(0,0,0,0.5);
+}
+
+.message-bay {
+    height: 73%;
+    width: 100%;
+    overflow-y: auto;
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+
+.message-input {
+    height: 15%;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+    display: flex;
+    background: dodgerblue;
+    border-bottom: 4px solid dodgerblue;
+}
+
+.message-input input {
+    width: 75%;
+    border-radius: 0px 0px 0px 10px;
+    outline: none;
+    text-indent: 10px;
+    border: 3px solid dodgerblue;
+}
+
+.message-input button {
+    width: 25%;
+    border-radius: 0px 0px 10px 0px;
+    background: dodgerblue;
+    color: white;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.message-input button:hover {
+    background: rgb(0,0,0,0.9);
+}
+
+.recieved-message {
+    min-height: 10%;
+    width: 60%;
+    float: right;
+    margin-right: 2%;
+    margin-top: 2%;
+    background: grey;
+    border-radius: 10px;
+}
+
+.recieved-message p {
+    margin: 8px;
+}
+
+.sent-message p {
+    margin: 8px;
+}
+
+.sent-message {
+    min-height: 10%;
+    width: 60%;
+    float: left;
+    margin-left: 2%;
+    margin-top: 2%;
+    background: lightblue;
+    border-radius: 10px;
+}
