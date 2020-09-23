@@ -3,20 +3,41 @@
 /* box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5); */
 
 .inner-wrapper {
+    height: 80%;
+    width: 100%;
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
+    position: absolute;
+}
+
+.inner-wrapper-admin {
+    height: 90%;
+    width: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+
+.inner-box {
+    order: 2;
+    height: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Welcome */
 .welcome-box {
     width: 60%;
-    height: 28%;
+    height: 20%;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
     background: rgb(59, 59, 59);
     border-radius: 10px;
-    position: absolute;
-    top: 10%;
-    right: 20%;
+    position: relative;
+    top: 5%;
+    left: 20%;
     display: flex;
     flex-direction: row;
     order: 1;
@@ -25,7 +46,7 @@
 .welcome-text {
     order: 1;
     height: 60%;
-    margin-top: 7%;
+    margin-top: 3.5%;
 }
 
 .welcome-label {
@@ -46,8 +67,8 @@
 }
 
 .account-icon {
-    height: 10vw;
-    width: 10vw;
+    height: 5vw;
+    width: 5vw;
     border-radius: 100%;
     background: #CCC;
     order: 1;
@@ -55,30 +76,57 @@
     margin-top: 3%;
     margin-left: 20%;
     text-align: center;
-    line-height: 10vw;
+    line-height: 5vw;
     font-size: 180%;
 }
 
 /* Current Groupings */
+.current-grouping {
+    order: 1;
+    width: 50%;
+}
+
 .current-groupings-label {
     text-align: left;
     color: white;
     font-size: 180%;
-    margin-top: 17%;
-    margin-left: 20%;
-    order: 2;
+    margin-top: 10%;
+    margin-left: 5%;
+}
+
+.current-admin-groupings-label {
+    text-align: left;
+    color: white;
+    font-size: 180%;
+    margin-top: 3%;
+    margin-left: 5%;
+}
+
+.current-admin-grouping {
+    order: 1;
+    width: 100%;
 }
 
 .current-groupings-box {
-    height: 40%;
-    width: 60%;
-    position: absolute;
-    top: 50%;
-    right: 20%;
+    height: 60%;
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
     background: rgb(59, 59, 59);
     border-radius: 10px;
     box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
-    order: 3;
+}
+
+.current-admin-groupings-box {
+    height: 70%;
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
 }
 
 .current-groupings-headers {
@@ -89,7 +137,10 @@
     flex-direction: row;
     border-radius: 10px 10px 0px 0px;
     font-weight: bold;
-    line-height: 5%;
+}
+
+.current-groupings-headers .indiv-header {
+    line-height: 4.68vh;
 }
 
 .current-groupings-text {
@@ -109,3 +160,50 @@
     width: 100%;
 }
 
+/* Awaiting Presentations */
+.presentation-awaiting {
+    order: 2;
+    width: 50%;
+}
+
+.presentation-awaiting-label {
+    text-align: left;
+    color: white;
+    font-size: 180%;
+    margin-top: 10%;
+    margin-left: 5%;
+}
+
+.presentation-awaiting-box {
+    height: 60%;
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    /* top: 50%;
+    right: 20%; */
+    background: rgb(59, 59, 59);
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 0.1px rgb(0,0,0,0.5);
+}
+
+.presentation-awaiting-headers {
+    height: 15%;
+    width: 100%;
+    background: dodgerblue;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+}
+
+.presentation-awaiting-headers .indiv-header {
+    line-height: 4.68vh;
+}
+
+.presentations-awaiting-text {
+    color: white;
+    height: 85%;
+    width: 100%;
+    overflow-y: auto;
+}

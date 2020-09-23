@@ -2,7 +2,6 @@ var editAccountButton = document.querySelector(".account-button");
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
-
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
 })
@@ -61,7 +60,7 @@ const loadActiveConferences = async () => {
                 tableNode.onclick = (event) => {
                     console.log(event.target.id)
                     sessionStorage.setItem("confID", event.target.id);
-                    window.location.replace("indiv-conference.html");
+                    window.location.href = "indiv-conference.html";
                 }
 
                 tableNode.appendChild(cNode)
@@ -162,15 +161,15 @@ const loadCurrentGroups = async () => {
                     //set the inner contents of the new row elements
                     conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
                     sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
-                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toDateString()
-                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString()
-                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString()
+                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toLocaleDateString()
+                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                     paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
 
                     tableNode.onclick = (event) => {
                         console.log(event.target.id)
                         sessionStorage.setItem("sessID", event.target.id);
-                        // window.location.replace("indiv-session.html");
+                        window.location.href = "indiv-session.html"
                     }
 
                     //set the new nodes to the table
@@ -237,7 +236,7 @@ const loadUnassignedSessions = async () => {
                     conferenceNode.innerHTML = res1[x]["conference"]["conferenceName"]
 
                     if (res1[x]["session"] == null) {
-                        sessionNode.innerHTML = "Waiting Assignment"
+                        sessionNode.innerHTML = new Date(res1[x]["conference"]["conferenceSubmissionDeadline"]).toLocaleDateString()
                     }
 
                     
@@ -256,7 +255,7 @@ const loadUnassignedSessions = async () => {
                     tableNode.appendChild(sessionNode)
                     
 
-                    document.querySelector(".presentations-missing-sessions").appendChild(tableNode)
+                    document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
                         document.querySelector(".loading-box").style.display = "none"

@@ -21,7 +21,7 @@ var closeCreateButton = document.querySelector(".close-create-button")
 var paperNameField = document.querySelector("#paperNameField")
 var paperPubField = document.querySelector("#paperPubField")
 var inputTopic = document.querySelector("#inputTopic")
-var subimtCreateButton = document.querySelector("#submitCreateButton")
+var submitCreateButton = document.querySelector("#submitCreateButton")
 
 var sessions = []
 var unassignedPresentations = []
@@ -158,8 +158,13 @@ const loadSessions = async () => {
                                 var presentationsTime = document.createElement("div")
                                 var presentationsTopic = document.createElement("div")
                                 var presentationsAuthor = document.createElement("div")
-                
-                                presentationsTime.innerHTML = "Unknown Time"
+                                
+                                if (presentations[y]["presentationTime"] == null) {
+                                    presentationsTime.innerHTML = "Unknown Time"
+                                }
+                                else {
+                                    presentationsTime.innerHTML = moment(new Date(presentations[y]["presentationTime"]).toString()).format("HH:mm");
+                                }
                                 presentationsAuthor.innerHTML = presentations[y]["user"]["name"]
                                 presentationsTopic.innerHTML = presentations[y]["paper"]["paperTitle"]
                                         
@@ -288,9 +293,16 @@ closeCreateButton.addEventListener("click", () => {
     document.querySelector(".create-backing").style.display = "none"
 })
 
-subimtCreateButton.addEventListener("click", () => {
-    if(paperNameField.value != "" && paperPubField.value != "" && inputTopic.selectedIndex != "0") {
+submitCreateButton.addEventListener("click", () => {
+    if(paperNameField.value == "" || paperPubField.value == "" || inputTopic.selectedIndex == "0") {
+        var message = "Please do not leave details blank"
+        document.querySelector(".message").innerHTML = message
+    }
+    else {
+        var message = ""
+        document.querySelector(".message").innerHTML = message
         sendNewPaper(paperNameField.value, paperPubField.value, inputTopic.value)
+        window.location.href("indiv-conference.html");
     }
 })
 

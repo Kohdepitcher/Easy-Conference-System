@@ -69,15 +69,24 @@ const loadSessions = async () => {
               var presentationsNode = document.createElement("div");
               var presentationsTopic = document.createElement("div");
               var presentationsAuthor = document.createElement("div");
+              var presentationsTime = document.createElement("div")
 
               presentationsAuthor.innerHTML = presentations[y]["paper"]["author"]["name"];
-              presentationsTopic.innerHTML =
-                presentations[y]["paper"]["paperTitle"];
+              presentationsTopic.innerHTML = presentations[y]["paper"]["paperTitle"];
+              if(presentations[y]["presentationTime"] == null) {
+                presentationsTime.innerHTML = "Time Unassigned"
+              }
+              else {
+                presentationsTime.innerHTML = presentations[y]["presentationTime"]
+              }
+              
 
               presentationsNode.className = "indiv-pres";
+              presentationsTime.className = "indiv-pres-section"
               presentationsAuthor.className = "indiv-pres-section";
               presentationsTopic.className = "indiv-pres-section";
 
+              presentationsNode.append(presentationsTime);
               presentationsNode.append(presentationsTopic);
               presentationsNode.append(presentationsAuthor);
 

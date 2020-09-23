@@ -7,27 +7,27 @@ checkIfLogged();
 
 function checkIfLogged() {
     if(sessionStorage.getItem("Username") == null && sessionStorage.getItem("Role") == null) {
-        window.location.replace("index.html");
+        window.location.href = "index.html";
     }
 }
 
 homeButton.addEventListener("click", () => {
     if(sessionStorage.getItem("Role") == "admin") {
-        window.location.replace("admin-home.html");
+        window.location.href = "admin-home.html";
     }
     else {
         checkIfLogged()
-        window.location.replace("presenter-home.html");
+        window.location.href = "presenter-home.html";
     }
 })
 
 conferencesButton.addEventListener("click", () => {
-    window.location.replace("conferences.html");
+    window.location.href = "conferences.html"
     checkIfLogged()
 })
 
 accountButton.addEventListener("click", () => {
-    window.location.replace("my-account.html");
+    window.location.href = "my-account.html";
     checkIfLogged()
 })
 
