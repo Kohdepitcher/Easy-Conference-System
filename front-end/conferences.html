@@ -233,15 +233,18 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
+
                       <h5 class="modal-title" id="exampleModalCenterTitle">Edit Conference</h5>
+                      
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
+
                     </div>
                     
                     <div class="modal-body">
 
-                        <form id="newConferenceForm">
+                        <form id="editConferenceForm">
 
                             <!-- conference name -->
                             <div class="form-group">
@@ -326,7 +329,40 @@
                           </form>
                     </div>
                     <div class="modal-footer">
+
+                        
+
                     <button type="button" class="btn btn-primary" onclick="updateSelectedConference()">Save</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+               <!-- delete conf mode -->
+               <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Delete Conference</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    
+                    <div class="modal-body">
+
+                        <form id="deleteConferenceForm">
+
+                            <p>NOTE: This will also delete all nominations and sessions for this conference</p>
+
+                        </form>
+
+                        
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteConference()">Delete</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                   </div>

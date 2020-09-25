@@ -205,6 +205,18 @@ const loadActiveConferences = async () => {
             var deleteButton = document.createElement("button")
                 deleteButton.className = "button button-warning"
                 deleteButton.innerHTML = "Delete"
+                deleteButton.id = res[x]["conferenceID"]
+                
+                deleteButton.onclick = (event) => {
+
+                    //get the conference from the array that matched the same id as the button
+                    desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+
+                    selectedConference = desiredConf.conferenceID
+
+                    //show the edit modal
+                    $('#deleteModal').modal({ show: true})
+                }
 
 
             //if an admin, only show edit and delete buttons
@@ -256,11 +268,15 @@ async function createConference() {
         var deadLine = new moment(submissionDeadLinePicker).seconds(0).milliseconds(0).utc();
             
         //patch the edited conference
-        const result = await sendNewConferece(conferenceName.value, date.format(), deadLine.format(), organisation.value)
+        const result = await sendNewConferece(conferenceName.value, date.format(), deadLine.format(), organisation.value).then(result => {
+            
+            //submit the form - will refresh the page and show the new conf
+            document.getElementById("newConferenceForm").submit()
+
+        })
     }
 
-    //submit the form - will refresh the page and show the new conf
-    document.getElementById("newConferenceForm").submit()
+    
 }
 
 //edit conference
@@ -304,14 +320,62 @@ async function updateSelectedConference() {
             selectedConference = null;
 
             //submit the form - will refresh the page and show the new conf
-            document.getElementById("newConferenceForm").submit()
+            document.getElementById("editConferenceForm").submit()
 
         }).catch(e => {
             console.log(e)
+
+            alert(e.message)
         })
     }
 
     
+}
+
+async function deleteConference() {
+
+    //check if the selected conference id isnt null
+    if (selectedConference != null ) {
+
+        //delete the conference
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences/" + selectedConference, {
+            method: "DELETE",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                // 'Content-Type': 'application/json'
+            }),
+
+            //format the response to json
+        }).then(response => response.json()).then(res => {
+
+            //if the response != ok
+            if(!res.ok) {
+
+                //throw and error
+                throw Error(res["message"]);
+            }
+
+        }).then(response => response.json()).then(res => {
+            console.log(res)
+
+            //set the selected conference back to null
+            selectedConference = null;
+
+            //submit the form - will refresh the page and show the new conf
+            document.getElementById("deleteConferenceForm").submit()
+
+        }).catch(e => {
+            console.log(e.message)
+
+            alert(e.message)
+        })
+
+        //set the selected conference back to null
+        selectedConference = null;
+
+    }
+
 }
 
 
