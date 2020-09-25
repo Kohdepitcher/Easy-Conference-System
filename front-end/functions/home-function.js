@@ -8,9 +8,14 @@ editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
 })
 
-editTopicsAndOrganisationsButton.addEventListener("click", () => {
-    window.location.replace("topics-organisations.html");
-})
+//will be null for presenter so check if not null to add click event for admin
+if (editTopicsAndOrganisationsButton != null) {
+    editTopicsAndOrganisationsButton.addEventListener("click", () => {
+        window.location.replace("topics-organisations.html");
+    })
+}
+
+
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 welcomeMessage.innerHTML = "Welcome " + sessionStorage.getItem("Username");
