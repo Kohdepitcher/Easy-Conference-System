@@ -1,9 +1,15 @@
-var editAccountButton = document.querySelector(".account-button");
+var editAccountButton = document.getElementById("editMyAccountButton");
+const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndOrganisationsButton");
+
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
+})
+
+editTopicsAndOrganisationsButton.addEventListener("click", () => {
+    window.location.replace("topics-organisations.html");
 })
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
