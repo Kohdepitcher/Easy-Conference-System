@@ -1,35 +1,28 @@
-// class topic {
-//     constructor(topicID, topicName) {
-//         this.topicID = topicID;
-//         this.topicName = topicName;
-//     }
-// }
-
 function Topic(topicID, topicName) {
     this.topicID = topicID;
     this.topicName = topicName;
 }
 
 var sessionsList = document.querySelector(".listing-sessions");
-var countdownAndTitle = document.querySelector(".deadline-countdown")
-var conferenceNameSection = document.querySelector(".conf-title")
-var countdownTimer = document.querySelector(".time-til-dead-timer")
+var countdownAndTitle = document.querySelector(".deadline-countdown");
+var conferenceNameSection = document.querySelector(".conf-title");
+var countdownTimer = document.querySelector(".time-til-dead-timer");
 
-var addPaperButton = document.querySelector("#addPaperButton")
-var arrangeButton = document.querySelector("#arrangeButton")
-var closeCreateButton = document.querySelector(".close-create-button")
-var paperNameField = document.querySelector("#paperNameField")
-var paperPubField = document.querySelector("#paperPubField")
-var inputTopic = document.querySelector("#inputTopic")
-var submitCreateButton = document.querySelector("#submitCreateButton")
+var addPaperButton = document.querySelector("#addPaperButton");
+var arrangeButton = document.querySelector("#arrangeButton");
+var closeCreateButton = document.querySelector(".close-create-button");
+
+var paperNameField = document.getElementById("newPaperNameField");
+var paperPubField = document.getElementById("newPaperPublisherField");
+var inputTopic = document.getElementById("newPaperTopicSelector");
+
+var submitCreateButton = document.querySelector("#submitCreateButton");
+
+const formMessage = document.getElementById("formMessage");
 
 var sessions = []
 var unassignedPresentations = []
 var topics = []
-
-paperNameField.value = ""
-paperPubField.value = ""
-inputTopic.selectedIndex = "0"
 
 const loadConference = async () => {
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences/" + sessionStorage.getItem("confID"), {
@@ -261,50 +254,108 @@ function showUnassignedPresentations() {
     document.querySelector(".listing-sessions").appendChild(sessionListingArea)
 }
 
-const sendNewPaper = async (name, pub, topic) => {
-    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations", {
-        method: "POST",
-        headers: new Headers({
-            Authorization: sessionStorage.getItem("BearerAuth"),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-            "paperName": name,
-            "paperPublisher": pub,
-            "topicID": topic,
-            "conferenceID": parseInt(sessionStorage.getItem("confID")),
-            //no longer needed "userID": 1
+// const sendNewPaper = async (name, pub, topic) => {
+//     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations", {
+//         method: "POST",
+//         headers: new Headers({
+//             Authorization: sessionStorage.getItem("BearerAuth"),
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//         }),
+//         body: JSON.stringify({
+//             "paperName": name,
+//             "paperPublisher": pub,
+//             "topicID": topic,
+//             "conferenceID": parseInt(sessionStorage.getItem("confID")),
+//             //no longer needed "userID": 1
+//         })
+//     }).then(response => response.json()).then(res => {
+//         console.log(res)
+//     }).catch(e => {
+//         console.log(e)
+//     })
+// }
+
+async function createPaperNomination() {
+
+    if (paperNameField.value == "") {
+        formMessage.innerHTML = "You must provide a name for the paper"
+        
+    } else if (paperPubField.value == "") {
+        formMessage.innerHTML = "You must provide a publisher for the paper"
+        
+    } else if (inputTopic.selectedIndex == "0") {
+        formMessage.innerHTML = "You must select a topic for the paper"
+        
+    }
+        
+
+
+
+    if(paperNameField.value != "" && paperPubField.value != "" && inputTopic.selectedIndex != "0") {
+
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations", {
+            method: "POST",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                "paperName": paperNameField.value,
+                "paperPublisher": paperPubField.value,
+                "topicID": inputTopic.value,
+                "conferenceID": parseInt(sessionStorage.getItem("confID")),
+            })
+        }).then(response  => {
+
+            //if the response != ok
+            if(!response === "200") {
+
+                //throw and error
+                throw Error(response["message"]);
+            }
+
+            return response;
+
+        }).then(response => response.json()).then(res => {
+            
+                //submit the form - will refresh the page
+                document.getElementById("newPaperForm").submit()
+
+        }).catch(e => {
+            console.log(e)
+
+            alert(e.message)
         })
-    }).then(response => response.json()).then(res => {
-        console.log(res)
-    }).catch(e => {
-        console.log(e)
-    })
+
+    }
+
+
 }
 
-addPaperButton.addEventListener("click", () => {
-    document.querySelector(".create-box").style.display = "block"
-    document.querySelector(".create-backing").style.display = "block"
-})
+// addPaperButton.addEventListener("click", () => {
+//     document.querySelector(".create-box").style.display = "block"
+//     document.querySelector(".create-backing").style.display = "block"
+// })
 
-closeCreateButton.addEventListener("click", () => {
-    document.querySelector(".create-box").style.display = "none"
-    document.querySelector(".create-backing").style.display = "none"
-})
+// closeCreateButton.addEventListener("click", () => {
+//     document.querySelector(".create-box").style.display = "none"
+//     document.querySelector(".create-backing").style.display = "none"
+// })
 
-submitCreateButton.addEventListener("click", () => {
-    if(paperNameField.value == "" || paperPubField.value == "" || inputTopic.selectedIndex == "0") {
-        var message = "Please do not leave details blank"
-        document.querySelector(".message").innerHTML = message
-    }
-    else {
-        var message = ""
-        document.querySelector(".message").innerHTML = message
-        sendNewPaper(paperNameField.value, paperPubField.value, inputTopic.value)
-        window.location.href("indiv-conference.html");
-    }
-})
+// submitCreateButton.addEventListener("click", () => {
+//     if(paperNameField.value == "" || paperPubField.value == "" || inputTopic.selectedIndex == "0") {
+//         var message = "Please do not leave details blank"
+//         document.querySelector(".message").innerHTML = message
+//     }
+//     else {
+//         var message = ""
+//         document.querySelector(".message").innerHTML = message
+//         sendNewPaper(paperNameField.value, paperPubField.value, inputTopic.value)
+//         window.location.href("indiv-conference.html");
+//     }
+// })
 
 loadSessions()
 
