@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <title>Conferences</title>
+        <link rel="stylesheet" type="text/css" href="styles/style.css" />
+        <link rel="stylesheet" type="text/css" href="styles/home.css" />
+        <link rel="stylesheet" type="text/css" href="styles/conferences.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"> -->
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script> -->
+        
+        <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script> -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" /> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+        
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="menu-box">
+                <div class="logo-box">
+                    Easy-Conference
+                </div>
+                <div class="menu-buttons-box">
+                    <div id="homeButton" class="menu-button">Home</div>
+                    <div id="conferencesButton" class="menu-button">Conferences</div>
+                    <div id="accountButton" class="menu-button">My Account</div>
+                    <div id="signOutButton" class="menu-button">Sign Out</div>
+                </div>
+            </div>
+            
+            <!-- organisations -->
+            <div class="box" style="margin-left: 3em; margin-right: 3em; margin-top: 1.5em; background-color: #424242;">
+                
+                <div style="background-color: #007bff;">
+                    <h2 style="color: #ffffff; background-color: #007bff; padding: 1em; display: inline-block">Organisations</h2>
+                    
+                    <button class="button button-action" style="display: inline-block;" data-toggle="modal" data-target="#createOrganisationModal" id="createOrganisationButton">Create new organisation</button>
+                </div>
+                
+                
+                <!-- <button class="button button-action">New Conference</button> -->
+                
+                <table class="material-table conference-table disable-scrolls" id="organisation-table">
+                    <thead class="material-thead">
+                        <tr class="material-tr" id="organisation-table-row">
+                            <th class="material-th th-left">Name</th>
+                            
+                            <th class="material-th th-rest">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="material-tbody conferece-table-body disable-scrolls" id="organisation-table-body">
+                    </tbody>
+                    
+                </table>
+                
+                <div class="d-flex justify-content-center" id="loadingOrganisationsSpinner">
+                    <div class="spinner-border text-primary m-5" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- topics table -->
+            <div class="box" style="margin-left: 3em; margin-right: 3em; margin-top: 1.5em; background-color: #424242;">
+                
+                <div style="background-color: #007bff;">
+                    <h2 style="color: #ffffff; background-color: #007bff; padding: 1em; display: inline-block">Topics for organisation</h2>
+                    
+                    
+                    <select class="form-control" id="selectedOrganisation" onchange="selectionDidChange()" style="display: inline; width: 12em;">
+                        <option value="" disabled selected>Choose...</option>
+                    </select>
+                    
+                    <button class="button button-action" style="display: inline-block;" data-toggle="modal" data-target="#createTopicModal" id="createTopicButton" disabled>Create new topic</button>
+                    
+                </div>
+                
+                <table class="material-table conference-table disable-scrolls" id="topic-table">
+                    <thead class="material-thead" id="topic-table-row">
+                        <tr class="material-tr">
+                            <th class="material-th th-left">Name</th>
+                            <th class="material-th th-rest">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="material-tbody conferece-table-body disable-scrolls" id="topic-table-body">
+                    </tbody>
+                    
+                </table>
+                
+                <div class="d-flex justify-content-center" id="loadingTopicsSpinner">
+                    <div class="spinner-border text-primary m-5" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            
+            
+            
+            
+            <!-- Create Organisation Modal -->
+            <div class="modal fade" id="createOrganisationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Create New Organisation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="newOrganisationForm">
+                                
+                                <!-- organisation name -->
+                                <div class="form-group">
+                                    <label for="conferenceNameInput">Organisation Name</label>
+                                    <input type="text" class="form-control" id="newOrganisationName" aria-describedby="emailHelp" placeholder="E.g. ICCMS">
+                                    <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                    <div class="invalid-feedback">
+                                        Please give organisation a name.
+                                    </div>
+                                </div>
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="newOrgButton" class="btn btn-primary" onclick="createOrganisation()">Create</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- edit organisation mode -->
+            <div class="modal fade" id="editOrganisationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit Organisation</h5>
+                            
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            
+                        </div>
+                        
+                        <div class="modal-body">
+                            
+                            <form id="editOrganisationForm">
+                                
+                                <!-- organisation name -->
+                                <div class="form-group">
+                                    <label for="conferenceNameInput">Organisation Name</label>
+                                    <input type="text" class="form-control" id="editOrganisationName" aria-describedby="emailHelp" placeholder="E.g. ICCMS">
+                                    <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                    <div class="invalid-feedback">
+                                        Please give organisation a name.
+                                    </div>
+                                </div>
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            
+                            
+                            
+                            <button type="button" id="editOrgButton" class="btn btn-primary" onclick="editOrganisation()">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- delete organisation modal -->
+            <div class="modal fade" id="deleteOrgganisationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Delete Conference</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            
+                            <form id="deleteOrganisationForm">
+                                
+                                <p>NOTE: This will also delete all topics, conferences, nominations, papers related to this organisation. This will wipe a lot of data from the system and this action is not reversable. Are you sure?</p>
+                                
+                            </form>
+                            
+                            
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="deleteOrgButton" class="btn btn-danger" onclick="deleteOrganisation()">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                
+                
+                
+                <!-- Create topic Modal -->
+                <div class="modal fade" id="createTopicModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Create New Topic</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newTopicForm">
+                                    
+                                    <!-- organisation name -->
+                                    <div class="form-group">
+                                        <label for="conferenceNameInput">Topic Name</label>
+                                        <input type="text" class="form-control" id="newTopicName" aria-describedby="emailHelp" placeholder="E.g. AI">
+                                        <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                        <div class="invalid-feedback">
+                                            Please give topic a name.
+                                        </div>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="newTopicButton" class="btn btn-primary" onclick="createTopic()">Create</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- edit topic modal -->
+                <div class="modal fade" id="editTopicModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Edit Topic</h5>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                
+                            </div>
+                            
+                            <div class="modal-body">
+                                
+                                <form id="editTopicForm">
+                                    
+                                    <!-- organisation name -->
+                                    <div class="form-group">
+                                        <label for="conferenceNameInput">Topic Name</label>
+                                        <input type="text" class="form-control" id="editTopicName" aria-describedby="emailHelp" placeholder="E.g. AI">
+                                        <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                        <div class="invalid-feedback">
+                                            Please give topic a name.
+                                        </div>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                
+                                
+                                
+                                <button type="button" id="editTopicButton" class="btn btn-primary" onclick="editTopic()">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- delete topic modal -->
+                <div class="modal fade" id="deleteTopicModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Delete Conference</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <div class="modal-body">
+                                
+                                <form id="deleteTopicForm">
+                                    
+                                    <p>NOTE: This will also delete all nominations, papers, and sessions for this topic</p>
+                                    
+                                </form>
+                                
+                                
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="deleteTopicButton" class="btn btn-danger" onclick="deleteTopic()">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
+            </div>
+            <script src="functions/functions.js"></script>
+            <script src="functions/topics-organisations-rendering.js"></script>
+            
+            
+        </body>
+        </html>
