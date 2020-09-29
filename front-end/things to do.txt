@@ -5,4 +5,11 @@
 - notifications for changes to session or group (Email)
 - notifications for upcoming session time (Email)
 - implement CHAD functionality
-- maybe sort by conferences //Also maybe not
+- maybe sort by conferences //Also maybe not\
+
+
+- Create sessions when paper is added/nominated
+- fix admin home page table headers
+- remove my account page for admin and replace with organisations
+- remove report box on home page
+- presenter page awaiting assignment not scrolling
