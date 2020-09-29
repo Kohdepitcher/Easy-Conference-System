@@ -26,10 +26,12 @@ conferencesButton.addEventListener("click", () => {
     checkIfLogged()
 })
 
-accountButton.addEventListener("click", () => {
-    window.location.href = "my-account.html";
-    checkIfLogged()
-})
+if (accountButton != null) {
+    accountButton.addEventListener("click", () => {
+        window.location.href = "my-account.html";
+        checkIfLogged()
+    })
+}
 
 signOutButton.addEventListener("click", () => {
     sessionStorage.removeItem("Username");

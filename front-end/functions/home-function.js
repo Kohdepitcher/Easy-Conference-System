@@ -1,5 +1,6 @@
 var editAccountButton = document.getElementById("editMyAccountButton");
 const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndOrganisationsButton");
+var organisationsButton = document.getElementById("organisationsButton");
 
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
@@ -12,9 +13,16 @@ editAccountButton.addEventListener("click", () => {
 if (editTopicsAndOrganisationsButton != null) {
     editTopicsAndOrganisationsButton.addEventListener("click", () => {
         window.location.replace("topics-organisations.html");
+        checkIfLogged()
     })
 }
 
+if(sessionStorage.getItem("Role") == "admin") {
+    organisationsButton.addEventListener("click", () => {
+        window.location.replace("topics-organisations.html");
+        checkIfLogged()
+    })
+}
 
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
