@@ -1,6 +1,6 @@
+var num;
 var editAccountButton = document.getElementById("editMyAccountButton");
 const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndOrganisationsButton");
-var organisationsButton = document.getElementById("organisationsButton");
 
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
@@ -13,16 +13,9 @@ editAccountButton.addEventListener("click", () => {
 if (editTopicsAndOrganisationsButton != null) {
     editTopicsAndOrganisationsButton.addEventListener("click", () => {
         window.location.replace("topics-organisations.html");
-        checkIfLogged()
     })
 }
 
-if(sessionStorage.getItem("Role") == "admin") {
-    organisationsButton.addEventListener("click", () => {
-        window.location.replace("topics-organisations.html");
-        checkIfLogged()
-    })
-}
 
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
@@ -32,8 +25,8 @@ if(sessionStorage.getItem("confID") != null) {
     sessionStorage.removeItem("confID")
 }
 
-// load all active conferences for the admin
-const loadActiveConferences = async () => {
+//return conference length
+const returnConferenceLength = async () => {
     document.querySelector(".current-groupings-admin-text").innerHTML = "";
     document.querySelector(".loading-box").style.display = "block"
     // Call all conferences
@@ -45,69 +38,84 @@ const loadActiveConferences = async () => {
         })
      }).then(response => response.json()).then(res => {
         console.log(res);
-        
-        // For every conference, call all the presentations associated with it
-        for (var x in res) {
-            console.log(res[x]["conferenceName"])
-            conferenceData.push(res[x])
-                var tableNode = document.createElement("div")
-                var cNode = document.createElement("div")
-                var sNode = document.createElement("div")
-                var pNode = document.createElement("div")
-                var dNode = document.createElement("div")
+        num = res.length;
 
-                tableNode.className = "indiv-report-entry"
-                cNode.className = "indiv-report-part"
-                sNode.className = "indiv-report-part"
-                pNode.className = "indiv-report-part"
-                dNode.className = "indiv-report-part"
-
-                tableNode.id = res[x]["conferenceID"]
-                cNode.id = res[x]["conferenceID"]
-                sNode.id = res[x]["conferenceID"]
-                pNode.id = res[x]["conferenceID"]
-                dNode.id = res[x]["conferenceID"]
-
-                console.log(res[x]["conferenceName"])
-                cNode.innerHTML = res[x]["conferenceName"]
-                sNode.innerHTML = "Unknown (For Now)"
-                pNode.innerHTML = res.length
-                var deadlineDate = new Date(res[x]["conferenceSubmissionDeadline"])
-                var deadlineMoment = moment(deadlineDate.toString())
-                dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
-
-                tableNode.onclick = (event) => {
-                    console.log(event.target.id)
-                    sessionStorage.setItem("confID", event.target.id);
-                    window.location.href = "indiv-conference.html";
-                }
-
-                tableNode.appendChild(cNode)
-                tableNode.appendChild(sNode)
-                tableNode.appendChild(pNode)
-                tableNode.appendChild(dNode)
-
-                document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
-
-                if(parseInt(x) + 1 == res.length) {
-                    document.querySelector(".loading-box").style.display = "none"
-                }
-
-
-            // fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + res[x]["conferenceID"], {
-            //     method: "GET",
-            //     headers: new Headers({
-            //         Authorization: sessionStorage.getItem("BearerAuth"),
-            //         cache: "no-cache"
-            //     })
-            // }).then(response1 => response1.json()).then(res1 => {
-                
-            // })    
-                
-            }
         }).catch(e => {
             console.log(e);
         })
+}
+
+// load all active conferences for the admin
+const loadActiveConferences = async () => {
+    returnConferenceLength();
+    console.log(num);
+    var index;
+
+    document.querySelector(".current-groupings-admin-text").innerHTML = "";
+    document.querySelector(".loading-box").style.display = "block"
+    // Call all conferences
+    for (index = 0; index < num; index++) {
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions-for-conferece/" + index, {
+            method: "GET",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                cache: "no-cache"
+            })
+        }).then(response => response.json()).then(res => {
+            console.log(res);
+            
+            // For every conference, call all the presentations associated with it
+            for (var x in res) {
+                console.log(res[x]["conferenceName"])
+                conferenceData.push(res[x])
+                    var tableNode = document.createElement("div")
+                    var cNode = document.createElement("div")
+                    var sNode = document.createElement("div")
+                    var pNode = document.createElement("div")
+                    var dNode = document.createElement("div")
+
+                    tableNode.className = "indiv-report-entry"
+                    cNode.className = "indiv-report-part"
+                    sNode.className = "indiv-report-part"
+                    pNode.className = "indiv-report-part"
+                    dNode.className = "indiv-report-part"
+
+                    tableNode.id = res[x]["conferenceID"]
+                    cNode.id = res[x]["conferenceID"]
+                    sNode.id = res[x]["conferenceID"]
+                    pNode.id = res[x]["conferenceID"]
+                    dNode.id = res[x]["conferenceID"]
+
+                    console.log(res[x]["conferenceName"])
+                    cNode.innerHTML = res[x]["conferenceName"]
+                    sNode.innerHTML = "Unknown (For Now)"
+                    pNode.innerHTML = res.length
+                    var deadlineDate = new Date(res[x]["conferenceSubmissionDeadline"])
+                    var deadlineMoment = moment(deadlineDate.toString())
+                    dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
+
+                    tableNode.onclick = (event) => {
+                        console.log(event.target.id)
+                        sessionStorage.setItem("confID", event.target.id);
+                        window.location.href = "indiv-conference.html";
+                    }
+
+                    tableNode.appendChild(cNode)
+                    tableNode.appendChild(sNode)
+                    tableNode.appendChild(pNode)
+                    tableNode.appendChild(dNode)
+
+                    document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+
+                    if(parseInt(x) + 1 == res.length) {
+                        document.querySelector(".loading-box").style.display = "none"
+                    }
+                    
+                }
+            }).catch(e => {
+                console.log(e);
+            })
+    }
 }
 
 // Load current groups for presenter
