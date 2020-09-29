@@ -8,8 +8,7 @@
 - maybe sort by conferences //Also maybe not\
 
 
-- Create sessions when paper is added/nominated
+- Create sessions when paper is added/nominated, hook up algorithm
 - fix admin home page table headers
 - remove my account page for admin and replace with organisations
-- remove report box on home page
-- presenter page awaiting assignment not scrolling
+- remove report box on home page //Done
