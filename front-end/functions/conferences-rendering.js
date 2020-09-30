@@ -201,6 +201,24 @@ const loadActiveConferences = async () => {
 
                 }
 
+            //create edit button        
+            var editPresentationsButton = document.createElement("button");
+                editPresentationsButton.className = "button button-action"
+                editPresentationsButton.innerHTML = "Edit Presentations"
+                editPresentationsButton.id = res[x]["conferenceID"]
+                editPresentationsButton.onclick = (event) => {
+
+                    
+                    //get the conference from the array that matched the same id as the button
+                    desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+
+                    sessionStorage.setItem("SelectedConferenceForEdit", desiredConf.conferenceID)
+                    
+                    
+                    window.location.replace("presentations-for-conference.html");
+                    
+                }
+
             //create delete button
             var deleteButton = document.createElement("button")
                 deleteButton.className = "button button-warning"
@@ -222,6 +240,7 @@ const loadActiveConferences = async () => {
             //if an admin, only show edit and delete buttons
             if(sessionStorage.getItem("Role") == "admin") {
                 conferenceActionsTableData.appendChild(editButton);
+                conferenceActionsTableData.appendChild(editPresentationsButton);
                 conferenceActionsTableData.appendChild(deleteButton);
             } 
             
