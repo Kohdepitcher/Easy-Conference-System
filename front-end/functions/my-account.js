@@ -2,6 +2,11 @@ var accountIcon = document.querySelector(".account-icon");
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 
+//dom elements
+const nameField = document.getElementById("nameField");
+const emailField = document.getElementById("emailField");
+
+
 // Load past groups for presenter
 const loadPastGroups = async () => {
     document.querySelector(".past-groupings-presenter-text").innerHTML = "";
@@ -79,6 +84,71 @@ const loadPastGroups = async () => {
         console.log(e);
     })
 }
+
+const loadUser = async () => {
+
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + sessionStorage.getItem("UserID"), {
+        method: "GET",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            'Accept': 'application/json',
+        }),
+    }).then(response  => {
+
+        //if the response != ok
+        if(!response === "200") {
+
+            //throw and error
+            throw Error(response["message"]);
+        }
+
+        return response;
+
+    }).then(response1 => response1.json()).then(res => {
+
+        console.log(res)
+
+        nameField.value = res["db"]["name"];
+
+        emailField.value = res["db"]["email"];
+
+        sessionStorage.setItem("email", res["db"]["email"]);
+
+    }).catch(e => {
+        console.log(e)
+
+        alert(e.message)
+    })
+}
+
+async function sendPasswordRecoveryEmail() {
+
+    // var actionCodeSettings = {
+    //     url: 'https://www.example.com/?email=user@example.com',
+    //     iOS: {
+    //       bundleId: 'com.example.ios'
+    //     },
+    //     android: {
+    //       packageName: 'com.example.android',
+    //       installApp: true,
+    //       minimumVersion: '12'
+    //     },
+    //     handleCodeInApp: true
+    //   };
+    
+    await firebase.auth().sendPasswordResetEmail(sessionStorage.getItem("email"))
+        .then(function() {
+          // Password reset email sent.
+        })
+        .catch(function(error) {
+          // Error occurred. Inspect error.code.
+
+            alert(error)
+
+        });
+}
+
+loadUser()
 
 if(sessionStorage.getItem("Role") == "admin") {
     //hide the past group table
