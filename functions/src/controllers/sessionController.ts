@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 //import database connection
 import { connect } from "../config";
 
-import { AuthRoles } from "../globals"
+import { AuthRoles, dateFromUTCString} from "../globals"
 
 //entities
 import { Session } from "../entities/session";
@@ -92,13 +92,13 @@ export class SessionController {
             newSession.sessionName = sessionName;
 
             //assign date for session
-            newSession.date = date;
+            newSession.date = dateFromUTCString(date);
 
             //assign start time
-            newSession.startTime = startTime;
+            newSession.startTime = dateFromUTCString(startTime);
 
             //assign end time
-            newSession.endTime = endTime;
+            newSession.endTime = dateFromUTCString(endTime);
 
             //assign the conference to the session
             newSession.conference = fetchedConference
@@ -457,40 +457,40 @@ export class SessionController {
         }
     }
 
-    // //DELETE
-    // //TODO: make this work
-    // async deletePresentation(response: Response, request: Request) {
+    //DELETE
+    //TODO: make this work
+    async deleteSession(request: Request, response: Response) {
 
-    //     //get the conference id from request parameters
-    //     const { conferenceID } = request.params;
-    //     console.log("Fetching details for conference: " + conferenceID);
+        //get the sessionID from request parameters
+        const { sessionID } = request.params;
+        console.log("Fetching details for session: " + sessionID);
 
-    //     //send error msg if no conferenceID was provided
-    //     if (!conferenceID) {
-    //         return response.status(400).send({ message: "conference ID is missing from request paramters"});
-    //     }
+        //send error msg if no conferenceID was provided
+        if (!sessionID) {
+            return response.status(400).send({ message: "session ID is missing from request paramters"});
+        }
 
-    //     try {
+        try {
 
-    //             //create connection to database
-    //             const conneciton = await connect()
+                //create connection to database
+                const conneciton = await connect()
 
-    //             //create reference to conference repository
-    //             const repository = conneciton.getRepository(Conference);
+                //create reference to conference repository
+                const repository = conneciton.getRepository(Session);
 
-    //             //store the fetched conference to update
-    //             const fetchedconference = await repository.findOne(conferenceID);
+                //store the fetched conference to update
+                const fetchedSession = await repository.findOne(sessionID);
 
-    //             //delete the conference
-    //             const deletedconference = await repository.remove(fetchedconference);
+                //delete the conference
+                const deleteSession = await repository.remove(fetchedSession);
 
-    //             return response.status(200).send(deletedconference)
+                return response.status(200).send(deleteSession)
             
-    //     } catch (error) {
-    //         return handleError(response, error);
-    //     }
+        } catch (error) {
+            return handleError(response, error);
+        }
 
-    // }
+    }
 
 
     //helper functions
