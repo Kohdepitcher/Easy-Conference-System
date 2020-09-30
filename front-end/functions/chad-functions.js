@@ -124,25 +124,48 @@ function sendToChad(message) {
     
     document.querySelector(".message-bay").scrollTop = document.querySelector(".message-bay").scrollHeight;
 
-    if(suggestionsAsked) {
-        if(questionAsked) {
-            if(sendMessageField.value.toLowerCase().includes("yes")) {
-                window.location.href = suggestions[answerNumber[0] - 1]["RelevantPage"]
+    //For admin
+    if(sessionStorage.getItem("Role") == "admin") {
+        if(suggestionsAsked) {
+            if(questionAsked) {
+                if(sendMessageField.value.toLowerCase().includes("yes")) {
+                    window.location.href = suggestionsAdmin[answerNumber[0] - 1]["RelevantPage"]
+                }
             }
-        }
-        else {
-            try {
-                answerNumber.push(parseInt(sendMessageField.value))
-                chadSend(suggestions[answerNumber[0] - 1]["Extended"])
-                chadSend(suggestions[answerNumber[0] - 1]["RedirectMessage"])
-                questionAsked = true
-            }
-            catch(e) {
-                console.log(e)
+            else {
+                try {
+                    answerNumber.push(parseInt(sendMessageField.value))
+                    chadSend(suggestionsAdmin[answerNumber[0] - 1]["Extended"])
+                    chadSend(suggestionsAdmin[answerNumber[0] - 1]["RedirectMessage"])
+                    questionAsked = true
+                }
+                catch(e) {
+                    console.log(e)
+                }
             }
         }
     }
-
+    else {
+        //For presenter
+        if(suggestionsAsked) {
+            if(questionAsked) {
+                if(sendMessageField.value.toLowerCase().includes("yes")) {
+                    window.location.href = suggestions[answerNumber[0] - 1]["RelevantPage"]
+                }
+            }
+            else {
+                try {
+                    answerNumber.push(parseInt(sendMessageField.value))
+                    chadSend(suggestions[answerNumber[0] - 1]["Extended"])
+                    chadSend(suggestions[answerNumber[0] - 1]["RedirectMessage"])
+                    questionAsked = true
+                }
+                catch(e) {
+                    console.log(e)
+                }
+            }
+        }
+    }
     sendMessageField.value = ""
 }
 
@@ -160,8 +183,16 @@ function chadSend(message) {
 
 function askAllSuggestions() {
     chadSend("What would you like help with? Please enter the corresponding number.")
-    for(var x in suggestions) {
-        chadSend(parseInt(x) + 1 + "- " + suggestions[x]["Text"])
+    //For admin
+    if(sessionStorage.getItem("Role") == "admin") {
+        for(var x in suggestionsAdmin) {
+            chadSend(parseInt(x) + 1 + "- " + suggestionsAdmin[x]["Text"])
+        }
+    }
+    else {
+        for(var x in suggestions) {
+            chadSend(parseInt(x) + 1 + "- " + suggestions[x]["Text"])
+        }
     }
     suggestionsAsked = true
 }
