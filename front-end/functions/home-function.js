@@ -4,21 +4,17 @@ const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndO
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
-if(sessionStorage.getItem("Role") == "Admin") {
+if(sessionStorage.getItem("Role") == "admin") {
     var organisationsButton = document.getElementById("organisationsButton");
 
     organisationsButton.addEventListener("click", () => {
-        window.location.replace("presentations-for-conference.html");
+        window.location.replace("topics-organisations.html");
     })
 }
 
 
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
-})
-
-organisationsButton.addEventListener("click", () => {
-    window.location.replace("topics-organisations.html");
 })
 
 //will be null for presenter so check if not null to add click event for admin
