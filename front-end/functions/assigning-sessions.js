@@ -56,59 +56,60 @@ function createNewSession(name, date, start, end, confID) {
         })
 }
 
+// Main logic function, other functions are for loading data
 function addPresentationsToSessions(sessions, presentations) {
     var averageTimezone = 0
     var totalTimezone = 0
-    var sortable = []
-    var usable = []
+    var sessionlessPresentations = [] // List of presentations that dont have a session
+    var unfullSessions = [] // List of sessions that aren't already full
 
     // Filtering out presentations that are already assigned to a session
     for(var y in presentations) {
         if(presentations[y]["session"] == null) {
-            sortable.push(presentations[y])
+            sessionlessPresentations.push(presentations[y])
         }
     }
 
     // Filtering out sessions that are already full
     for(var x in sessions) {
         if(sessions[x]["presentations"].length < 6) {
-            usable.push(sessions[x])
+            unfullSessions.push(sessions[x])
         }
     }
 
-    for(var a in sortable) {
-        var zone = sortable[a]["user"]["timeZone"]
+    for(var a in sessionlessPresentations) {
+        var zone = sessionlessPresentations[a]["user"]["timeZone"]
         console.log(zone)
 
-        for(var b in usable) {
+        for(var b in unfullSessions) {
             var totalTimezone = 0
-            for(var c in usable[b]["presentations"]) {
-                totalTimezone += usable[b]["presentations"][c]["user"]["timeZone"]
+            for(var c in unfullSessions[b]["presentations"]) {
+                totalTimezone += unfullSessions[b]["presentations"][c]["user"]["timeZone"]
 
-                if(parseInt(c) + 1 == usable[b]["presentations"].length) {
-                    averageTimezone = Math.round(totalTimezone / usable[b]["presentations"].length)
+                if(parseInt(c) + 1 == unfullSessions[b]["presentations"].length) {
+                    averageTimezone = Math.round(totalTimezone / unfullSessions[b]["presentations"].length)
                     
                     if(zone >= averageTimezone - 3 && zone <= averageTimezone + 3) {
-                        usable[b]["presentations"].push(sortable[a])
-                        sortable.splice(a, 1)
+                        unfullSessions[b]["presentations"].push(sessionlessPresentations[a]) // Update session to include the new presentation
+                        sessionlessPresentations.splice(a, 1) // remove presentation from sessionlessPresentations array
                     }
                 }
             }
 
-            if(usable[b]["presentations"].length == 6) {
-                usable.splice(b, 1)
+            if(unfullSessions[b]["presentations"].length == 6) {
+                unfullSessions.splice(b, 1)
             }
         }
     }
 
-    if(usable.length == 0 && sortable.length != 0) {
+    if(unfullSessions.length == 0 && sessionlessPresentations.length != 0) {
         // Create a new session
-        // Fill the session with the rest of the presentations in the sortable array
+        // Fill the session with the rest of the presentations in the sessionlessPresentations array
         // If the new session presentations length grows bigger than 6, make a new session, repeat
     }
 
-    console.log(sortable)
-    console.log(usable)
+    console.log(sessionlessPresentations)
+    console.log(unfullSessions)
     console.log(sessions)
 }
 
