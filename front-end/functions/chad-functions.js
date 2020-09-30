@@ -66,6 +66,12 @@ var suggestionsAdmin = [
         "Extended": "This will allow you to edit and update your account details.",
         "RelevantPage": "my-account.html",
         "RedirectMessage": "Would you like me to redirect you to the my account page to edit your account?"
+    },
+    {
+        "Text": "Assign Presentations to Sessions",
+        "Extended": "The conference page allows you to assign presentations to sessions by clicking the edit presentations button",
+        "RelevantPage": "conferences.html",
+        "RedirectMessage": "Would you like me to redirect you to the conference page to assign presentations?"
     }
 ]
 
