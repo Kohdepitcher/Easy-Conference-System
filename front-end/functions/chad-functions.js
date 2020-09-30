@@ -33,6 +33,39 @@ var suggestions = [
         "Extended": "This will allow you to add a new paper for a conference, which will assigned to a session after the conference submission deadline. Simply click nominate and add paper once you're redirected.",
         "RelevantPage": "conferences.html",
         "RedirectMessage": "Would you like me to redirect you to the conferences page to view a list of conferences to nominate a paper for?"
+    },
+    {
+        "Text": "Edit my account",
+        "Extended": "This will allow you to edit and update your account details.",
+        "RelevantPage": "my-account.html",
+        "RedirectMessage": "Would you like me to redirect you to the my account page to edit your account?"
+    }
+]
+
+var suggestionsAdmin = [
+    {
+        "Text": "View Active Conferences",
+        "Extended": "This will allow you to view all active conferences that you can click on for further details.",
+        "RelevantPage": "admin-home.html",
+        "RedirectMessage": "Would you like me to redirect you to the home page to view active conferences?"
+    },
+    {
+        "Text": "View and edit All Conferences",
+        "Extended": "This will allow you to view and edit all of the conferences that are upcoming, and register a paper to them.",
+        "RelevantPage": "conferences.html",
+        "RedirectMessage": "Would you like me to redirect you to the conferences page to view the conferences?"
+    },
+    {
+        "Text": "Edit Organisations and their Topics",
+        "Extended": "This will allow you to edit organisations and their topics.",
+        "RelevantPage": "topics-organisations.html",
+        "RedirectMessage": "Would you like me to redirect you to the organisation page to edit organisations and topics?"
+    },
+    {
+        "Text": "Edit My Account",
+        "Extended": "This will allow you to edit and update your account details.",
+        "RelevantPage": "my-account.html",
+        "RedirectMessage": "Would you like me to redirect you to the my account page to edit your account?"
     }
 ]
 
@@ -91,25 +124,48 @@ function sendToChad(message) {
     
     document.querySelector(".message-bay").scrollTop = document.querySelector(".message-bay").scrollHeight;
 
-    if(suggestionsAsked) {
-        if(questionAsked) {
-            if(sendMessageField.value.toLowerCase().includes("yes")) {
-                window.location.href = suggestions[answerNumber[0] - 1]["RelevantPage"]
+    //For admin
+    if(sessionStorage.getItem("Role") == "admin") {
+        if(suggestionsAsked) {
+            if(questionAsked) {
+                if(sendMessageField.value.toLowerCase().includes("yes")) {
+                    window.location.href = suggestionsAdmin[answerNumber[0] - 1]["RelevantPage"]
+                }
             }
-        }
-        else {
-            try {
-                answerNumber.push(parseInt(sendMessageField.value))
-                chadSend(suggestions[answerNumber[0] - 1]["Extended"])
-                chadSend(suggestions[answerNumber[0] - 1]["RedirectMessage"])
-                questionAsked = true
-            }
-            catch(e) {
-                console.log(e)
+            else {
+                try {
+                    answerNumber.push(parseInt(sendMessageField.value))
+                    chadSend(suggestionsAdmin[answerNumber[0] - 1]["Extended"])
+                    chadSend(suggestionsAdmin[answerNumber[0] - 1]["RedirectMessage"])
+                    questionAsked = true
+                }
+                catch(e) {
+                    console.log(e)
+                }
             }
         }
     }
-
+    else {
+        //For presenter
+        if(suggestionsAsked) {
+            if(questionAsked) {
+                if(sendMessageField.value.toLowerCase().includes("yes")) {
+                    window.location.href = suggestions[answerNumber[0] - 1]["RelevantPage"]
+                }
+            }
+            else {
+                try {
+                    answerNumber.push(parseInt(sendMessageField.value))
+                    chadSend(suggestions[answerNumber[0] - 1]["Extended"])
+                    chadSend(suggestions[answerNumber[0] - 1]["RedirectMessage"])
+                    questionAsked = true
+                }
+                catch(e) {
+                    console.log(e)
+                }
+            }
+        }
+    }
     sendMessageField.value = ""
 }
 
@@ -127,8 +183,16 @@ function chadSend(message) {
 
 function askAllSuggestions() {
     chadSend("What would you like help with? Please enter the corresponding number.")
-    for(var x in suggestions) {
-        chadSend(parseInt(x) + 1 + "- " + suggestions[x]["Text"])
+    //For admin
+    if(sessionStorage.getItem("Role") == "admin") {
+        for(var x in suggestionsAdmin) {
+            chadSend(parseInt(x) + 1 + "- " + suggestionsAdmin[x]["Text"])
+        }
+    }
+    else {
+        for(var x in suggestions) {
+            chadSend(parseInt(x) + 1 + "- " + suggestions[x]["Text"])
+        }
     }
     suggestionsAsked = true
 }
