@@ -59,9 +59,11 @@ export function presentationRoutesConfig(app: Application) {
         new  PresentationController().updatePresentation
     ])
 
-    // //DELETE
-    // app.delete('/presentations/:presentationID', [
-    //     new  PresentationController().updateOrganisation
-    // ])
+    //DELETE
+    app.delete('/presentations/:presentationID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new  PresentationController().deletePresentation
+    ])
 
 }
