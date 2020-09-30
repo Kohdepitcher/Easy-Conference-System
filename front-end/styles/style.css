@@ -121,7 +121,7 @@
         height: 50%;
         width: 30%;
         position: absolute;
-        top: 10%;
+        top: 15%;
         left: 35%;
         background: rgb(59, 59, 59);
         border-radius: 10px;
@@ -200,7 +200,7 @@
     }
 
     #signInButton{
-        height: 10%;
+        height: 7vh !important;
         width: 20%;
         order: 1;
         background: dodgerblue;
@@ -215,7 +215,7 @@
     }
 
     #signUpButton{
-        height: 10%;
+        height: 7vh !important;
         order: 2;
         width: 20%;
         background: dodgerblue;
