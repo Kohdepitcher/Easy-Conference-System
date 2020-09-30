@@ -102,6 +102,7 @@ const loadActiveConferences = async (confArray) => {
 //modified to fetch all sessions for user
 const loadCurrentGroups = async () => {
     document.querySelector(".current-groupings-presenter-text").innerHTML = "";
+    document.querySelector(".loading-box").style.display = "block"
     // fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations-for-user/" + sessionStorage.getItem("UserID"), {
     fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions/" + sessionStorage.getItem("UserID"), {
                 method: "GET",
@@ -262,7 +263,7 @@ const loadUnassignedSessions = async () => {
                     document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
-                        document.querySelector(".loading-box").style.display = "none"
+                        // document.querySelector(".loading-box").style.display = "none"
                     }
                 
             }
