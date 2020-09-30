@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <head>
+            <title>Presentations for Conference</title>
+            <link rel="stylesheet" type="text/css" href="styles/style.css" />
+            <link rel="stylesheet" type="text/css" href="styles/home.css" />
+            <link rel="stylesheet" type="text/css" href="styles/conferences.css" />
+            <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"> 
+
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+            <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"> -->
+
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment.min.js"></script>
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script> -->
+            
+            <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script> -->
+            <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" /> -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+
+            <!-- <style>
+                /* .bootstrap-datetimepicker-widget table tr th {
+                               color: #000;
+                } */
+
+                .bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+                    background: #2f2f2f;
+                }
+
+                .bootstrap-datetimepicker-widget table td.day:hover {
+                    background: #2f2f2f;
+                }
+
+                .bootstrap-datetimepicker-widget table td span:hover {
+                    background: #2f2f2f;
+                }
+
+                .bootstrap-datetimepicker-widget table td span {
+                    margin: 0;
+                }
+
+                
+
+            </style> -->
+        </head>
+    <body>
+        <div class="wrapper">
+            <div class="menu-box">
+                <div class="logo-box">
+                    Easy-Conference
+                </div>
+                <div class="menu-buttons-box">
+                    <div id="homeButton" class="menu-button">Home</div>
+                    <div id="conferencesButton" class="menu-button">Conferences</div>
+                    <div id="accountButton" class="menu-button">My Account</div>
+                    <div id="signOutButton" class="menu-button">Sign Out</div>
+                </div>
+            </div>
+
+            <!-- box -->
+            <div class="box" style="margin-left: 3em; margin-right: 3em; margin-top: 1.5em; background-color: #424242;">
+
+                <div style="background-color: #007bff;">
+                    <h2 style="color: #ffffff; background-color: #007bff; padding: 1em; display: inline-block">Sessions for Conference</h2>
+
+                    <button class="button button-action" style="display: inline-block;" data-toggle="modal" data-target="#createSessionModal" id="createConferenceButton">Create new session</button>
+                </div>
+                
+
+                <!-- <button class="button button-action">New Conference</button> -->
+
+                <table class="material-table session-table disable-scrolls">
+                    <thead class="material-thead">
+                      <tr class="material-tr">
+                        <th class="material-th th-left">Session Name</th>
+                        <th class="material-th th-rest">Date</th>
+                        <th class="material-th th-rest">Start Time</th>
+                        <th class="material-th th-rest">End Time Deadline</th>
+                        <th class="material-th th-rest">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="material-tbody session-table-body disable-scrolls">
+
+                    </tbody>
+
+                </table>
+
+                <div class="d-flex justify-content-center" id="sessionLoadingSpinner">
+                    <div class="spinner-border text-primary m-5" role="status">
+                    <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- box -->
+            <div class="box" style="margin-left: 3em; margin-right: 3em; margin-top: 1.5em; background-color: #424242;">
+
+                <div style="background-color: #007bff;">
+                    <h2 style="color: #ffffff; background-color: #007bff; padding: 1em; display: inline-block">Presentations for Conference</h2>
+
+                    <!-- <button class="button button-action" style="display: inline-block;" data-toggle="modal" data-target="#createModal" id="createConferenceButton">Create new conference</button> -->
+                </div>
+                
+
+                <!-- <button class="button button-action">New Conference</button> -->
+
+                <table class="material-table presentation-table disable-scrolls">
+                    <thead class="material-thead">
+                      <tr class="material-tr">
+                        <th class="material-th th-left">Session Name</th>
+                        <th class="material-th th-rest">Date</th>
+                        <th class="material-th th-rest">Start Time</th>
+                        <th class="material-th th-rest">End Time Deadline</th>
+                        <th class="material-th th-rest">Paper Name</th>
+                        <th class="material-th th-rest">Publisher</th>
+                        <th class="material-th th-rest">Topic</th>
+                        <th class="material-th th-rest">Author</th>
+                        <th class="material-th th-rest">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="material-tbody presentation-table-body disable-scrolls">
+
+                    </tbody>
+
+                </table>
+
+                <div class="d-flex justify-content-center" id="loadingSpinner">
+                    <div class="spinner-border text-primary m-5" role="status">
+                    <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Create session Modal -->
+            <div class="modal fade" id="createSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Create New Session</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newSessionForm">
+
+                            <!-- conference name -->
+                            <div class="form-group">
+                              <label for="conferenceNameInput">Session Name</label>
+                              <input type="text" class="form-control" id="newSessionName" aria-describedby="emailHelp" placeholder="E.g. AI [1]">
+                              <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              <div class="invalid-feedback">
+                                Please give session a name.
+                              </div>
+                            </div>
+
+
+                            <!-- conference date -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDateInput">Conference Date</label>
+                                <input type="date" class="form-control" id="newConferenceDate" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Session Date</label>
+                            <div class="input-group date" id="sessionDatePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#conferenceDatePicker"/> -->
+                                <!-- <div class="input-group-append" data-target="#conferenceDatePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#sessionDatePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            <!-- conference submission deadline -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDeadLineInput">Conference Submission Deadline</label>
+                                <input type="datetime" class="form-control" id="newConferenceDeadLine" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted">Nominations will be rejected after this time and date</small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Start Time</label>
+                              <div class="input-group date" id="startTimePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#submissionDeadLinePicker"/>
+                                <div class="input-group-append" data-target="#submissionDeadLinePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                        
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#startTimePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            <!-- conference submission deadline -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDeadLineInput">Conference Submission Deadline</label>
+                                <input type="datetime" class="form-control" id="newConferenceDeadLine" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted">Nominations will be rejected after this time and date</small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">End Time</label>
+                              <div class="input-group date" id="endTimePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#submissionDeadLinePicker"/>
+                                <div class="input-group-append" data-target="#submissionDeadLinePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                        
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#endTimePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            
+                            <!-- <button type="button" class="btn btn-primary"  onsubmit="createConference()">Create Conferece</button> -->
+                          </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="createSession()">Create</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+
+            <div class="modal fade" id="editPaperTopic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit Paper Topic</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editPresentationForm">
+
+                                <!-- paper Topic -->
+                                <div class="form-group">
+                                    <label for="newOrganisationSelector">Topic</label>
+                                    <select class="form-control" id="patchPaperTopicSelector">
+                                        <option value="" disabled selected>Choose...</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                    Please select a topic.
+                                    </div>
+                                </div>
+
+                                <!-- paper session -->
+                                <div class="form-group">
+                                    <label for="newOrganisationSelector">Session</label>
+                                    <select class="form-control" id="patchPaperSessionSelector">
+                                        <option value="" disabled selected>Choose...</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                    Please select a topic.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="message" id="formMessage"></div>
+                                </div>
+
+                                
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="newOrgButton" class="btn btn-primary" onclick="updateSelectedPresentation()">Create</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+              
+
+            <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
+        </div>
+        <script src="functions/functions.js"></script>
+        <script src="functions/presentations-for-conferece-rendering.js"></script>
+
+        
+    </body>
+</html>
