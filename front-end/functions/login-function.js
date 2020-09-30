@@ -177,6 +177,10 @@ const firebaseLogin = async (email, password) => {
 
         console.log(error)
         console.log(errorCode + " - " + errorMessage)
+
+        var message = "Please enter valid login details"
+        document.querySelector(".message").innerHTML = message
+        document.querySelector(".loading-box").style.display = "none"
     })
 }
 

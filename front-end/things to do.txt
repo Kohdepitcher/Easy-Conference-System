@@ -9,7 +9,7 @@
 
 
 - Create sessions when paper is added/nominated, hook up algorithm
-- fix admin home page table headers
+- fix admin home page table headers //Done
 - remove my account page for admin and replace with organisations
 - remove report box on home page //Done
 - login fail validation
