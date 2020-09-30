@@ -1,4 +1,3 @@
-var num;
 var editAccountButton = document.getElementById("editMyAccountButton");
 const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndOrganisationsButton");
 
@@ -27,8 +26,6 @@ if(sessionStorage.getItem("confID") != null) {
 
 //return conference length
 const returnConferenceLength = async () => {
-    document.querySelector(".current-groupings-admin-text").innerHTML = "";
-    document.querySelector(".loading-box").style.display = "block"
     // Call all conferences
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences", {
         method: "GET",
@@ -37,8 +34,8 @@ const returnConferenceLength = async () => {
             cache: "no-cache"
         })
      }).then(response => response.json()).then(res => {
-        console.log(res);
-        num = res.length;
+            console.log(res);
+            loadActiveConferences(res);
 
         }).catch(e => {
             console.log(e);
@@ -46,16 +43,14 @@ const returnConferenceLength = async () => {
 }
 
 // load all active conferences for the admin
-const loadActiveConferences = async () => {
-    returnConferenceLength();
-    console.log(num);
-    var index;
-
+const loadActiveConferences = async (confArray) => {
+    
     document.querySelector(".current-groupings-admin-text").innerHTML = "";
     document.querySelector(".loading-box").style.display = "block"
     // Call all conferences
-    for (index = 0; index < num; index++) {
-        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions-for-conferece/" + index, {
+    for (var y in confArray) {
+        console.log(confArray[y]["conferenceName"])
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions-for-conferece/" + y, {
             method: "GET",
             headers: new Headers({
                 Authorization: sessionStorage.getItem("BearerAuth"),
@@ -66,7 +61,7 @@ const loadActiveConferences = async () => {
             
             // For every conference, call all the presentations associated with it
             for (var x in res) {
-                console.log(res[x]["conferenceName"])
+                
                 conferenceData.push(res[x])
                     var tableNode = document.createElement("div")
                     var cNode = document.createElement("div")
@@ -80,17 +75,17 @@ const loadActiveConferences = async () => {
                     pNode.className = "indiv-report-part"
                     dNode.className = "indiv-report-part"
 
-                    tableNode.id = res[x]["conferenceID"]
-                    cNode.id = res[x]["conferenceID"]
-                    sNode.id = res[x]["conferenceID"]
-                    pNode.id = res[x]["conferenceID"]
-                    dNode.id = res[x]["conferenceID"]
+                    tableNode.id = res[x]["conference"]["conferenceID"]
+                    cNode.id = res[x]["conference"]["conferenceID"]
+                    sNode.id = res[x]["conference"]["conferenceID"]
+                    pNode.id = res[x]["conference"]["conferenceID"]
+                    dNode.id = res[x]["conference"]["conferenceID"]
 
-                    console.log(res[x]["conferenceName"])
-                    cNode.innerHTML = res[x]["conferenceName"]
-                    sNode.innerHTML = "Unknown (For Now)"
-                    pNode.innerHTML = res.length
-                    var deadlineDate = new Date(res[x]["conferenceSubmissionDeadline"])
+                    console.log(res[x]["conference"]["conferenceName"])
+                    cNode.innerHTML = res[x]["conference"]["conferenceName"]
+                    sNode.innerHTML = res.length
+                    pNode.innerHTML = res[x]["presentations"].length
+                    var deadlineDate = new Date(res[x]["conference"]["conferenceSubmissionDeadline"])
                     var deadlineMoment = moment(deadlineDate.toString())
                     dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
 
@@ -296,7 +291,7 @@ const loadUnassignedSessions = async () => {
 }
 
 if(sessionStorage.getItem("Role") == "admin") {
-    loadActiveConferences();
+    returnConferenceLength();
 }
 else {
 
