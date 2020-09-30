@@ -73,9 +73,9 @@ signUpButton.addEventListener("click", async () => {
     }
 })
 
-// signInButton.addEventListener("click", () => {
-//     window.location.replace("presenter-home.html");
-// })
+signInButton.addEventListener("click", () => {
+     window.location.replace("presenter-home.html");
+ })
 
 //creates the firebase user
 const firebaseCreate = async (email, password, country, timezone, user) => {

@@ -57,6 +57,20 @@
     color: white;
 }
 
+.logo-login {
+    font-size: 150%;
+    margin-left: 35%;
+    color: white;
+    margin-top: 2%;
+}
+
+.logo-signup {
+    font-size: 150%;
+    margin-left: 25%;
+    color: white;
+    margin-top: 2%;
+}
+
 /* Report */
     .report-box {
         height: 70%;
