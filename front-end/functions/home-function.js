@@ -50,66 +50,39 @@ const loadActiveConferences = async (confArray) => {
     // Call all conferences
     for (var y in confArray) {
         console.log(confArray[y]["conferenceName"])
-        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions-for-conferece/" + y, {
-            method: "GET",
-            headers: new Headers({
-                Authorization: sessionStorage.getItem("BearerAuth"),
-                cache: "no-cache"
-            })
-        }).then(response => response.json()).then(res => {
-            console.log(res);
-            
-            // For every conference, call all the presentations associated with it
-            for (var x in res) {
-                
-                conferenceData.push(res[x])
-                    var tableNode = document.createElement("div")
-                    var cNode = document.createElement("div")
-                    var sNode = document.createElement("div")
-                    var pNode = document.createElement("div")
-                    var dNode = document.createElement("div")
 
-                    tableNode.className = "indiv-report-entry"
-                    cNode.className = "indiv-report-part"
-                    sNode.className = "indiv-report-part"
-                    pNode.className = "indiv-report-part"
-                    dNode.className = "indiv-report-part"
+        var tableNode = document.createElement("div")
+        var cNode = document.createElement("div")
+        var dNode = document.createElement("div")
 
-                    tableNode.id = res[x]["conference"]["conferenceID"]
-                    cNode.id = res[x]["conference"]["conferenceID"]
-                    sNode.id = res[x]["conference"]["conferenceID"]
-                    pNode.id = res[x]["conference"]["conferenceID"]
-                    dNode.id = res[x]["conference"]["conferenceID"]
+        tableNode.className = "indiv-report-entry"
+        cNode.className = "indiv-report-part"
+        dNode.className = "indiv-report-part"
 
-                    console.log(res[x]["conference"]["conferenceName"])
-                    cNode.innerHTML = res[x]["conference"]["conferenceName"]
-                    sNode.innerHTML = res.length
-                    pNode.innerHTML = res[x]["presentations"].length
-                    var deadlineDate = new Date(res[x]["conference"]["conferenceSubmissionDeadline"])
-                    var deadlineMoment = moment(deadlineDate.toString())
-                    dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
+        tableNode.id = confArray[y]["conferenceID"]
+        cNode.id = confArray[y]["conferenceID"]
+        dNode.id = confArray[y]["conferenceID"]
 
-                    tableNode.onclick = (event) => {
-                        console.log(event.target.id)
-                        sessionStorage.setItem("confID", event.target.id);
-                        window.location.href = "indiv-conference.html";
-                    }
+        console.log(confArray[y]["conferenceName"])
+        cNode.innerHTML = confArray[y]["conferenceName"]
+        var deadlineDate = new Date(confArray[y]["conferenceSubmissionDeadline"])
+        var deadlineMoment = moment(deadlineDate.toString())
+        dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
 
-                    tableNode.appendChild(cNode)
-                    tableNode.appendChild(sNode)
-                    tableNode.appendChild(pNode)
-                    tableNode.appendChild(dNode)
+        tableNode.onclick = (event) => {
+            console.log(event.target.id)
+            sessionStorage.setItem("confID", event.target.id);
+            window.location.href = "indiv-conference.html";
+        }
 
-                    document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+        tableNode.appendChild(cNode)
+        tableNode.appendChild(dNode)
 
-                    if(parseInt(x) + 1 == res.length) {
-                        document.querySelector(".loading-box").style.display = "none"
-                    }
-                    
-                }
-            }).catch(e => {
-                console.log(e);
-            })
+        document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
+
+        if(parseInt(y) + 1 == confArray.length) {
+            document.querySelector(".loading-box").style.display = "none"
+        }
     }
 }
 
