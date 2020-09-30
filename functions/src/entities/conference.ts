@@ -15,20 +15,20 @@ export class Conference extends BaseEntity {
     conferenceID: number;
 
     //name of the conference
-    @Column()
+    @Column({ nullable: false })
     conferenceName: string;
 
-    @Column()
+    @Column({ nullable: false, type: 'datetime', default: () => 'NOW()' })
     conferenceDate: Date;
 
     //cutoff date for submission
-    @Column()
+    @Column({ nullable: false, type: 'datetime', default: () => 'NOW()' })
     conferenceSubmissionDeadline: Date;
 
     
 
     //related organisation
-    @ManyToOne( type => Organisation, organisation => organisation.conferences)
+    @ManyToOne( type => Organisation, organisation => organisation.conferences, {cascade: true, onDelete: "CASCADE" })
     organisation: Organisation
 
     @OneToMany( type => Presentation, presentation => presentation.conference)
