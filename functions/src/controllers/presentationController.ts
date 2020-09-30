@@ -193,6 +193,7 @@ export class PresentationController {
 
                 .leftJoinAndSelect("presentation.conference", "Conference")
 
+
                 //left join the user so that we only get presentations that match the user uuid
                 .leftJoin("presentation.user", "User")
                 .where("User.UUID = :id", { id: userID })
@@ -322,6 +323,8 @@ export class PresentationController {
             //join the relevant paper to the presentation
             .leftJoinAndSelect("presentation.paper", "Paper")
 
+            .leftJoinAndSelect("Paper.topic", "Topic")
+
             //join the session to the presentation
             .leftJoinAndSelect("presentation.session", "Session")
 
@@ -330,6 +333,9 @@ export class PresentationController {
 
             //left join the user so that we only get presentations that match the user uuid
             .leftJoinAndSelect("presentation.conference", "Conference")
+
+            .leftJoinAndSelect("Conference.organisation", "Organisation")
+
             .where("Conference.conferenceID = :id", { id: conferenceID })
 
             .getMany();
@@ -497,15 +503,15 @@ export class PresentationController {
 
     //DELETE
     //TODO: make this work
-    async deletePresentation(response: Response, request: Request) {
+    async deletePresentation(request: Request, response: Response) {
 
-        //get the conference id from request parameters
-        const { conferenceID } = request.params;
-        console.log("Fetching details for conference: " + conferenceID);
+        //get the presentation id from request parameters
+        const { presentationID } = request.params;
+        console.log("Fetching details for presentation: " + presentationID);
 
         //send error msg if no conferenceID was provided
-        if (!conferenceID) {
-            return response.status(400).send({ message: "conference ID is missing from request paramters"});
+        if (!presentationID) {
+            return response.status(400).send({ message: "presentationID is missing from request paramters"});
         }
 
         try {
@@ -514,15 +520,15 @@ export class PresentationController {
                 const conneciton = await connect()
 
                 //create reference to conference repository
-                const repository = conneciton.getRepository(Conference);
+                const repository = conneciton.getRepository(Presentation);
 
-                //store the fetched conference to update
-                const fetchedconference = await repository.findOne(conferenceID);
+                //store the fetched presentation to update
+                const fetchedPresentation = await repository.findOne(presentationID);
 
                 //delete the conference
-                const deletedconference = await repository.remove(fetchedconference);
+                const deletedPresentation = await repository.remove(fetchedPresentation);
 
-                return response.status(200).send(deletedconference)
+                return response.status(200).send(deletedPresentation)
             
         } catch (error) {
             return handleError(response, error);
