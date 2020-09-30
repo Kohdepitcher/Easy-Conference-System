@@ -24,7 +24,8 @@ export class Topic extends BaseEntity {
 
 
     //associated organisation
-    @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics)
+    //delete topics when the related organisation is deleted
+    @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics, {cascade: true, onDelete: "CASCADE" })
     organisation: Organisation;
 
     // @OneToMany(type => Presentation, presentation => presentation.topic)
