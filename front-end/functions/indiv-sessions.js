@@ -1,5 +1,21 @@
 var session = {};
 
+const loadConference = async () => {
+  await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences/" + sessionStorage.getItem("confID"), {
+      method: "GET",
+      headers: new Headers({
+          Authorization: sessionStorage.getItem("BearerAuth"),
+          cache: "no-cache"
+      })
+  }).then(response => response.json()).then(res => {
+      console.log(res)
+      conferenceNameSection.innerHTML = res["conferenceName"]
+      var deadlineDate = new Date(res["conferenceSubmissionDeadline"])
+      var deadlineMoment = moment(deadlineDate.toString())
+      countdownTimer.innerHTML = countdown(deadlineMoment.format("DD/MM/YYYY HH:mm"))
+  })
+}
+
 const loadSessions = async () => {
   document.querySelector(".loading-box").style.display = "block";
   await fetch(
@@ -117,3 +133,4 @@ const loadSessions = async () => {
 };
 
 loadSessions();
+loadConference();
