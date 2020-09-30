@@ -11,7 +11,7 @@ editAccountButton.addEventListener("click", () => {
 })
 
 organisationsButton.addEventListener("click", () => {
-    window.location.replace("presentations-for-conference.html");
+    window.location.replace("topics-organisations.html");
 })
 
 //will be null for presenter so check if not null to add click event for admin
