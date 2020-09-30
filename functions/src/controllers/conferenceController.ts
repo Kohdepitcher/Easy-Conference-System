@@ -255,6 +255,9 @@ export class ConferenceController {
             //update the conference properties
             fetchedConference.conferenceName = name;
 
+            console.log(dateFromUTCString(date))
+            console.log(dateFromUTCString(submissionDeadline))
+
             fetchedConference.conferenceDate = dateFromUTCString(date);//new Date(Date.parse(submissionDeadline))
 
             //update the conference submission deadline
@@ -273,7 +276,7 @@ export class ConferenceController {
     }
 
     //DELETE
-    async deleteconference(response: Response, request: Request) {
+    async deleteconference(request: Request, response: Response ) {
 
         //get the conference id from request parameters
         const { conferenceID } = request.params;

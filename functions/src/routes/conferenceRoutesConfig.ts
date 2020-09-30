@@ -55,10 +55,10 @@ export function conferenceRoutesConfig(app: Application) {
     ])
 
     //DELETE
-    // app.delete('/conferences/:conferenceID', [
-    //     isAuthenticated,
-    //     isAuthorized({ hasRole: [AuthRoles.Admin] }),
-    //     new ConferenceController().deleteconference
-    // ])
+    app.delete('/conferences/:conferenceID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new ConferenceController().deleteconference
+    ])
 
 }

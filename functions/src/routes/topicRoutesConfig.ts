@@ -59,10 +59,10 @@ export function topicRoutesConfig(app: Application) {
     ]);
 
     //DELETE
-    // app.delete('/topics/:topicID', [
-    //     isAuthenticated,
-    //     isAuthorized({ hasRole: [AuthRoles.Admin] }),
-    //     new TopicController().deleteTopic
-    // ]);
+    app.delete('/topics/:topicID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new TopicController().deleteTopic
+    ]);
 
 }

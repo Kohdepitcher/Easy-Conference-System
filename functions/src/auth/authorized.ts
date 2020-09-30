@@ -31,7 +31,7 @@ export function isAuthorized(opts: { hasRole: Array<'admin' | 'manager' | 'user'
        const { role, email, uid } = res.locals
        const { id } = req.params
 
-       if (email=== 'kohde1@hotmail.com')
+       if (email === 'kohde1@hotmail.com')
             return next();
 
        if (opts.allowSameUser && id && uid === id)
@@ -42,7 +42,7 @@ export function isAuthorized(opts: { hasRole: Array<'admin' | 'manager' | 'user'
 
        if (opts.hasRole.includes(role))
            return next();
-2
+
        return res.status(403).send({ message: "You dont have the required role, you need these roles: " + opts.hasRole});
    }
 }

@@ -31,7 +31,7 @@ export class Presentation extends BaseEntity {
     // @ManyToOne(type => Organisation, Organisation => Organisation.relatedTopics)
     // organisation: Organisation;
 
-    @ManyToOne(type => Conference, conference => conference.presentations)
+    @ManyToOne(type => Conference, conference => conference.presentations, {cascade: true, onDelete: "CASCADE" })
     conference: Conference;
 
     @ManyToOne(type => Session, session => session.presentations)

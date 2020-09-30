@@ -272,8 +272,8 @@ export class userController {
     async patch(req: Request, res: Response) {
         try {
 
-            //temp store a UID that will be set soon
-            var specifiedUID: string;
+            // //temp store a UID that will be set soon
+            var specifiedUID
 
             //if a user is a presenter
             if (res.locals.role == AuthRoles.presenter) {
@@ -299,17 +299,17 @@ export class userController {
             const { displayName, email, country, timeZone } = req.body
 
             //if any of the required fields are empty
-            if (!email) {
-                
-                //send 400 error to client
-                return res.status(400).send({ message: 'Missing email for user' })
-            }
-
             // no name in body
             if (!displayName) {
                 
                 //send 400 error to client
                 return res.status(400).send({ message: 'Missing displayName for user' })
+            }
+
+            if (!email) {
+                
+                //send 400 error to client
+                return res.status(400).send({ message: 'Missing email for user' })
             }
 
             //no country in body

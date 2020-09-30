@@ -51,7 +51,7 @@ signUpButton.addEventListener("click", async () => {
     var confirmPass = document.getElementById("enterConfirmPass").value;
     var countryDropDown = document.querySelector('#country-dropdown'); 
     var country = countryDropDown.value; 
-    var timezone = 10;
+    var timezone = (new Date().getTimezoneOffset()) / 60;
 
     if (email.length == 0 || pass.length == 0 || user.length == 0 || confirmPass.length == 0) {
         var message = "Please do not leave details blank"

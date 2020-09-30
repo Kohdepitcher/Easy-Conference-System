@@ -90,7 +90,7 @@ export const api = functions.https.onRequest(app);
 exports.setUpUser = functions.auth.user().onCreate(async (user) => {
 
   //get the user's attributes
-  const {uid, email} = user;
+  const {uid} = user;
 
   //store the default role in a variable
   const role = AuthRoles.presenter
@@ -98,7 +98,50 @@ exports.setUpUser = functions.auth.user().onCreate(async (user) => {
   try {
 
       //set the custom role claim
-      await admin.auth().setCustomUserClaims(uid, { role })
+     return await admin.auth().setCustomUserClaims(uid, { role })
+
+      // //create new connection to DB
+      // const connection = await connect();
+  
+      // //get the user repository
+      // const repo = connection.getRepository(User);
+      
+      // //create a new user
+      // const newUser: User = new User();
+
+      // //set the uuid on the db user
+      // newUser.UUID = uid
+
+      // //set the email on the db user
+      // newUser.email = email;
+
+      // //set the other user attributes to default empty values
+      // newUser.country = "";
+      // newUser.timeZone = 0;
+      // newUser.name = "";
+
+      // const savedNewUser = await repo.save(newUser);
+
+      // console.log(savedNewUser)
+
+      // return savedNewUser;
+
+      
+
+  } catch (err) {
+      console.log(err)
+
+      return `${err.code} - ${err.message}`;
+  }
+
+});
+
+exports.setUpUserInDB = functions.auth.user().onCreate(async (user) => {
+
+  //get the user's attributes
+  const {uid, email} = user;
+
+  try {
 
       //create new connection to DB
       const connection = await connect();

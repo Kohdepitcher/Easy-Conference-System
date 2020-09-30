@@ -48,10 +48,10 @@ export function organisationRoutesConfig(app: Application) {
     ])
 
     //DELETE
-    // app.delete('/organisations/:organisationID', [
-    //     isAuthenticated,
-    //     isAuthorized({ hasRole: [AuthRoles.Admin] }),
-    //     new OrganisationController().updateOrganisation
-    // ])
+    app.delete('/organisations/:organisationID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new OrganisationController().updateOrganisation
+    ])
 
 }

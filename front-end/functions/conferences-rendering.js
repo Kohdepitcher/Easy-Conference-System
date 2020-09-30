@@ -12,10 +12,20 @@ function Conferece(conferenceID, conferenceName, conferenceDate, conferenceDeadL
     this.organisationID = organisationID;
 }
 
+function Topic(topicID, topicName) {
+    this.topicID = topicID;
+    this.topicName = topicName;
+}
+
 //refereces to dom elements
 const conferenceTable = document.querySelector(".conference-table");
 const conferenceTableRow = document.querySelector(".conference-table-row");
 const conferenceTableBody = document.querySelector(".conferece-table-body");
+
+//referece the required new paper fields
+var paperNameField = document.getElementById("newPaperNameField");
+var paperPubField = document.getElementById("newPaperPublisherField");
+var inputTopic = document.getElementById("newPaperTopicSelector");
 
 const loadingSpinner = document.getElementById("loadingSpinner");
 
@@ -33,6 +43,9 @@ var conferences = [];
 
 //array to store all the organisations
 var organisations = []
+
+//array to track all the topics
+var topics = []
 
 //track the selectedConference
 var selectedConference = null;
@@ -167,7 +180,30 @@ const loadActiveConferences = async () => {
                 nominateButton.onclick = (event) => {
                     console.log(event.target.id)
                     sessionStorage.setItem("confID", event.target.id);
-                    window.location.replace("indiv-conference.html");
+
+                    //get the organisation of the selected conf
+                    desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+
+                    //track the selected id
+                    selectedConference = desiredConf.conferenceID
+
+                    //clear the topics array incase a different organisation id
+                    topics.length = 0;
+
+                    //populate the topic list with the org's topics
+                    loadTopics(desiredConf.organisationID)
+
+                    
+                    
+                    
+                    // window.location.replace("indiv-conference.html");
+
+                    //show the create new paper modal
+                    $('#createPaperModal').modal({ show: true})
+
+
+
+
                 }
 
                 //check if past the deadline
@@ -444,6 +480,113 @@ const updateConferece = async (confID, name, date, deadLine, organisationID) => 
     }).catch(e => {
         console.log(e)
     })
+}
+
+//fetches the topics for an organisation
+const loadTopics = async (organisationID) => {
+
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/topics-for-organisation/" + organisationID, {
+        method: "GET",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            cache: "no-cache"
+        })
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+        
+        //populate the topics array
+        if (res.length != 0) {
+
+            //for each element in the reponse array, loop and push
+            for (var topicResponse in res) {
+
+                //create a new instance of topic and fill it with the required data
+                var newTopic = new Topic(res[topicResponse]["topicID"], res[topicResponse]["topicName"]);
+
+                //puah the topic onto the Topics array
+                topics.push(newTopic)
+            }
+
+            // console.log(topics)
+
+
+            //populate the topic options list
+            for (var i in topics) {
+
+                var topicFromIndex = topics[i]
+                var option = document.createElement("option")
+
+                    option.textContent = topicFromIndex.topicName;
+                    option.value = topicFromIndex.topicID;
+                    
+                inputTopic.appendChild(option)
+
+            }
+
+        }
+
+
+        
+    })
+
+}
+
+async function createPaperNomination() {
+
+    if (paperNameField.value == "") {
+        formMessage.innerHTML = "You must provide a name for the paper"
+        
+    } else if (paperPubField.value == "") {
+        formMessage.innerHTML = "You must provide a publisher for the paper"
+        
+    } else if (inputTopic.selectedIndex == "0") {
+        formMessage.innerHTML = "You must select a topic for the paper"
+        
+    }
+        
+
+
+
+    if(paperNameField.value != "" && paperPubField.value != "" && inputTopic.selectedIndex != "0") {
+
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations", {
+            method: "POST",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                "paperName": paperNameField.value,
+                "paperPublisher": paperPubField.value,
+                "topicID": inputTopic.value,
+                "conferenceID": parseInt(sessionStorage.getItem("confID")),
+            })
+        }).then(response  => {
+
+            //if the response != ok
+            if(!response === "200") {
+
+                //throw and error
+                throw Error(response["message"]);
+            }
+
+            return response;
+
+        }).then(response => response.json()).then(res => {
+            
+                //submit the form - will refresh the page
+                document.getElementById("newPaperForm").submit()
+
+        }).catch(e => {
+            console.log(e)
+
+            alert(e.message)
+        })
+
+    }
+
+
 }
 
 //call the render conferences func

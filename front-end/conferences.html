@@ -369,6 +369,68 @@
                 </div>
               </div>
 
+
+
+              <!-- create paper modal -->
+              <div class="modal fade" id="createPaperModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Nominate Paper</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="newPaperForm">
+                                
+                                <!-- paper name -->
+                                <div class="form-group">
+                                    <label for="conferenceNameInput">Paper Name</label>
+                                    <input type="text" class="form-control" id="newPaperNameField" aria-describedby="emailHelp" placeholder="E.g. AI Advancements">
+                                    <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                    <div class="invalid-feedback">
+                                        Please give paper a name.
+                                    </div>
+                                </div>
+
+                                <!-- publisher name -->
+                                <div class="form-group">
+                                    <label for="conferenceNameInput">Paper Publisher</label>
+                                    <input type="text" class="form-control" id="newPaperPublisherField" aria-describedby="emailHelp" placeholder="E.g. CQUniversity">
+                                    <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                                    <div class="invalid-feedback">
+                                        Please give paper a publisher.
+                                    </div>
+                                </div>
+
+                                <!-- conference organisation -->
+                                <div class="form-group">
+                                    <label for="newOrganisationSelector">Topic</label>
+                                    <select class="form-control" id="newPaperTopicSelector">
+                                        <option value="" disabled selected>Choose...</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                    Please select a topic.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="message" id="formMessage"></div>
+                                </div>
+
+                                
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="newOrgButton" class="btn btn-primary" onclick="createPaperNomination()">Create</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
         </div>
         <script src="functions/functions.js"></script>

@@ -38,6 +38,8 @@ export class Session extends BaseEntity {
     @OneToMany(type => Presentation, presentation => presentation.session)
     presentations: Presentation[];
 
-    @ManyToOne(type => Conference, conference => conference.sessions)
+    @ManyToOne(type => Conference, conference => conference.sessions, {cascade: true, onDelete: "CASCADE" })
     conference: Conference;
+
+    
 }

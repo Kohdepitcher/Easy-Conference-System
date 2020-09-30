@@ -275,7 +275,7 @@ export class TopicController {
     }
 
     //DELETE
-    async deleteTopic(response: Response, request: Request) {
+    async deleteTopic(request: Request, response: Response) {
 
         //get the topic id from request parameters
         const { topicID } = request.params;

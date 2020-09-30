@@ -76,8 +76,9 @@
                         
                         <div class="form-group">
                             <label for="exampleInputEmail1">Country</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else</small> -->
+                            <input type="text" class="form-control" id="countryField" aria-describedby="emailHelp">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else</small>
+
                           </div>
 
                         <div class="form-group" style="margin-top: 2em;">
@@ -86,7 +87,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 1em;">Change your details</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1em;" onsubmit="updateUser()">Change your details</button>
                       </form>
 
                 </div>

@@ -5,6 +5,7 @@ accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 //dom elements
 const nameField = document.getElementById("nameField");
 const emailField = document.getElementById("emailField");
+const countryField = document.getElementById("countryField")
 
 
 // Load past groups for presenter
@@ -112,6 +113,8 @@ const loadUser = async () => {
 
         emailField.value = res["db"]["email"];
 
+        countryField.value = res["db"]["country"]
+
         sessionStorage.setItem("email", res["db"]["email"]);
 
     }).catch(e => {
@@ -162,4 +165,34 @@ else {
 function hidePastConferences() {
     var hide = document.getElementById("past-conferences");
     hide.style.display = "none";
+}
+
+async function updateUser() {
+
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + sessionStorage.getItem("UserID"), {
+        method: "PATCH",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            cache: "no-cache",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+
+        }),
+        body: JSON.stringify({
+            "displayName": nameField.value, 
+            "email": emailField.value, 
+            "country": countryField.value,
+            "timeZone": (new Date().getTimezoneOffset()) / 60
+        })
+
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+
+        
+       
+
+    }).catch(e => {
+        console.log(e)
+    })
+
 }
