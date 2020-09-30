@@ -4,7 +4,14 @@ const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndO
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
-var organisationsButton = document.getElementById("organisationsButton");
+if(sessionStorage.getItem("Role") == "Admin") {
+    var organisationsButton = document.getElementById("organisationsButton");
+
+    organisationsButton.addEventListener("click", () => {
+        window.location.replace("presentations-for-conference.html");
+    })
+}
+
 
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
@@ -77,8 +84,8 @@ const loadActiveConferences = async (confArray) => {
 
         tableNode.onclick = (event) => {
             console.log(event.target.id)
-            sessionStorage.setItem("confID", event.target.id);
-            window.location.href = "indiv-conference.html";
+            sessionStorage.setItem("SelectedConferenceForEdit", event.target.id);
+            window.location.href = "presentations-for-conference.html";
         }
 
         tableNode.appendChild(cNode)
