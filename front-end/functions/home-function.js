@@ -4,8 +4,14 @@ const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndO
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
+var organisationsButton = document.getElementById("organisationsButton");
+
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
+})
+
+organisationsButton.addEventListener("click", () => {
+    window.location.replace("presentations-for-conference.html");
 })
 
 //will be null for presenter so check if not null to add click event for admin
