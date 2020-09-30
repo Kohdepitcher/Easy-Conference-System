@@ -4,6 +4,7 @@
 
 function groupSessionsToTimezone(presentations, days) {
     var usedTopics = []
+    console.log(presentations)
 
     for(var x in presentations) {
         if(!usedTopics.includes(presentations[x]["paper"]["paperTitle"])) {
@@ -63,7 +64,7 @@ function groupSessionsToTimezone(presentations, days) {
     console.log("Sessions split into timezones: ");
     console.log(arrangedSessions)
 
-    reshuffleSessions(arrangedSessions, hourDiff)
+    // reshuffleSessions(arrangedSessions, hourDiff)
 }
 
 const loadPresentations = async () => {
