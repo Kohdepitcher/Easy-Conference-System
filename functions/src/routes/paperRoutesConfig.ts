@@ -56,6 +56,12 @@ export function paperRoutesConfig(app: Application) {
         new PaperController().updatePaper
     ]);
 
+    app.patch('/just-topic-for-paper/:paperID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new PaperController().updatePaperWithJustTopic
+    ]);
+
     //DELETE
     // app.delete('/papers/:paperID', [
     //     new PaperController().deletePaper
