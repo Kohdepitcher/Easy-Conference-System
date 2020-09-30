@@ -15,9 +15,12 @@ function TopicPaper(topicID, paperID, sessionID, presentationID) {
     this.presentationID = presentationID;
 }
 
-function Session(sessionID, sessionName) {
+function Session(sessionID, sessionName, date, startTime, endTime) {
     this.sessionID = sessionID;
     this.sessionName = sessionName;
+    this.date = date;
+    this.startTime = startTime;
+    this.endTime = endTime;
 }
 
 //refereces to dom elements
@@ -57,6 +60,8 @@ var organisationID = null;
 
 //track the selected presentation for edit
 var selectedPresentation = null;
+
+var selectedSession = null;
 
 
 //track the selectedConference
@@ -195,7 +200,7 @@ const loadSessionsForConference = async () => {
             // For every conference, call all the presentations associated with it
         for (var x in res) {
 
-            var fetchedSession = new Session(res[x]["sessionID"], res[x]["sessionName"])
+            var fetchedSession = new Session(res[x]["sessionID"], res[x]["sessionName"], res[x]["date"], res[x]["startTime"], res[x]["endTime"])
             sessions.push(fetchedSession)
 
 
@@ -231,50 +236,35 @@ const loadSessionsForConference = async () => {
             endTimeTableData.innerHTML = new Date(res[x]["endTime"]).toLocaleString()
             
 
-            
-
-            
-            
-            //create each action button
-            
-            // var nominateButton = document.createElement("button");
-            //     nominateButton.className = "button button-action"
-            //     nominateButton.innerHTML = "Nominate"
-
-            //     //assign the conference id to the button
-            //     nominateButton.id = res[x]["conferenceID"]
-
-            //     //assign on click method to the button
-            //     nominateButton.onclick = (event) => {
-            //         console.log(event.target.id)
-            //         sessionStorage.setItem("confID", event.target.id);
-            //         window.location.replace("indiv-conference.html");
-            //     }
-
-            //     //check if past the deadline
-            //     if (new Date(res[x]["conferenceSubmissionDeadline"]) < new Date) {
-            //         nominateButton.disabled = true;
-            //     }
 
             //create edit button        
             var editButton = document.createElement("button");
                 editButton.className = "button button-action-2"
                 editButton.innerHTML = "Edit"
                 editButton.id = res[x]["sessionID"]
-            //     editButton.onclick = (event) => {
+                editButton.onclick = (event) => {
 
                     
-            //         //get the conference from the array that matched the same id as the button
-            //         desiredConf = paperTopics.find(o => o.paperID == event.target.id)
+                    //get the conference from the array that matched the same id as the button
+                    desiredSes = sessions.find(o => o.sessionID == event.target.id)
+
+
+                    //set the name and organisation selector values from conference
+                    document.getElementById("editSessionName").value = desiredSes.sessionName
+
+                    //set the date pickers to the conference date and deadline
+                    $('#editSessionDatePicker').datetimepicker('date', moment(desiredSes.date));
+                    $('#editStartTimePicker').datetimepicker('date', moment(desiredSes.startTime));
+                    $('#editEndTimePicker').datetimepicker('date', moment(desiredSes.endTime));
                     
-            //         inputTopic.value = desiredConf.topicID
+                    
 
-            //         selectedPaper = desiredConf.paperID
+                    selectedSession = desiredSes.sessionID;
 
-            //         //show the edit modal
-            //         $('#editPaperTopic').modal({ show: true})
+                    //show the edit modal
+                    $('#editSessionModal').modal({ show: true})
 
-            //     }
+                }
 
             // //create delete button
             var deleteButton = document.createElement("button")
@@ -282,16 +272,16 @@ const loadSessionsForConference = async () => {
                 deleteButton.innerHTML = "Delete"
                 deleteButton.id = res[x]["sessionID"]
                 
-            //     deleteButton.onclick = (event) => {
+                deleteButton.onclick = (event) => {
 
-            //         //get the conference from the array that matched the same id as the button
-            //         desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+                    //get the conference from the array that matched the same id as the button
+                    desiredSes = paperTopics.find(o => o.sessionID == event.target.id)
 
-            //         selectedConference = desiredConf.conferenceID
+                    selectedSession = desiredSes.sessionID
 
-            //         //show the edit modal
-            //         $('#deleteModal').modal({ show: true})
-            //     }
+                    //show the edit modal
+                    $('#deleteSessionModal').modal({ show: true})
+                }
 
 
             //if an admin, only show edit and delete buttons
@@ -510,16 +500,16 @@ const loadPresentationsForConferece = async () => {
                 deleteButton.innerHTML = "Delete"
                 deleteButton.id = res[x]["presentationID"]
                 
-            //     deleteButton.onclick = (event) => {
+                deleteButton.onclick = (event) => {
 
-            //         //get the conference from the array that matched the same id as the button
-            //         desiredConf = conferences.find(o => o.conferenceID == event.target.id)
+                    //get the conference from the array that matched the same id as the button
+                    desiredPres = paperTopics.find(o => o.presentationID == event.target.id)
 
-            //         selectedConference = desiredConf.conferenceID
+                    selectedPresentation = desiredPres.presentationID
 
-            //         //show the edit modal
-            //         $('#deleteModal').modal({ show: true})
-            //     }
+                    //show the edit modal
+                    $('#deletePresentationModal').modal({ show: true})
+                }
 
 
             // //if an admin, only show edit and delete buttons
@@ -563,6 +553,8 @@ const loadPresentationsForConferece = async () => {
 
 //edit the presentation's paper topic and session id
 async function updateSelectedPresentation() {
+
+    console.log(paperTopics)
 
     //get the topic and session values from the drop down
     const topic = inputTopic.value;
@@ -648,7 +640,7 @@ async function updateSelectedPresentation() {
             selectedPaper = null;
 
             //submit the form - will refresh the page and show the updated row
-            document.getElementById("editPresentationForm").submit()
+            // document.getElementById("editPresentationForm").submit()
 
         }).catch(e => {
             console.log(e)
@@ -659,12 +651,54 @@ async function updateSelectedPresentation() {
 
 
     }
-
-
-
-   
-
     
+}
+
+//delete presentation and attached paper
+async function deletePresentation() {
+
+    //check if the selected conference id isnt null
+    if (selectedPresentation != null ) {
+
+        //delete the conference
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/presentations/" + selectedPresentation, {
+            method: "DELETE",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                // 'Content-Type': 'application/json'
+            }),
+
+            //format the response to json
+        }).then(response => response.json()).then(res => {
+
+            //if the response != ok
+            if(!res.ok) {
+
+                //throw and error
+                throw Error(res["message"]);
+            }
+
+        }).then(response => response.json()).then(res => {
+            console.log(res)
+
+            //set the selected conference back to null
+            selectedPresentation = null;
+
+            //submit the form - will refresh the page and show the new conf
+            document.getElementById("deletePresentationForm").submit()
+
+        }).catch(e => {
+            console.log(e.message)
+
+            alert(e.message)
+        })
+
+        //set the selected conference back to null
+        selectedPresentation = null;
+
+    }
+
 }
 
 async function createSession() {
@@ -723,6 +757,112 @@ async function createSession() {
     })
             
     }
+}
+
+//edits the session
+async function editSession() {
+    const sessionName = document.getElementById("editSessionName");
+    
+    const sessionDate = $('#editSessionDatePicker').datetimepicker('viewDate');
+    
+    const sessionStartTime = $('#editStartTimePicker').datetimepicker('viewDate');
+    const sessionEndTime = $('#editEndTimePicker').datetimepicker('viewDate');
+
+    //validation
+    if (sessionName.value != "" && selectedSession != null) {
+
+        //convert the dates to utc
+        var date = new moment(sessionDate).seconds(0).milliseconds(0).utc();
+        var start = new moment(sessionStartTime).seconds(0).milliseconds(0).utc();
+        var end = new moment(sessionEndTime).seconds(0).milliseconds(0).utc();
+
+        console.log(date.format())
+            
+        //patch the edited conference
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions/" + selectedSession, {
+        method: "PATCH",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+            "sessionName": sessionName.value,
+            "date": date.format(), 
+            "startTime": start.format(), 
+            "endTime": end.format(),
+            "conferenceID": sessionStorage.getItem("SelectedConferenceForEdit")
+        })
+    }).then(response  => {
+
+        //if the response != ok
+        if(!response === "200") {
+
+            
+
+            //throw and error
+            throw Error(response["message"]);
+        }
+
+        return response;
+
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+
+        document.getElementById("editSessionForm").submit()
+    }).catch(e => {
+        console.log(e)
+        alert(e.message)
+    })
+            
+    }
+}
+
+//delete desired session
+async function deletePresentation() {
+
+    //check if the selected conference id isnt null
+    if (selectedSession != null ) {
+
+        //delete the conference
+        await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions/" + selectedSession, {
+            method: "DELETE",
+            headers: new Headers({
+                Authorization: sessionStorage.getItem("BearerAuth"),
+                'Accept': 'application/json',
+                // 'Content-Type': 'application/json'
+            }),
+
+            //format the response to json
+        }).then(response => response.json()).then(res => {
+
+            //if the response != ok
+            if(!res.ok) {
+
+                //throw and error
+                throw Error(res["message"]);
+            }
+
+        }).then(response => response.json()).then(res => {
+            console.log(res)
+
+            //set the selected conference back to null
+            selectedSession = null;
+
+            //submit the form - will refresh the page and show the new conf
+            document.getElementById("deleteSessionForm").submit()
+
+        }).catch(e => {
+            console.log(e.message)
+
+            alert(e.message)
+        })
+
+        //set the selected conference back to null
+        selectedSession = null;
+
+    }
+
 }
 
 

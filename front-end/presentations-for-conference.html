@@ -260,13 +260,162 @@
                   </div>
                 </div>
               </div>
+
+            <!-- Create session Modal -->
+            <div class="modal fade" id="editSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Edit Session</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editSessionForm">
+
+                            <!-- conference name -->
+                            <div class="form-group">
+                              <label for="conferenceNameInput">Session Name</label>
+                              <input type="text" class="form-control" id="editSessionName" aria-describedby="emailHelp" placeholder="E.g. AI [1]">
+                              <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              <div class="invalid-feedback">
+                                Please give session a name.
+                              </div>
+                            </div>
+
+
+                            <!-- conference date -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDateInput">Conference Date</label>
+                                <input type="date" class="form-control" id="newConferenceDate" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted"></small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Session Date</label>
+                            <div class="input-group date" id="editSessionDatePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#conferenceDatePicker"/> -->
+                                <!-- <div class="input-group-append" data-target="#conferenceDatePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#editSessionDatePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            <!-- conference submission deadline -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDeadLineInput">Conference Submission Deadline</label>
+                                <input type="datetime" class="form-control" id="newConferenceDeadLine" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted">Nominations will be rejected after this time and date</small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">Start Time</label>
+                              <div class="input-group date" id="editStartTimePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#submissionDeadLinePicker"/>
+                                <div class="input-group-append" data-target="#submissionDeadLinePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                        
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#editStartTimePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            <!-- conference submission deadline -->
+                            <!-- <div class="form-group">
+                                <label for="conferenceDeadLineInput">Conference Submission Deadline</label>
+                                <input type="datetime" class="form-control" id="newConferenceDeadLine" aria-describedby="emailHelp" placeholder="">
+                                <small id="newConferenceNameHelp" class="form-text text-muted">Nominations will be rejected after this time and date</small>
+                              </div> -->
+                              <div class="form-group">
+                                <label for="newOrganisationSelector">End Time</label>
+                              <div class="input-group date" id="editEndTimePicker" data-target-input="nearest">
+                                <!-- <input type="text" class="form-control datetimepicker-input" data-target="#submissionDeadLinePicker"/>
+                                <div class="input-group-append" data-target="#submissionDeadLinePicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div> -->
+                            </div>
+                            </div>
+                        
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#editEndTimePicker').datetimepicker({
+                                        useCurrent: true,
+                                        inline: true,
+                                        sideBySide: true
+                                        // debug: true,
+                                        // sideBySide: true
+                                    });
+                                    
+                                });
+                            </script>
+
+                            
+                            <!-- <button type="button" class="btn btn-primary"  onsubmit="createConference()">Create Conferece</button> -->
+                          </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="editSession()">Save</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <!-- delete session modal -->
+            <div class="modal fade" id="deleteSessionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Delete Session</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    
+                    <div class="modal-body">
+
+                        <form id="deleteSessionForm">
+
+                            <p>NOTE: This will only delete the session not the attached presentations
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deletePresentation()">Delete</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
             
 
             <div class="modal fade" id="editPaperTopic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit Paper Topic</h5>
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit Paper Topic and Session</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -305,13 +454,40 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="newOrgButton" class="btn btn-primary" onclick="updateSelectedPresentation()">Create</button>
+                            <button type="button" id="newOrgButton" class="btn btn-primary" onclick="updateSelectedPresentation()">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
               
+            <!-- delete presentation mode -->
+            <div class="modal fade" id="deletePresentationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Delete Presentation</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    
+                    <div class="modal-body">
+
+                        <form id="deletePresentationForm">
+
+                            <p>NOTE: This will also delete the related paper for this presentation</p>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deletePresentation()">Delete</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
 
             <div class="footer-box">Copyright &copy; Kohde Pitcher, Mikaela Maskell, Ceejay Kelly 2020</div>
         </div>
