@@ -5,6 +5,15 @@ var signOutButton = document.getElementById("signOutButton");
 
 checkIfLogged();
 
+if(sessionStorage.getItem("Role") == "admin") {
+    var organisationsButton = document.getElementById("organisationsButton");
+
+    organisationsButton.addEventListener("click", () => {
+        window.location.replace("topics-organisations.html");
+    })
+}
+
+
 function checkIfLogged() {
     if(sessionStorage.getItem("Username") == null && sessionStorage.getItem("Role") == null) {
         window.location.href = "index.html";

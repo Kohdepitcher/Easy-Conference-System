@@ -263,7 +263,7 @@ const loadUnassignedSessions = async () => {
                     document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
                     if(x + 1 == res1.length) {
-                        // document.querySelector(".loading-box").style.display = "none"
+                        document.querySelector(".loading-box").style.display = "none"
                     }
                 
             }
