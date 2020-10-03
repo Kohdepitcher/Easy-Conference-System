@@ -7,6 +7,10 @@ const nameField = document.getElementById("nameField");
 const emailField = document.getElementById("emailField");
 const countryField = document.getElementById("countryField")
 
+if(sessionStorage.getItem("Role") != "admin") {
+    var org = document.getElementById("organisationsButton");
+    org.parentNode.removeChild(org);
+}
 
 // Load past groups for presenter
 const loadPastGroups = async () => {

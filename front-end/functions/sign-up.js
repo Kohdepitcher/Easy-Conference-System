@@ -68,7 +68,7 @@ signUpButton.addEventListener("click", async () => {
         document.querySelector(".message").innerHTML = message
 
         await firebaseCreate(email, pass, country, timezone, user);   
-        //window.location.replace("index.html");
+        window.location.replace("index.html");
 
     }
 })

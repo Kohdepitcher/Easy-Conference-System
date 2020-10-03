@@ -1,3 +1,8 @@
+if(sessionStorage.getItem("Role") != "admin") {
+    var org = document.getElementById("organisationsButton");
+    org.parentNode.removeChild(org);
+}
+
 //Entities
 function Organisation(organisationID, organisationName) {
     this.organisationID = organisationID;

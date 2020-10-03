@@ -89,7 +89,7 @@ const loadActiveConferences = async (confArray) => {
 
         document.querySelector(".current-groupings-admin-text").appendChild(tableNode)
 
-        if(parseInt(y) + 1 == confArray.length) {
+        if(parseInt(y) + 1 == confArray.length || confArray.length == 0) {
             document.querySelector(".loading-box").style.display = "none"
             console.log("load active conferences end");
         }
@@ -188,7 +188,7 @@ const loadCurrentGroups = async () => {
 
                     document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
-                    if(parseInt(x) + 1 == takenGroups.length) {
+                    if(parseInt(x) + 1 == takenGroups.length || takenGroups.length == 0) {
                         document.querySelector(".loading-box").style.display = "none"
                         console.log("load current groups end");
                     }
@@ -264,7 +264,7 @@ const loadUnassignedSessions = async () => {
 
                     document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
-                    if(parseInt(x) + 1 == res1.length) {
+                    if(parseInt(x) + 1 == res1.length || res1.length == 0) {
                         document.querySelector(".loading-box").style.display = "none"
                         console.log("load unassigned sessions end");
                     }
