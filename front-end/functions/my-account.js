@@ -8,11 +8,6 @@ const emailField = document.getElementById("emailField");
 const countryField = document.getElementById("countryField")
 
 
-if(sessionStorage.getItem("Role") != "admin") {
-    document.getElementById("organisationsButton").style.visibility="hidden";
-}
-
-
 // Load past groups for presenter
 const loadPastGroups = async () => {
     document.querySelector(".past-groupings-presenter-text").innerHTML = "";

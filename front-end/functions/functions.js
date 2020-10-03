@@ -13,6 +13,11 @@ if(sessionStorage.getItem("Role") == "admin") {
     })
 }
 
+if(sessionStorage.getItem("Role") != "admin") {
+    var org = document.getElementById("organisationsButton");
+    org.parentNode.removeChild(org);
+}
+
 
 function checkIfLogged() {
     if(sessionStorage.getItem("Username") == null && sessionStorage.getItem("Role") == null) {
