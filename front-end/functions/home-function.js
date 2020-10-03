@@ -91,6 +91,7 @@ const loadActiveConferences = async (confArray) => {
 
         if(parseInt(y) + 1 == confArray.length) {
             document.querySelector(".loading-box").style.display = "none"
+            console.log("load active conferences end");
         }
     }
 }
@@ -187,8 +188,9 @@ const loadCurrentGroups = async () => {
 
                     document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
 
-                    if(x + 1 == takenGroups.length) {
+                    if(parseInt(x) + 1 == takenGroups.length) {
                         document.querySelector(".loading-box").style.display = "none"
+                        console.log("load current groups end");
                     }
                 }
             }
@@ -262,8 +264,9 @@ const loadUnassignedSessions = async () => {
 
                     document.querySelector(".presentations-awaiting-text").appendChild(tableNode)
 
-                    if(x + 1 == res1.length) {
+                    if(parseInt(x) + 1 == res1.length) {
                         document.querySelector(".loading-box").style.display = "none"
+                        console.log("load unassigned sessions end");
                     }
                 
             }
