@@ -106,6 +106,8 @@ function addPresentationsToSessions(sessions, presentations) {
         // Create a new session
         // Fill the session with the rest of the presentations in the sessionlessPresentations array
         // If the new session presentations length grows bigger than 6, make a new session, repeat
+
+        console.log(sessionlessPresentations)
     }
 
     console.log(sessionlessPresentations)
