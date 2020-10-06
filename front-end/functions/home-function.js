@@ -126,9 +126,13 @@ const loadCurrentGroups = async () => {
                 }
             for(var x in takenGroups) {
                 //Check if date has passed for each session
-                var date = takenGroups[x]["session_startTime"]
+                var deadline = takenGroups[x]["session_date"]
+                var date = moment(deadline).unix()
 
-                if (date < Date.now()) {
+                var dateNow = Date.now()
+                var dateNowMoment = moment(dateNow).unix();
+
+                if (date < dateNowMoment) {
                     console.log("date has passed")
                 } 
                 else {
