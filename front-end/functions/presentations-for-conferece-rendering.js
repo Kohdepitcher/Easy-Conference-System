@@ -1,8 +1,3 @@
-//entities
-// function Conferece(presentationID, conferenceName, conferenceDate, conferenceDeadLine, organisationID) {
-
-// }
-
 function Topic(topicID, topicName) {
     this.topicID = topicID;
     this.topicName = topicName;
@@ -99,7 +94,6 @@ const loadTopics = async (organisationID) => {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
         
         //populate the topics array
         if (res.length != 0) {
@@ -113,8 +107,6 @@ const loadTopics = async (organisationID) => {
                 //puah the topic onto the Topics array
                 topics.push(newTopic)
             }
-
-            // console.log(topics)
 
 
             //populate the topic options list
@@ -163,8 +155,7 @@ const loadSpecificConference = async () => {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
-    
+
         loadTopics(res["organisation"]["organisationID"])
         
     }).catch(e => {
@@ -192,7 +183,6 @@ const loadSessionsForConference = async () => {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
 
         showSpinner(false, sessionLoadingSpinner);
     
@@ -318,22 +308,6 @@ const loadSessionsForConference = async () => {
                 
         }
 
-        //populate the session options list
-        // for (var i in sessions) {
-
-        //     var sessionFromIndex = sessions[i]
-        //     var option = document.createElement("option")
-
-        //         option.textContent = sessionFromIndex.sessionName;
-        //         option.value = sessionFromIndex.sessionID;
-                
-        //     inputSession.appendChild(option)
-
-        //     console.log(sessionFromIndex)
-
-        // }
-
-
         
     }).then(() => {
 
@@ -382,7 +356,6 @@ const loadPresentationsForConferece = async () => {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res);
 
         showSpinner(false, loadingSpinner);
         
@@ -399,12 +372,6 @@ const loadPresentationsForConferece = async () => {
                 var newTopicPaper = new TopicPaper(res[x]["paper"]["topic"]["topicID"], res[x]["paper"]["paperID"], "", res[x]['presentationID'])
                 paperTopics.push(newTopicPaper)
             }
-
-            
-
-            
-
-            // console.log(res[x]["conferenceName"])
 
             //create table row data
             var tableRow = conferenceTable.insertRow(-1)
@@ -476,8 +443,6 @@ const loadPresentationsForConferece = async () => {
                 editButton.innerHTML = "Edit"
                 editButton.id = res[x]["paper"]["paperID"]
                 editButton.onclick = (event) => {
-
-                    console.log(paperTopics)
                     
                     //get the conference from the array that matched the same id as the button
                     desiredPaper = paperTopics.find(o => o.paperID == event.target.id)
@@ -554,16 +519,12 @@ const loadPresentationsForConferece = async () => {
 //edit the presentation's paper topic and session id
 async function updateSelectedPresentation() {
 
-    console.log(paperTopics)
-
     //get the topic and session values from the drop down
     const topic = inputTopic.value;
     const session = inputSession.value
 
     //if neither the selected presentation or selected paper is null
     if (selectedPresentation != null && selectedPaper != null) {
-
-        // console.log(selectedPaper)
 
         //validation - check that not the first option is select
         if (topic.selectedIndex != "0") {
@@ -600,7 +561,6 @@ async function updateSelectedPresentation() {
         })
     }
 
-        // console.log(selectedPresentation)
 
         //validation - check that first option is not selected
         if (session.selectedIndex != "0") {
@@ -633,7 +593,6 @@ async function updateSelectedPresentation() {
             return response;
 
         }).then(response => response.json()).then(res => {
-            // console.log(res)
 
             //set the selected paper and presetation back to null
             selectedPresentation = null;
@@ -680,7 +639,6 @@ async function deletePresentation() {
             }
 
         }).then(response => response.json()).then(res => {
-            console.log(res)
 
             //set the selected conference back to null
             selectedPresentation = null;
@@ -716,8 +674,6 @@ async function createSession() {
         var date = new moment(sessionDate).seconds(0).milliseconds(0).utc();
         var start = new moment(sessionStartTime).seconds(0).milliseconds(0).utc();
         var end = new moment(sessionEndTime).seconds(0).milliseconds(0).utc();
-
-        console.log(date.format())
             
         //patch the edited conference
         await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions", {
@@ -748,8 +704,6 @@ async function createSession() {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
-
         document.getElementById("newSessionForm").submit()
     }).catch(e => {
         console.log(e)
@@ -775,8 +729,6 @@ async function editSession() {
         var date = new moment(sessionDate).seconds(0).milliseconds(0).utc();
         var start = new moment(sessionStartTime).seconds(0).milliseconds(0).utc();
         var end = new moment(sessionEndTime).seconds(0).milliseconds(0).utc();
-
-        console.log(date.format())
             
         //patch the edited conference
         await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/sessions/" + selectedSession, {
@@ -807,7 +759,6 @@ async function editSession() {
         return response;
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
 
         document.getElementById("editSessionForm").submit()
     }).catch(e => {
@@ -844,7 +795,6 @@ async function deletePresentation() {
             }
 
         }).then(response => response.json()).then(res => {
-            console.log(res)
 
             //set the selected conference back to null
             selectedSession = null;

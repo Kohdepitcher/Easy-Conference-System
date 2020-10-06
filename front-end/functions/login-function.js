@@ -1,4 +1,3 @@
-
 var loginButton = document.querySelector("#signInButton")
 var usernameText = document.querySelector("#usernameText")
 var passwordText = document.querySelector("#passText")
@@ -17,6 +16,7 @@ if (page != "sign-up.html") {
     checkIfLogged();
 }
 
+// Login button processing
 loginButton.addEventListener("click", () => {
     // login();
     var user = document.getElementById("usernameText").value;
@@ -30,6 +30,8 @@ loginButton.addEventListener("click", () => {
     }
 })
 
+// checking to see if the username field has been touched
+// Implementing the gobal enter key to login
 usernameText.addEventListener("focus", () => {
     usernameTouched = true;
 
@@ -51,6 +53,8 @@ usernameText.addEventListener("focus", () => {
     }
 })
 
+// Checking to see if the password text field has been touched
+// Implementing the enter key to login
 passwordText.addEventListener("focus", () => {
     passwordTouched = true;
 
@@ -72,57 +76,28 @@ passwordText.addEventListener("focus", () => {
     }
 })
 
+// Sign up button functionality
 signUpButton.addEventListener("click", () => {
     window.location.replace("sign-up.html");
     checkIfLogged()
 })
 
-// const loadConferences = async () => {
 
-//     await fetch("http://localhost:3000/viewconferences").then(response => response.json()).then(res => {
-//         for(var x in res) {
-//             var tableNode = document.createElement("div")
-//             var cNode = document.createElement("div")
-//             var gNode = document.createElement("div")
-//             var dNode = document.createElement("div")
-//             var paNode = document.createElement("div")
-        
-//             tableNode.className = "indiv-report-entry"
-//             cNode.className = "indiv-report-part"
-//             gNode.className = "indiv-report-part"
-//             dNode.className = "indiv-report-part"
-//             paNode.className = "indiv-report-part"
-        
-//             cNode.innerHTML = res[x]["Conference"]
-//             gNode.innerHTML = res[x]["Group"]
-//             dNode.innerHTML = res[x]["Date"]
-//             paNode.innerHTML = res[x]["Paper"]
-        
-//             tableNode.appendChild(cNode)
-//             tableNode.appendChild(gNode)
-//             tableNode.appendChild(dNode)
-//             tableNode.appendChild(paNode)
-//             document.querySelector(".report-box-entry-list").appendChild(tableNode)
+// const login = async () => {
+//     await fetch("http://localhost:3000/usercheck?user=" + usernameText.value + "&pass=" + passwordText.value).then(response => response.json()).then(res => {
+//         console.log(res)    
+//         if(res["username"] == usernameText.value) {
+//             sessionStorage.setItem("Username", usernameText.value)
+//             sessionStorage.setItem("Role", res["role"])
+
+//             checkIfLogged();
 //         }
 //     }).catch(e => {
-//         console.log(e);
+//         alert("Please enter valid login details.")
 //     })
 // }
 
-const login = async () => {
-    await fetch("http://localhost:3000/usercheck?user=" + usernameText.value + "&pass=" + passwordText.value).then(response => response.json()).then(res => {
-        console.log(res)    
-        if(res["username"] == usernameText.value) {
-            sessionStorage.setItem("Username", usernameText.value)
-            sessionStorage.setItem("Role", res["role"])
-
-            checkIfLogged();
-        }
-    }).catch(e => {
-        alert("Please enter valid login details.")
-    })
-}
-
+// Checking if the user is already logged in, and if they, redirect to the home page that suits their role
 function checkIfLogged() {
     if(sessionStorage.getItem("Username") != null && sessionStorage.getItem("Role") != null) {
         if(sessionStorage.getItem("Role") == "admin") {
@@ -134,18 +109,20 @@ function checkIfLogged() {
     }
 }
 
-const firebaseCreate = async (email, password) => {
-    await firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
-        console.log(response)
-    }).catch(error => {
-        var errorCode = error.code
-        var errorMessage = error.errorMessage
+// Creating a new account with firebase
+// const firebaseCreate = async (email, password) => {
+//     await firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
+//         console.log(response)
+//     }).catch(error => {
+//         var errorCode = error.code
+//         var errorMessage = error.errorMessage
 
-        console.log(error)
-        console.log(errorCode + " - " + errorMessage)
-    })
-}
+//         console.log(error)
+//         console.log(errorCode + " - " + errorMessage)
+//     })
+// }
 
+// function that handles login through the client side and the backend, using fireAuth
 const firebaseLogin = async (email, password) => {
     document.querySelector(".loading-box").style.display = "block"
     await firebase.auth().signInWithEmailAndPassword(email, password).then(response => {

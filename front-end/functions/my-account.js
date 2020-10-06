@@ -22,7 +22,6 @@ const loadPastGroups = async () => {
                     cache: "no-cache"
                 })
             }).then(response1 => response1.json()).then(res1 => {
-            console.log(res1)
 
             for(var x in res1) {
                 
@@ -36,13 +35,9 @@ const loadPastGroups = async () => {
 
                 var deadlineDate = new Date(date)
                 var deadlineMoment = moment(deadlineDate.toString())
-                console.log(deadlineMoment.format("DD/MM/YYYY")) // Printing Deadline
-                console.log(moment(new Date().toString()).format("DD/MM/YYYY")) // Printing Today
                 var passed = false;
 
                 if (deadlineMoment < Date.now()) {
-                    console.log("date has passed")
-
                     passed = true;
 
                     var tableNode = document.createElement("div")
@@ -75,12 +70,11 @@ const loadPastGroups = async () => {
                     }
                 } 
                 else {
-                    console.log("date has not passed")
+                    // Do nothing
                 }
             }
              
             if (!passed) {
-                console.log("no conferences") 
                 var message = "Haven't been in any conferences yet :("
                 document.querySelector(".past-groupings-presenter-text").innerHTML = message
             }
@@ -90,6 +84,7 @@ const loadPastGroups = async () => {
     })
 }
 
+// Loading the user information
 const loadUser = async () => {
 
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + sessionStorage.getItem("UserID"), {
@@ -110,9 +105,6 @@ const loadUser = async () => {
         return response;
 
     }).then(response1 => response1.json()).then(res => {
-
-        console.log(res)
-
         nameField.value = res["db"]["name"];
 
         emailField.value = res["db"]["email"];
@@ -128,21 +120,8 @@ const loadUser = async () => {
     })
 }
 
+// Send password recovery email with firebase
 async function sendPasswordRecoveryEmail() {
-
-    // var actionCodeSettings = {
-    //     url: 'https://www.example.com/?email=user@example.com',
-    //     iOS: {
-    //       bundleId: 'com.example.ios'
-    //     },
-    //     android: {
-    //       packageName: 'com.example.android',
-    //       installApp: true,
-    //       minimumVersion: '12'
-    //     },
-    //     handleCodeInApp: true
-    //   };
-    
     await firebase.auth().sendPasswordResetEmail(sessionStorage.getItem("email"))
         .then(function() {
           // Password reset email sent.
@@ -157,6 +136,7 @@ async function sendPasswordRecoveryEmail() {
 
 loadUser()
 
+// Checks if the user is an admin or a presenter, and renders past conferences if the user is a presenter
 if(sessionStorage.getItem("Role") == "admin") {
     //hide the past group table
     hidePastConferences();
@@ -166,11 +146,13 @@ else {
     loadPastGroups();
 }
 
+// hides past conferences
 function hidePastConferences() {
     var hide = document.getElementById("past-conferences");
     hide.style.display = "none";
 }
 
+// Changing user details based on the new details provided in the fields
 async function updateUser() {
 
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + sessionStorage.getItem("UserID"), {
@@ -190,11 +172,7 @@ async function updateUser() {
         })
 
     }).then(response => response.json()).then(res => {
-        console.log(res)
-
-        
-       
-
+        // Do nothing
     }).catch(e => {
         console.log(e)
     })
