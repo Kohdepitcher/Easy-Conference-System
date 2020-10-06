@@ -167,7 +167,7 @@ const loadActiveConferences = async () => {
             //populate table row with data
             conferenceNameTableData.innerHTML = res[x]["conferenceName"]
             organisationTableData.innerHTML = res[x]["organisation"]["organisationName"]
-            conferenceDateTableData.innerHTML = new Date(res[x]["conferenceDate"]).toLocaleString()
+            conferenceDateTableData.innerHTML = moment( new Date(res[x]["conferenceDate"]).toString()).format("DD/MM/YYYYY");
             conferenceSubDeadlineTableData.innerHTML = new Date(res[x]["conferenceSubmissionDeadline"]).toLocaleString()
 
             
