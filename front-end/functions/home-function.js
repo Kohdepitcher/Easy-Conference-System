@@ -113,91 +113,93 @@ const loadCurrentGroups = async () => {
                 })
             }).then(response1 => response1.json()).then(res1 => {
             console.log(res1)
+                var fullyIterated = false;
                 var takenGroups = [];
-                for(var x in res1) {
-                    if(takenGroups.includes(res1[x])) {
-                        // Do nothing
-                        console.log("Already here")
-                        console.log(takenGroups)
+                for(var z in res1) {
+                    var foundInTaken = takenGroups.filter(group => group["session_sessionName"] == res1[z]["session_sessionName"])
+                    if(foundInTaken.length == 0) {
+                        takenGroups.push(res1[z])
+                        fullyIterated = true
                     }
-                    else {
-                        takenGroups.push(res1[x])
+
+                    if(parseInt(z) + 1 == res1.length && fullyIterated) {
+                        for(var x in takenGroups) {
+                            //Check if date has passed for each session
+                            var deadline = takenGroups[x]["session_date"]
+                            var date = moment(deadline).unix()
+            
+                            var dateNow = Date.now()
+                            var dateNowMoment = moment(dateNow).unix();
+            
+                            if (date < dateNowMoment) {
+                                console.log("date has passed")
+                            } 
+                            else {
+                                console.log("date has not passed")
+                            
+                                //create a table row node
+                                var tableNode = document.createElement("div")
+            
+                                //create each column for the new row
+                                var conferenceNode = document.createElement("div")
+                                var sessionNode = document.createElement("div")
+                                var dateNode = document.createElement("div")
+                                var startTimeNode = document.createElement("div")
+                                var endTimeNode = document.createElement("div")
+                                var paperNode = document.createElement("div")
+            
+                                //set the CSS classes on the new table row elements
+                                tableNode.className = "indiv-report-entry"
+                                conferenceNode.className = "indiv-report-part"
+                                sessionNode.className = "indiv-report-part"
+                                dateNode.className = "indiv-report-part"
+                                startTimeNode.className = "indiv-report-part"
+                                endTimeNode.className = "indiv-report-part"
+                                paperNode.className = "indiv-report-part"
+            
+                                //set the ids on the nodes
+                                tableNode.id = takenGroups[x]["Conference_conferenceID"]
+            
+                                conferenceNode.id = takenGroups[x]["Conference_conferenceID"]
+                                sessionNode.id = takenGroups[x]["session_sessionID"]
+                                dateNode.id = takenGroups[x]["Conference_conferenceID"]
+                                startTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                                endTimeNode.id = takenGroups[x]["Conference_conferenceID"]
+                                paperNode.id = takenGroups[x]["Paper_paperID"]
+            
+                                //set the inner contents of the new row elements
+                                conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
+                                sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
+                                dateNode.innerHTML = moment(new Date(takenGroups[x]["session_date"]).toString()).format("DD/MM/YYYY")
+                                startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                                endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                                paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
+            
+                                tableNode.onclick = (event) => {
+                                    console.log(event.target.id)
+                                    sessionStorage.setItem("sessID", event.target.id);
+                                    window.location.href = "indiv-session.html"
+                                }
+            
+                                //set the new nodes to the table
+                                tableNode.appendChild(conferenceNode)
+                                tableNode.appendChild(sessionNode)
+                                tableNode.appendChild(dateNode)
+                                tableNode.appendChild(startTimeNode)
+                                tableNode.appendChild(endTimeNode)
+                                tableNode.appendChild(paperNode)
+            
+                                document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
+            
+                                if(parseInt(x) + 1 == takenGroups.length || takenGroups.length == 0) {
+                                    document.querySelector(".loading-box").style.display = "none"
+                                    console.log("load current groups end");
+                                }
+                            }
+                        }
                     }
                 }
-            for(var x in takenGroups) {
-                //Check if date has passed for each session
-                var deadline = takenGroups[x]["session_date"]
-                var date = moment(deadline).unix()
-
-                var dateNow = Date.now()
-                var dateNowMoment = moment(dateNow).unix();
-
-                if (date < dateNowMoment) {
-                    console.log("date has passed")
-                } 
-                else {
-                    console.log("date has not passed")
-                
-                    //create a table row node
-                    var tableNode = document.createElement("div")
-
-                    //create each column for the new row
-                    var conferenceNode = document.createElement("div")
-                    var sessionNode = document.createElement("div")
-                    var dateNode = document.createElement("div")
-                    var startTimeNode = document.createElement("div")
-                    var endTimeNode = document.createElement("div")
-                    var paperNode = document.createElement("div")
-
-                    //set the CSS classes on the new table row elements
-                    tableNode.className = "indiv-report-entry"
-                    conferenceNode.className = "indiv-report-part"
-                    sessionNode.className = "indiv-report-part"
-                    dateNode.className = "indiv-report-part"
-                    startTimeNode.className = "indiv-report-part"
-                    endTimeNode.className = "indiv-report-part"
-                    paperNode.className = "indiv-report-part"
-
-                    //set the ids on the nodes
-                    tableNode.id = takenGroups[x]["Conference_conferenceID"]
-
-                    conferenceNode.id = takenGroups[x]["Conference_conferenceID"]
-                    sessionNode.id = takenGroups[x]["session_sessionID"]
-                    dateNode.id = takenGroups[x]["Conference_conferenceID"]
-                    startTimeNode.id = takenGroups[x]["Conference_conferenceID"]
-                    endTimeNode.id = takenGroups[x]["Conference_conferenceID"]
-                    paperNode.id = takenGroups[x]["Paper_paperID"]
-
-                    //set the inner contents of the new row elements
-                    conferenceNode.innerHTML = takenGroups[x]["Conference_conferenceName"]
-                    sessionNode.innerHTML = takenGroups[x]["session_sessionName"]
-                    dateNode.innerHTML = new Date(takenGroups[x]["session_date"]).toLocaleDateString()
-                    startTimeNode.innerHTML = new Date(takenGroups[x]["session_startTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
-                    endTimeNode.innerHTML = new Date(takenGroups[x]["session_endTime"]).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
-                    paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
-
-                    tableNode.onclick = (event) => {
-                        console.log(event.target.id)
-                        sessionStorage.setItem("sessID", event.target.id);
-                        window.location.href = "indiv-session.html"
-                    }
-
-                    //set the new nodes to the table
-                    tableNode.appendChild(conferenceNode)
-                    tableNode.appendChild(sessionNode)
-                    tableNode.appendChild(dateNode)
-                    tableNode.appendChild(startTimeNode)
-                    tableNode.appendChild(endTimeNode)
-                    tableNode.appendChild(paperNode)
-
-                    document.querySelector(".current-groupings-presenter-text").appendChild(tableNode)
-
-                    if(parseInt(x) + 1 == takenGroups.length || takenGroups.length == 0) {
-                        document.querySelector(".loading-box").style.display = "none"
-                        console.log("load current groups end");
-                    }
-                }
-            }
+            
             
     }).catch(e => {
         console.log(e);
@@ -247,7 +249,7 @@ const loadUnassignedSessions = async () => {
                     conferenceNode.innerHTML = res1[x]["conference"]["conferenceName"]
 
                     if (res1[x]["session"] == null) {
-                        sessionNode.innerHTML = new Date(res1[x]["conference"]["conferenceSubmissionDeadline"]).toLocaleDateString()
+                        sessionNode.innerHTML = moment(new Date(res1[x]["conference"]["conferenceSubmissionDeadline"]).toString()).format("DD/MM/YYYY")
                     }
 
                     
