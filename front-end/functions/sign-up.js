@@ -39,41 +39,6 @@ signInButton.addEventListener("click", () => {
      window.location.replace("presenter-home.html");
  })
 
- //patches the firebase user with the rest of their data
- async function patchUser(user, email, country, timezone, userID, bearerAuth) {
-
-    console.log(JSON.stringify({
-        "displayName": user, 
-        "email": email, 
-        "country": country,
-        "timeZone": timezone
-    }))
-    
-    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/user-for-signup/" + userID, {
-        method: "PATCH",
-        headers: new Headers({
-            Authorization: bearerAuth,
-            cache: "no-cache",
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-
-        }),
-        body: JSON.stringify({
-            "displayName": user, 
-            "email": email, 
-            "country": country,
-            "timeZone": timezone
-        })
-
-    }).then(response => response.json()).then(res => {
-        // console.log(res)
-    }).catch(e => {
-        console.log(e)
-    })
-
-    //after the user has finished patching, fill out session storage with the required data
-    prefillSessionStorage()
-}
 
 //creates the firebase user
 const firebaseCreate = async (email, password, country, timezone, user) => {
@@ -123,6 +88,42 @@ const firebaseCreate = async (email, password, country, timezone, user) => {
     //patch the user in the backend
     await patchUser(user, email, country, timezone, userUID, bearerAuth)
 
+}
+
+ //patches the firebase user with the rest of their data
+ async function patchUser(user, email, country, timezone, userID, bearerAuth) {
+
+    console.log(JSON.stringify({
+        "displayName": user, 
+        "email": email, 
+        "country": country,
+        "timeZone": timezone
+    }))
+    
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/user-for-signup/" + userID, {
+        method: "PATCH",
+        headers: new Headers({
+            Authorization: bearerAuth,
+            cache: "no-cache",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+
+        }),
+        body: JSON.stringify({
+            "displayName": user, 
+            "email": email, 
+            "country": country,
+            "timeZone": timezone
+        })
+
+    }).then(response => response.json()).then(res => {
+        // console.log(res)
+    }).catch(e => {
+        console.log(e)
+    })
+
+    //after the user has finished patching, fill out session storage with the required data
+    prefillSessionStorage()
 }
 
 //this is reponsible for pre filling the session storage with the required user data from backend
