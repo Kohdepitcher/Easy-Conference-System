@@ -1,48 +1,10 @@
 var signUpButton = document.getElementById("signUpButton");
 var signInButton = document.getElementById("signInButton");
 
-const getUserToken = async() => {
+async function getUserToken() {
     return await firebase.auth().currentUser.getIdToken(true);
 }
 
-const patchUser = async (user, email, country, timezone, userID, bearerAuth) => {
-    
-    console.log(JSON.stringify({
-        "displayName": user, 
-        "email": email, 
-        "country": country,
-        "timeZone": timezone
-    }))
-    
-    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/users/" + userID, {
-        method: "PATCH",
-        headers: new Headers({
-            Authorization: bearerAuth,
-            cache: "no-cache",
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-
-        }),
-        body: JSON.stringify({
-            "displayName": user, 
-            "email": email, 
-            "country": country,
-            "timeZone": timezone
-        })
-
-    }).then(response => response.json()).then(res => {
-        console.log(res)
-
-        
-       
-
-    }).catch(e => {
-        console.log(e)
-    })
-
-    //after the user has finished patching, fill out session storage with the required data
-    prefillSessionStorage()
-}
 
 signUpButton.addEventListener("click", async () => {
     var email = document.getElementById("enterEmail").value;
@@ -77,11 +39,48 @@ signInButton.addEventListener("click", () => {
      window.location.replace("presenter-home.html");
  })
 
+ //patches the firebase user with the rest of their data
+ async function patchUser(user, email, country, timezone, userID, bearerAuth) {
+
+    console.log(JSON.stringify({
+        "displayName": user, 
+        "email": email, 
+        "country": country,
+        "timeZone": timezone
+    }))
+    
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/user-for-signup/" + userID, {
+        method: "PATCH",
+        headers: new Headers({
+            Authorization: bearerAuth,
+            cache: "no-cache",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+
+        }),
+        body: JSON.stringify({
+            "displayName": user, 
+            "email": email, 
+            "country": country,
+            "timeZone": timezone
+        })
+
+    }).then(response => response.json()).then(res => {
+        // console.log(res)
+    }).catch(e => {
+        console.log(e)
+    })
+
+    //after the user has finished patching, fill out session storage with the required data
+    prefillSessionStorage()
+}
+
 //creates the firebase user
 const firebaseCreate = async (email, password, country, timezone, user) => {
 
     //create users in fireauth
     await firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
+              
         console.log(response)
 
     }).catch(error => {
@@ -92,17 +91,15 @@ const firebaseCreate = async (email, password, country, timezone, user) => {
         console.log(errorCode + " - " + errorMessage)
     })
 
-    //get user's token
-    var userToken = await getUserToken()
+    // //get user's token
+    // var userToken = await getUserToken()
+    // console.log("Auth token fetched: " + userToken)
 
-    // firebase.auth().currentUser.getIdToken().then(function(idToken) {
-    //     userToken = idToken;
-    // })
 
-    //get the current user uid
-    var userUID = firebase.auth().currentUser.uid
+    const userUID = firebase.auth().currentUser.uid
+    var bearerAuth
 
-    //force a new token for user from fireauth as setting account information deems a "major change" which revokes previous token
+    // force a new token for user from fireauth as setting account information deems a "major change" which revokes previous token
     await fetch("https://securetoken.googleapis.com/v1/token?key=AIzaSyC3skpOyi2I7PdtmlpOWcANOldmToW_xys", {
         method: "POST",
 
@@ -112,49 +109,20 @@ const firebaseCreate = async (email, password, country, timezone, user) => {
             "refresh_token": firebase.auth().currentUser.refreshToken
         })
     }).then(response => response.json()).then(res => {
-        // console.log(res)
-
-        //set the user token var to the newest token
-        userToken = res["id_token"]
-
-        var bearerAuth = "Bearer " + res["id_token"]//response["user"]["$"]["B"]["b"]["b"]["firebase:authUser:AIzaSyC3skpOyi2I7PdtmlpOWcANOldmToW_xys:[DEFAULT]"]["stsTokenManager"]["accessToken"]
         
-        //wait 5 seconds incase cloud function trigger takes longer than usual
-        setTimeout(() => {
-            
-            //patch the user in the backend
-            patchUser(user, email, country, timezone, userUID, bearerAuth)
-        }, 5000);
+
+        bearerAuth = "Bearer " + res["id_token"]//response["user"]["$"]["B"]["b"]["b"]["firebase:authUser:AIzaSyC3skpOyi2I7PdtmlpOWcANOldmToW_xys:[DEFAULT]"]["stsTokenManager"]["accessToken"]
+        
 
         
 
     }).catch(e => {
         console.log(e)
-
-        
     })
 
-    
-        
-    //get the current user token
-    //const userToken = await getUserToken()
+    //patch the user in the backend
+    await patchUser(user, email, country, timezone, userUID, bearerAuth)
 
-    // firebase.auth().currentUser.getIdToken().then(function(idToken) {
-    //     userToken = idToken;
-    // })
-
-
-
-    
-
-    // var userID = response["user"]["$"]["B"]["b"]["b"]["firebase:authUser:AIzaSyC3skpOyi2I7PdtmlpOWcANOldmToW_xys:[DEFAULT]"]["uid"]
-    // var bearerAuth = "Bearer " + userToken//response["user"]["$"]["B"]["b"]["b"]["firebase:authUser:AIzaSyC3skpOyi2I7PdtmlpOWcANOldmToW_xys:[DEFAULT]"]["stsTokenManager"]["accessToken"]
-    // setTimeout(() => {
-    //     // firebaseLogin(email, password)
-    //     patchUser(user, email, country, timezone, userUID, bearerAuth)
-    // }, 5000);
-
-    
 }
 
 //this is reponsible for pre filling the session storage with the required user data from backend
@@ -183,8 +151,7 @@ const prefillSessionStorage = async() => {
                 sessionStorage.setItem("BearerAuth", bearerAuth)
                 sessionStorage.setItem("UserID", res["user"]["uid"])
 
-                
-
+                //redirect to the presenter home
                 window.location.replace("presenter-home.html");
             
             }
