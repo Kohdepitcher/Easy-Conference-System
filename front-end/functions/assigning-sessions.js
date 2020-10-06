@@ -80,7 +80,6 @@ function addPresentationsToSessions(sessions, presentations) {
     for(var a in sessionlessPresentations) {
         var zone = sessionlessPresentations[a]["user"]["timeZone"]
         console.log(zone)
-
         for(var b in unfullSessions) {
             var totalTimezone = 0
             for(var c in unfullSessions[b]["presentations"]) {
@@ -89,7 +88,7 @@ function addPresentationsToSessions(sessions, presentations) {
                 if(parseInt(c) + 1 == unfullSessions[b]["presentations"].length) {
                     averageTimezone = Math.round(totalTimezone / unfullSessions[b]["presentations"].length)
                     
-                    if(zone >= averageTimezone - 3 && zone <= averageTimezone + 3) {
+                    if(zone >= averageTimezone - 3 && zone <= averageTimezone + 3 && sessionlessPresentations[a]["paper"]["topic"]["topicName"] == unfullSessions[b]["presentations"][0]["paper"]["topic"]["topicName"]) {
                         unfullSessions[b]["presentations"].push(sessionlessPresentations[a]) // Update session to include the new presentation
                         sessionlessPresentations.splice(a, 1) // remove presentation from sessionlessPresentations array
                     }
@@ -102,76 +101,86 @@ function addPresentationsToSessions(sessions, presentations) {
         }
     }
 
-    if(unfullSessions.length == 0 && sessionlessPresentations.length != 0) {
-        // Create a new session
-        // Fill the session with the rest of the presentations in the sessionlessPresentations array
-        // If the new session presentations length grows bigger than 6, make a new session, repeat
-    }
+    groupSessionsToTimezone(sessionlessPresentations, 3)
 
-    console.log(sessionlessPresentations)
-    console.log(unfullSessions)
-    console.log(sessions)
+    // console.log(sessionlessPresentations)
+    // console.log(unfullSessions)
+    // console.log(sessions)
 }
 
-loadSessionsAndPresentations(1)
+loadSessionsAndPresentations(sessionStorage.getItem("SelectedConferenceForEdit"))
 
-// function groupSessionsToTimezone(presentations, days) {
-//     var usedTopics = []
+function groupSessionsToTimezone(presentations, days) {
+    var usedTopics = []
 
-//     for(var x in presentations) {
-//         if(!usedTopics.includes(presentations[x]["paper"]["topic"]["topicName"])) {
-//             usedTopics.push(presentations[x]["paper"]["topic"]["topicName"])
-//         }
-//     }
+    for(var x in presentations) {
+        if(!usedTopics.includes(presentations[x]["paper"]["topic"]["topicName"])) {
+            usedTopics.push(presentations[x]["paper"]["topic"]["topicName"])
+        }
+    }
 
-//     var sortedPres = presentations.sort((a,b) => {
-//         return a.user.timeZone - b.user.timeZone
-//     })
+    var sortedPres = presentations.sort((a,b) => {
+        return a.user.timeZone - b.user.timeZone
+    })
 
-//     var arrangedSessions = []
+    var arrangedSessions = []
 
-//     // Works 
-//     var range = sortedPres[sortedPres.length - 1]["user"]["timeZone"] - sortedPres[0]["user"]["timeZone"]
+    // Works 
+    var range = sortedPres[sortedPres.length - 1]["user"]["timeZone"] - sortedPres[0]["user"]["timeZone"]
+    console.log("Range: " + range)
+    if(range == 0) {
+        for(var w in usedTopics) {
+            var currentTopic = usedTopics[w]
 
-//     // Works
-//     var splits = Math.ceil(range / days)
-
-//     console.log(range)
-
-//     // Works
-//     var hourDiff = Math.ceil(range / splits)
-
-//     for(var w in usedTopics) {
-//         var currentTopic = usedTopics[w]
-//         for(var x = 0; x < splits; x++) {
-//             var newSession = []
-//             var splitStart = 0
+            newSession = sortedPres.filter(sess => sess["paper"]["topic"]["topicName"] == currentTopic);
+            var numberOfSessions = Math.ceil(newSession.length / 6)
+            console.log(newSession)
     
-//             if(x == 0) {
-//                 splitStart = sortedPres[0]["user"]["timeZone"]
-//             }
-//             else {
-//                 splitStart = sortedPres[0]["user"]["timeZone"] + (hourDiff * x) + 1
-//             }
-    
-//             var splitIncrease = hourDiff
-//             var splitLimit = sortedPres[0]["user"]["timeZone"] + (hourDiff * x) + splitIncrease
-    
-//             newSession = sortedPres.filter(sess => sess["user"]["timeZone"] <= splitLimit && sess["user"]["timeZone"] >= splitStart && sess["paper"]["topic"]["topicName"] == currentTopic);
-//             var numberOfSessions = Math.ceil(newSession.length / 6)
-//             console.log(newSession)
-    
-//             for(var z = 0; z < numberOfSessions; z++) {
-//                 var addableSession = newSession.splice(0, 6);
-//                 arrangedSessions.push(addableSession);
-//             }
-//         }
-//     }
+            for(var z = 0; z < numberOfSessions; z++) {
+                var addableSession = newSession.splice(0, 6);
+                arrangedSessions.push(addableSession);
+            }
+        }
+    }
+    else {
+        // Works
+        var splits = Math.ceil(range / days)
 
-//     arrangedSessions = reshuffleSessions(arrangedSessions, hourDiff)
+        console.log(range)
 
-//     console.log(arrangedSessions)
-// }
+        // Works
+        var hourDiff = Math.ceil(range / splits)
+
+        for(var w in usedTopics) {
+            var currentTopic = usedTopics[w]
+            for(var x = 0; x < splits; x++) {
+                var newSession = []
+                var splitStart = 0
+        
+                if(x == 0) {
+                    splitStart = sortedPres[0]["user"]["timeZone"]
+                }
+                else {
+                    splitStart = sortedPres[0]["user"]["timeZone"] + (hourDiff * x) + 1
+                }
+        
+                var splitIncrease = hourDiff
+                var splitLimit = sortedPres[0]["user"]["timeZone"] + (hourDiff * x) + splitIncrease
+        
+                newSession = sortedPres.filter(sess => sess["user"]["timeZone"] <= splitLimit && sess["user"]["timeZone"] >= splitStart && sess["paper"]["topic"]["topicName"] == currentTopic);
+                var numberOfSessions = Math.ceil(newSession.length / 6)
+                console.log(newSession)
+        
+                for(var z = 0; z < numberOfSessions; z++) {
+                    var addableSession = newSession.splice(0, 6);
+                    arrangedSessions.push(addableSession);
+                }
+            }
+        }
+    }
+
+    console.log(arrangedSessions)
+}
 
 // // Get presentations table for a specific conference (call conference ID)
 // const loadPresentations = async () => {

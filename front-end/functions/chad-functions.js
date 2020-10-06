@@ -1,7 +1,9 @@
 var chadIcon = document.querySelector(".chad-icon")
 var chadMessageArea = document.querySelector(".chad-message-area")
 var sendMessageField = document.querySelector("#sendToChadField")
+var sendMessageButton = document.querySelector("#sendMessageButton")
 
+// Greetings that chad can fire off
 var possibleGreetings = [
     "Hello",
     "Hi",
@@ -9,12 +11,14 @@ var possibleGreetings = [
     "Hey"
 ]
 
+// Greetings that change according to the time of day
 var possibleTimeDependentGreetings = [
     "Good Morning",
     "Good Afternoon",
     "Good Evening"
 ]
 
+// Different things that chad can ask a user, as well as relevant pages that can be redirected to if the user asks
 var suggestions = [
     {
         "Text": "View My Sessions",
@@ -42,6 +46,7 @@ var suggestions = [
     }
 ]
 
+// List of suggestions that an admin can ask chad to do, with relevant pages to redirect to
 var suggestionsAdmin = [
     {
         "Text": "View Active Conferences",
@@ -84,6 +89,7 @@ var hour = today.getHours()
 
 var userName = sessionStorage.getItem("Username")
 
+// If statement that checks what time of day it is and renders a different greeting based on that
 if(hour < 12) {
     chadSend(possibleTimeDependentGreetings[0] + ", " + userName)
 }
@@ -96,6 +102,7 @@ else {
 
 askAllSuggestions()
 
+// Open/Close Chad message panel
 chadIcon.addEventListener("click", () => {
     if(chadMessageArea.style.height == "100%") {
         chadMessageArea.style.height = 0
@@ -109,15 +116,19 @@ chadIcon.addEventListener("click", () => {
     }
 })
 
+// Registering when the enter key is pressed to end a message to chad
 document.addEventListener("keydown", (event) => {
     if(event.key == "Enter" && sendMessageField.value != "") {
         sendToChad(sendMessageField.value)
     }
 })
 
+sendMessageButton.addEventListener("click", () => {
+    sendToChad(sendMessageField.value)
+})
 
+// Function that involves a user sending a message to chad, which renders in the chat ui
 function sendToChad(message) {
-    console.log(answerNumber)
     var sentNode = document.createElement("div")
     var sentP = document.createElement("p")
 
@@ -175,6 +186,7 @@ function sendToChad(message) {
     sendMessageField.value = ""
 }
 
+// Function that handles chad sending a message to the user, which renders in the chat ui
 function chadSend(message) {
     var recieveNode = document.createElement("div")
     var recieveP = document.createElement("p")
@@ -187,6 +199,7 @@ function chadSend(message) {
     document.querySelector(".message-bay").scrollTop = document.querySelector(".message-bay").scrollHeight;
 }
 
+// Function to handle chad asking all possible suggestions for a specific user role
 function askAllSuggestions() {
     chadSend("What would you like help with? Please enter the corresponding number.")
     //For admin
