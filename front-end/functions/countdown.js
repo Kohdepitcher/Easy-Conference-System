@@ -25,8 +25,6 @@ function timezones() {
     var utcCurrent = currentDate.toUTCString()
     var ausDarwin = new Date("2020-09-09 18:00").toLocaleString("en-US", {timeZone: "Australia/Darwin"})
     var offsetTest = new Date("2020-09-09 18:00").toLocaleString("en-US")
-    console.log(ausDarwin)
-    console.log(offsetTest)
 }
 
 // timezones()

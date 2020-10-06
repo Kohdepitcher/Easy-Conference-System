@@ -4,15 +4,6 @@ const editTopicsAndOrganisationsButton = document.getElementById("editTopicsAndO
 var accountIcon = document.querySelector(".account-icon")
 var welcomeMessage = document.querySelector(".welcome-label")
 
-if(sessionStorage.getItem("Role") == "admin") {
-    var organisationsButton = document.getElementById("organisationsButton");
-
-    organisationsButton.addEventListener("click", () => {
-        window.location.replace("topics-organisations.html");
-    })
-}
-
-
 editAccountButton.addEventListener("click", () => {
     window.location.replace("my-account.html");
 })
@@ -23,8 +14,6 @@ if (editTopicsAndOrganisationsButton != null) {
         window.location.replace("topics-organisations.html");
     })
 }
-
-
 
 accountIcon.innerHTML = sessionStorage.getItem("Username")[0];
 welcomeMessage.innerHTML = "Welcome " + sessionStorage.getItem("Username");
@@ -43,7 +32,6 @@ const returnConferenceLength = async () => {
             cache: "no-cache"
         })
      }).then(response => response.json()).then(res => {
-            console.log(res);
             loadActiveConferences(res);
 
         }).catch(e => {
@@ -58,7 +46,6 @@ const loadActiveConferences = async (confArray) => {
     document.querySelector(".loading-box").style.display = "block"
     // Call all conferences
     for (var y in confArray) {
-        console.log(confArray[y]["conferenceName"])
 
         var tableNode = document.createElement("div")
         var cNode = document.createElement("div")
@@ -72,14 +59,12 @@ const loadActiveConferences = async (confArray) => {
         cNode.id = confArray[y]["conferenceID"]
         dNode.id = confArray[y]["conferenceID"]
 
-        console.log(confArray[y]["conferenceName"])
         cNode.innerHTML = confArray[y]["conferenceName"]
         var deadlineDate = new Date(confArray[y]["conferenceSubmissionDeadline"])
         var deadlineMoment = moment(deadlineDate.toString())
         dNode.innerHTML = deadlineMoment.format("DD/MM/YYYY HH:mm")
 
         tableNode.onclick = (event) => {
-            console.log(event.target.id)
             sessionStorage.setItem("SelectedConferenceForEdit", event.target.id);
             window.location.href = "presentations-for-conference.html";
         }
@@ -91,16 +76,11 @@ const loadActiveConferences = async (confArray) => {
 
         if(parseInt(y) + 1 == confArray.length || confArray.length == 0) {
             document.querySelector(".loading-box").style.display = "none"
-            console.log("load active conferences end");
         }
     }
 }
 
-// Load current groups for presenter
-// Needs to be pretty much rebuilt, as its acting like the active conferences function
-// Need to check presenter's paper id to then show the paper id's group
-
-//modified to fetch all sessions for user
+//fetch all sessions for user
 const loadCurrentGroups = async () => {
     document.querySelector(".current-groupings-presenter-text").innerHTML = "";
     document.querySelector(".loading-box").style.display = "block"
@@ -112,7 +92,9 @@ const loadCurrentGroups = async () => {
                     cache: "no-cache"
                 })
             }).then(response1 => response1.json()).then(res1 => {
-            console.log(res1)
+
+                // Eliminate multiple session references for the same reference 
+                // if the user has multiple presentations in a single session
                 var fullyIterated = false;
                 var takenGroups = [];
                 for(var z in res1) {
@@ -132,10 +114,9 @@ const loadCurrentGroups = async () => {
                             var dateNowMoment = moment(dateNow).unix();
             
                             if (date < dateNowMoment) {
-                                console.log("date has passed")
+                               // Do Nothing
                             } 
                             else {
-                                console.log("date has not passed")
                             
                                 //create a table row node
                                 var tableNode = document.createElement("div")
@@ -176,7 +157,6 @@ const loadCurrentGroups = async () => {
                                 paperNode.innerHTML = takenGroups[x]["Paper_paperTitle"]
             
                                 tableNode.onclick = (event) => {
-                                    console.log(event.target.id)
                                     sessionStorage.setItem("sessID", event.target.id);
                                     window.location.href = "indiv-session.html"
                                 }
@@ -193,7 +173,6 @@ const loadCurrentGroups = async () => {
             
                                 if(parseInt(x) + 1 == takenGroups.length || takenGroups.length == 0) {
                                     document.querySelector(".loading-box").style.display = "none"
-                                    console.log("load current groups end");
                                 }
                             }
                         }
@@ -216,7 +195,6 @@ const loadUnassignedSessions = async () => {
                     cache: "no-cache"
                 })
             }).then(response1 => response1.json()).then(res1 => {
-            console.log(res1)
 
             for(var x in res1) {
                 
@@ -255,13 +233,6 @@ const loadUnassignedSessions = async () => {
                     
                     paperNode.innerHTML = res1[x]["paper"]["paperTitle"]
 
-
-                    // tableNode.onclick = (event) => {
-                    //     console.log(event.target.id)
-                    //     sessionStorage.setItem("confID", event.target.id);
-                    //     window.location.replace("indiv-conference.html");
-                    // }
-
                     //set the new nodes to the table
                     tableNode.appendChild(conferenceNode)
                     tableNode.appendChild(paperNode)
@@ -272,7 +243,6 @@ const loadUnassignedSessions = async () => {
 
                     if(parseInt(x) + 1 == res1.length || res1.length == 0) {
                         document.querySelector(".loading-box").style.display = "none"
-                        console.log("load unassigned sessions end");
                     }
                 
             }
@@ -282,6 +252,7 @@ const loadUnassignedSessions = async () => {
     })
 }
 
+// Role check on home page render, which changes what is rendered on the page
 if(sessionStorage.getItem("Role") == "admin") {
     returnConferenceLength();
 }

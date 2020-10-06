@@ -73,7 +73,6 @@ const loadOrganisations = async () => {
             cache: "no-cache"
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
         
         //populate the topics array
         if (res.length != 0) {
@@ -122,8 +121,6 @@ const loadOrganisations = async () => {
 
 // load all active conferences for the admin
 const loadActiveConferences = async () => {
-    // document.querySelector(".current-groupings-admin-text").innerHTML = "";
-    // document.querySelector(".loading-box").style.display = "block"
     // Call all conferences
     await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/conferences", {
         method: "GET",
@@ -132,7 +129,6 @@ const loadActiveConferences = async () => {
             cache: "no-cache"
         })
      }).then(response => response.json()).then(res => {
-        console.log(res);
 
         showSpinner(false);
         
@@ -141,8 +137,6 @@ const loadActiveConferences = async () => {
 
             var newConf = new Conferece(res[x]["conferenceID"],res[x]["conferenceName"],res[x]["conferenceDate"],res[x]["conferenceSubmissionDeadline"], res[x]["organisation"]["organisationID"])
             conferences.push(newConf)
-
-            console.log(res[x]["conferenceName"])
 
             //create table row data
             var tableRow = conferenceTable.insertRow(-1)//document.createElement("<tr></tr>")
@@ -183,7 +177,6 @@ const loadActiveConferences = async () => {
 
                 //assign on click method to the button
                 nominateButton.onclick = (event) => {
-                    console.log(event.target.id)
                     sessionStorage.setItem("confID", event.target.id);
 
                     //get the organisation of the selected conf
@@ -350,8 +343,6 @@ async function updateSelectedConference() {
     var conferenceDatePicker = $('#editConferenceDatePicker').datetimepicker('viewDate');
     var submissionDeadLinePicker = $('#editSubmissionDeadLinePicker').datetimepicker('viewDate');
 
-    console.log(selectedConference)
-
     //validation
     if (conferenceName.value != "" && organisation.selectedIndex != "0" && selectedConference != null) {
 
@@ -417,7 +408,6 @@ async function deleteConference() {
             }
 
         }).then(response => response.json()).then(res => {
-            console.log(res)
 
             //set the selected conference back to null
             selectedConference = null;
@@ -426,7 +416,6 @@ async function deleteConference() {
             document.getElementById("deleteConferenceForm").submit()
 
         }).catch(e => {
-            console.log(e.message)
 
             alert(e.message)
         })
@@ -455,7 +444,7 @@ const sendNewConferece = async (name, date, deadLine, organisationID) => {
             "submissionDeadline": deadLine
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
+        // Do nothing
     }).catch(e => {
         console.log(e)
     })
@@ -497,7 +486,6 @@ const loadTopics = async (organisationID) => {
             cache: "no-cache"
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
         
         //populate the topics array
         if (res.length != 0) {
