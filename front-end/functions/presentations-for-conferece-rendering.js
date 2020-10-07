@@ -36,6 +36,15 @@ const loadingSpinner = document.getElementById("loadingSpinner");
 const sessionLoadingSpinner = document.getElementById("sessionLoadingSpinner");
 
 const createConferenceButton = document.getElementById("createConferenceButton");
+const autoAssignConferenceButton = document.getElementById("autoAssignSessionsButton");
+
+autoAssignConferenceButton.onclick = (event) => {
+
+   startAutoAssignment()
+
+    
+
+}
 
 //create form elements
 var inputTopic = document.getElementById("patchPaperTopicSelector");
@@ -231,9 +240,9 @@ const loadSessionsForConference = async () => {
 
             //populate table row with data
             sessionNameTableData.innerHTML = res[x]["sessionName"]
-            dateTableData.innerHTML = new Date(res[x]["date"]).toLocaleString()
-            startTimeTableData.innerHTML = new Date(res[x]["startTime"]).toLocaleString()
-            endTimeTableData.innerHTML = new Date(res[x]["endTime"]).toLocaleString()
+            dateTableData.innerHTML = moment( new Date(res[x]["date"]).toString()).format("DD/MM/YYYYY");
+            startTimeTableData.innerHTML = moment( new Date(res[x]["startTime"]).toString()).format("HH:MM");
+            endTimeTableData.innerHTML = moment( new Date(res[x]["endTime"]).toString()).format("HH:MM");
             
 
 
@@ -453,9 +462,9 @@ const loadPresentationsForConferece = async () => {
                 endTimeTableData.innerHTML = "NA"
             } else {
                 sessionNameTableData.innerHTML = sessionName["sessionName"]
-                dateTableData.innerHTML = new Date(sessionName["date"]).toLocaleString()
-                startTimeTableData.innerHTML = new Date(sessionName["startTime"]).toLocaleString()
-                endTimeTableData.innerHTML = new Date(sessionName["endTime"]).toLocaleString()
+                dateTableData.innerHTML = moment( new Date(sessionName["date"]).toString()).format("DD/MM/YYYYY");
+                startTimeTableData.innerHTML = moment( new Date(sessionName["startTime"]).toString()).format("HH:MM");
+                endTimeTableData.innerHTML = moment( new Date(sessionName["endTime"]).toString()).format("HH:MM");
             }
 
             
@@ -863,6 +872,43 @@ async function deletePresentation() {
 
     }
 
+}
+
+async function startAutoAssignment() {
+            
+    //auto assign sessions to presentations
+    await fetch("https://us-central1-easyconferencescheduling.cloudfunctions.net/api/assign-sessions-presentations-for-conference/" + + sessionStorage.getItem("SelectedConferenceForEdit"), {
+        method: "POST",
+        headers: new Headers({
+            Authorization: sessionStorage.getItem("BearerAuth"),
+            'Accept': 'application/json',
+            // 'Content-Type': 'application/json'
+        }),
+
+        //format the response to json
+    }).then(response => response.json()).then(res => {
+
+        //if the response != ok
+        if(!res.ok) {
+
+            //throw and error
+            throw Error(res["message"]);
+        }
+
+    }).then(response => response.json()).then(res => {
+        console.log(res)
+
+        //set the selected conference back to null
+        selectedSession = null;
+
+        //submit the form - will refresh the page and show the new conf
+        document.getElementById("deleteSessionForm").submit()
+
+    }).catch(e => {
+        console.log(e.message)
+
+        alert(e.message)
+    })
 }
 
 
