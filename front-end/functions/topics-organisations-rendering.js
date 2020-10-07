@@ -96,7 +96,6 @@ function populateOrganisationSelectList() {
 }
 
 function selectionDidChange() {
-    console.log("selection changed: " + selectedOrganisationSelector.value)
 
     //clear the topics table body to remove old topics
     topicTableBody.innerHTML = "";
@@ -234,8 +233,6 @@ function populateTopicsTable() {
                 
                 //get the topic from the array that matched the same id as the button
                 desiredTopic = topics.find(o => o.topicID == event.target.id)
-
-                console.log(desiredTopic)
                 
                 //set the name and organisation selector values from conference
                 document.getElementById("editTopicName").value = desiredTopic.topicName
@@ -299,9 +296,6 @@ const loadOrganisations = async () => {
             cache: "no-cache"
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
-        
-        
         if (res.length != 0) {
 
             //for each element in the reponse array, loop and push
@@ -344,7 +338,6 @@ const loadTopicsForSelectedOrganisation = async (organisationID) => {
             cache: "no-cache"
         })
     }).then(response => response.json()).then(res => {
-        console.log(res)
         
         //populate the topics array
         if (res.length != 0) {
@@ -527,8 +520,6 @@ async function createTopic() {
                 "organisationID": selectedOrganisationSelector.value
             })
         }).then(response  => {
-
-            // console.log(response.ok)
 
             //if the response != ok
             if(!response === "200") {
