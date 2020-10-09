@@ -226,7 +226,7 @@ export class ConferenceController {
 
         //get the contents of the body and set to a constant
         //each word inside is a key to a matching value in the body json
-        const { name, date, submissionDeadline } = request.body;
+        const { name, date, submissionDeadline, organisationID } = request.body;
         
         //no name in body
         if(!name) {
@@ -241,6 +241,10 @@ export class ConferenceController {
             return response.status(400).send({ message: "Missing conference submission deadline"});
         }
 
+        if(!organisationID) {
+            return response.status(400).send({ message: "Missing organisationID"});
+        }
+
         try {
             
             //create connection to database
@@ -248,9 +252,13 @@ export class ConferenceController {
 
             //create reference to conference repository
             const repository = conneciton.getRepository(Conference);
+            const organisaitonRepo = conneciton.getRepository(Organisation);
 
             //store the fetched conference to update
             const fetchedConference = await repository.findOne(conferenceID);
+
+            //store the fetched organisation
+            const fetchedOrganisation = await organisaitonRepo.findOne(organisationID);
 
             //update the conference properties
             fetchedConference.conferenceName = name;
@@ -262,6 +270,8 @@ export class ConferenceController {
 
             //update the conference submission deadline
             fetchedConference.conferenceSubmissionDeadline = dateFromUTCString(submissionDeadline);//new Date(Date.parse(submissionDeadline));
+
+            fetchedConference.organisation = fetchedOrganisation;
 
             //save the conference back to db
             const updatedconference = await repository.save(fetchedConference);
