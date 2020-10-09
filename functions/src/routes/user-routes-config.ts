@@ -53,7 +53,10 @@ export function userRoutesConfig(app: Application) {
          new userController().patch
      ]);
 
-     
+     app.patch('/user-for-signup/:uid', [
+        isAuthenticated,
+        new userController().patch
+    ]);
 
 
      // deletes :id user
