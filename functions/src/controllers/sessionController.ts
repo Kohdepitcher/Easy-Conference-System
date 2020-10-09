@@ -11,6 +11,7 @@ import { Session } from "../entities/session";
 // import { User } from "../entities/user";
 // import { Paper } from "../entities/paper";
 import { Conference } from "../entities/conference";
+import { Presentation } from "../entities/presentation";
 // import { Topic } from "../entities/topic"
 
 /*
@@ -162,6 +163,8 @@ export class SessionController {
             //need to also join the paper to each presentation
             .leftJoinAndSelect("Presentation.paper", "Paper")
 
+            .leftJoinAndSelect("Paper.topic", "Topic")
+
             //need to also join the author to each paper
             .leftJoinAndSelect("Presentation.user", "User")
             // .leftJoinAndSelect("Presentation", "presentation", "presentation.sessionSessionID = session.sessionID")
@@ -240,6 +243,8 @@ export class SessionController {
 
             // //need to also join the paper to each presentation
             .leftJoinAndSelect("Presentation.paper", "Paper")
+
+            .leftJoinAndSelect("Paper.topic", "Topic")
 
             // //need to also join the author to each paper
             .leftJoinAndSelect("Paper.author", "User")
@@ -324,6 +329,8 @@ export class SessionController {
 
             //need to also join the paper to each presentation
             .leftJoinAndSelect("Presentation.paper", "Paper")
+
+            .leftJoinAndSelect("Paper.topic", "Topic")
 
             //need to also join the author to each paper
             .leftJoinAndSelect("Presentation.user", "User")
@@ -493,12 +500,396 @@ export class SessionController {
     }
 
 
-    //helper functions
-    //handles an error and returns a response to the client
+    async assignSessionsToPresentations(request: Request, response: Response) {
+
+        //get the confID from request parameters
+        const { conferenceID } = request.params;
+
+        //send error msg if no conferenceID was provided
+        if (!conferenceID) {
+            return response.status(400).send({ message: "conference ID is missing from request paramters"});
+        }
+
+        try {
+
+            //store an instance of connect for db interaction
+            const connection = await connect()
+            
+            //store references to the required repositories
+            const presentationRepo = connection.getRepository(Presentation);
+            const sessionRepo = connection.getRepository(Session);
+            const conferenceRepo = connection.getRepository(Conference);
+
+            // fetch the matching conference
+            const fetchedConference = await conferenceRepo.findOne(conferenceID);
+
+            //if the conference doesnt exist, break early and show user error
+            if (fetchedConference == undefined || fetchedConference == null) {
+                return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+            }
+
+            //if a conferece does exist, delete all the sessions related to the conferece
+            // NOTE this a realy stupid fix to assigning sessions to exisitng sessions that have less than 6
+            // if we had more time, this would have a better solution than simply just jumping all the sessions and recreating them
+            await sessionRepo.createQueryBuilder('session')
+                .delete()
+                .where("session.conferenceConferenceID = :id", { id: conferenceID })
+                .execute();
+
+
+
+
+            var sessionlessPresentations: Presentation[]; // List of presentations that dont have a session
+            var unfullSessions: Session[]// List of sessions that aren't already full
+
+            //fill the sessionless presentations array with all presentations that dont have a session assigned
+            sessionlessPresentations = await presentationRepo.createQueryBuilder('presentation')
+
+                .select()
+
+                //join the relevant paper to the presentation
+                .leftJoinAndSelect("presentation.paper", "Paper")
+
+                .leftJoinAndSelect("Paper.topic", "Topic")
+
+                //join the session to the presentation
+                .leftJoinAndSelect("presentation.session", "Session")
+
+                //join the users to the presentation
+                .leftJoinAndSelect("presentation.user", "User")
+
+                //left join the user so that we only get presentations that match the user uuid
+                .leftJoinAndSelect("presentation.conference", "Conference")
+                .leftJoinAndSelect("Conference.organisation", "Organisation")
+
+                //only want the presentations for conference
+                .where("Conference.conferenceID = :id", { id: conferenceID })
+
+                //and only want where they havent got a session assigned
+                .andWhere("presentation.sessionSessionID IS NULL")
+
+                .getMany();
+
+
+            const tempSessions = await sessionRepo.createQueryBuilder('session')
+
+                .select()
+
+                //need to also join the presentations to the session
+                .leftJoinAndSelect("session.presentations", "Presentation")
+
+                //need to also join the paper to each presentation
+                .leftJoinAndSelect("Presentation.paper", "Paper")
+
+                .leftJoinAndSelect("Paper.topic", "Topic")
+
+                //need to also join the author to each paper
+                .leftJoinAndSelect("Presentation.user", "User")
+
+
+                //left join the conference to the session so that we only get sessions that match the conference id
+                .leftJoinAndSelect("session.conference", "Conference")
+                .where("Conference.conferenceID = :id", { id: conferenceID })
+
+                // .andWhere("Count(Presentation.presentationID) < 6")
+
+                // .groupBy("Presentation.presentationID")
+
+                //order by date asc
+                .orderBy("session.date", "ASC")
+
+                //then order by start time
+                .addOrderBy("session.startTime", "ASC")
+
+        
+                .printSql()
+
+                .getMany();
+
+            //filter out sessions that have 6 presentations
+            unfullSessions = tempSessions.filter(function(a) {
+
+                //return true if the length of the presentation array is less than 6
+                return a.presentations.length < 6;
+            })
+
+
+            var averageTimezone = 0
+            var totalTimezone = 0
+
+            if (sessionlessPresentations.length > 0 ) {
+           
+                for(var a in sessionlessPresentations) {
+
+                    var zone = sessionlessPresentations[a].user.timeZone//["user"]["timeZone"]
+                    console.log(zone)
+
+                    // if (unfullSessions[0].presentations.length != 0 ) {
+                    
+                            for(var b in unfullSessions) {
+
+                                var totalTimezone = 0
+
+                                for(var c in unfullSessions[b].presentations) {
+                                    
+                                    totalTimezone += unfullSessions[b].presentations[c].user.timeZone
+                    
+                                    if(parseInt(c) + 1 == unfullSessions[b].presentations.length) {
+
+                                        averageTimezone = Math.round(totalTimezone / unfullSessions[b].presentations.length)
+
+                                        
+
+                                        try {
+                                            console.log("Sessionless presentation topic name: " + sessionlessPresentations[a].paper.topic.topicName)
+                                            console.log("unfull session presentation topic name: " + unfullSessions[b].presentations[0].paper.topic.topicName)
+
+                                            if((zone >= averageTimezone - 3) && (zone <= averageTimezone + 3) && (sessionlessPresentations[a].paper.topic.topicName == unfullSessions[b].presentations[0].paper.topic.topicName)) {
+                                            
+                                                unfullSessions[b].presentations.push(sessionlessPresentations[a]) // Update session to include the new presentation
+                                                
+                                                sessionlessPresentations.splice(parseInt(a), 1) // remove presentation from sessionlessPresentations array
+                                            }
+                                        } catch (err) {
+                                            console.log(err)
+                                        }
+                                        
+                                        
+                                    }
+                                }
+                    
+                                if(unfullSessions[b]["presentations"].length == 6) {
+                                    unfullSessions.splice(parseInt(b), 1)
+                                }
+                            }
+                    // }
+                }
+
+                    groupSessionsToTimezone(sessionlessPresentations, 3)
+
+        
+            }
+
+
+
+            return response.status(200).send("Successfully generated sessions for conference");
+
+        } catch (error) {
+            return handleError(response, error);
+        }
+
+
+    }
+
+}
+
+// function range(start, stop, step) {
+//     if (typeof stop == 'undefined') {
+//         // one param defined
+//         stop = start;
+//         start = 0;
+//     }
+
+//     if (typeof step == 'undefined') {
+//         step = 1;
+//     }
+
+//     if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+//         return [];
+//     }
+
+//     var result = [];
+//     for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+//         result.push(i);
+//     }
+
+//     return result;
+// };
+
+const rangeCreator = (start, end) => Array.from({length: (end - start)}, (v, k) => k + start);
+
+function handleError(res: Response, err: any) {
+    return res.status(500).send({ message: `${err.code} - ${err.message}` });
+}
+
+function groupSessionsToTimezone(presentations: Presentation[], days: number) {
+
+    var usedTopics = []
+
+    for(var x in presentations) {
+        if(!usedTopics.includes(presentations[x].paper.topic.topicName)) {
+            usedTopics.push(presentations[x].paper.topic.topicName)
+        }
+    }
+
+    var sortedPres = presentations.sort((a: Presentation, b: Presentation) => {
+        return Number(a.user.timeZone) - Number(b.user.timeZone)
+    })
+
+    var arrangedSessions = []
+
+    // Works 
+    var range = sortedPres[sortedPres.length - 1].user.timeZone - sortedPres[0].user.timeZone
+    console.log("Range: " + range)
+    if(range == 0) {
+
+        var sessionCount = 0;
+
+        for(var w in usedTopics) {
+            var currentTopic = usedTopics[w]
+
+            var newSession: any[] = sortedPres.filter(sess => sess.paper.topic.topicName == currentTopic);
+            var numberOfSessions = Math.ceil(newSession.length / 6)
+
+            //store a count of matching sessions for topic
+            var matchingSessionsCount = 0;
+
+            for(var z = 0; z < numberOfSessions; z++) {
+
+                var addableSession = newSession.splice(0, 6);
+                arrangedSessions.push(addableSession);
+
+                //increment the matching session count
+                //will count up if there is multiple sessions with the same topic
+                matchingSessionsCount += 1;
+                sessionCount += 1;
+                console.log("session Count:" + matchingSessionsCount)
+
+                //create a session for the topic using the array of 6 presentations
+                createSessionForPresentation(addableSession, days, matchingSessionsCount, sessionCount)
+            }
+        }
+    }
+
+    //this code will now never execute since we now delete all sessions to assign presentations to new sessions
+    // else {
+    //     // Works
+    //     var splits = Math.ceil(range / days)
+
+    //     // console.log(range)
+
+    //     // Works
+    //     var hourDiff = Math.ceil(range / splits)
+
+    //     for(var w in usedTopics) {
+
+    //         var currentTopic = usedTopics[w]
+
+    //         const splitRange = rangeCreator(0, splits);
+
+
+    //         for(let x of splitRange) {
+
+    //             var newSession = []
+    //             var splitStart = 0
+        
+    //             if(x == 0) {
+    //                 splitStart = sortedPres[0].user.timeZone
+    //             }
+    //             else {
+    //                 splitStart = sortedPres[0].user.timeZone + (hourDiff * x) + 1
+    //             }
+        
+    //             var splitIncrease = hourDiff
+    //             var splitLimit = sortedPres[0].user.timeZone + (hourDiff * x) + splitIncrease
+        
+    //             newSession = sortedPres.filter(sess => sess.user.timeZone <= splitLimit && sess.user.timeZone >= splitStart && sess.paper.topic.topicName == currentTopic);
+    //             var numberOfSessions = Math.ceil(newSession.length / 6)
+    //             // console.log(newSession)
+        
+    //             for(var z = 0; z < numberOfSessions; z++) {
+    //                 var addableSession = newSession.splice(0, 6);
+    //                 arrangedSessions.push(addableSession);
+                    
+    //                 createSessionForPresentation(addableSession, splits, 1);
+    //                 console.log("splits: " + splits)
+    //             }
+    //         }
+    //     }
+    // }
+
+    console.log(arrangedSessions)
 
 
 }
 
-function handleError(res: Response, err: any) {
-    return res.status(500).send({ message: `${err.code} - ${err.message}` });
+//creates a session and assigns an array of presentations to it
+async function createSessionForPresentation(presentations: Presentation[], days: number, matchingSessionsCount: number, sessionCount: number) {
+
+    //how many sessions per day
+    const maxSessionsPerDay = 4;
+
+    try {
+
+        //store an instance of connect for db interaction
+        const connection = await connect()
+
+        //store references to the required repositories
+        // const presentationRepo = connection.getRepository(Presentation);
+        const sessionRepo = connection.getRepository(Session);
+
+        const conferenceRepo = connection.getRepository(Conference);
+            
+        // fetch the matching conference
+        const fetchedConference = await conferenceRepo.findOne(presentations[0].conference.conferenceID);
+
+        // if (fetchedConference == undefined || fetchedConference == null) {
+        //     return response.status(400).send({ message: "No conference exists that matched conference id: " + conferenceID})
+        // }
+
+        //figure out how many days to add the session based on the total count of sessions so far divided by the allowed amount of sessions per day minus 1
+        //the minus 1 is because we want the first sessions to occure on the same day of the conference
+        var numberOfDaysToAdd = Math.ceil((sessionCount / maxSessionsPerDay) - 1)
+
+        //new paper entry
+        const newSession = new Session();
+
+        const date = presentations[0].conference.conferenceDate
+        const dateWithAddedOffset = new Date(date.setUTCDate(date.getUTCDate() + numberOfDaysToAdd));
+
+        //store the starting time for session, calculated later on
+        var startingTime: Date;
+
+        //store the endtinf time for session, calculated later on
+        var endingTime: Date;
+
+        //determine times based on the number of days to add
+        if (numberOfDaysToAdd == 0) {
+            startingTime = new Date(dateWithAddedOffset.setUTCHours(13,30,0));
+            endingTime = new Date(dateWithAddedOffset.setUTCHours(18,0,0));
+        } 
+        
+        //if the day is after the first day of the conference
+        else {
+            startingTime = new Date(dateWithAddedOffset.setUTCHours(9,0,0));
+            endingTime = new Date(dateWithAddedOffset.setUTCHours(12,0,0));
+        }
+
+
+            //asign name of session
+            newSession.sessionName = presentations[0].paper.topic.topicName + " " + matchingSessionsCount;// + " " + String(matchingSession.length + 1)
+
+            //assign date for session
+            newSession.date = dateWithAddedOffset
+
+            //assign start time
+            newSession.startTime = startingTime;
+
+            //assign end time
+            newSession.endTime = endingTime;
+
+            //assign the array of presentations to this new session
+            newSession.presentations = presentations;
+
+            //assign the conference to the session
+            newSession.conference = fetchedConference
+
+            
+            //save the new conference to DB
+            await sessionRepo.save(newSession);
+
+    } catch (err) {
+        console.error(err)
+    }
+
 }
