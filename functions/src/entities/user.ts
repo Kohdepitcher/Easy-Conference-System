@@ -31,7 +31,7 @@ export class User extends BaseEntity {
 
     //timezone for the user
     @Column()
-    timeZone: Number;
+    timeZone: number;
 
     //track when user was created
     @Column('datetime')
