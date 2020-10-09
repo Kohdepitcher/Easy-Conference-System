@@ -683,30 +683,9 @@ export class SessionController {
 
 }
 
-// function range(start, stop, step) {
-//     if (typeof stop == 'undefined') {
-//         // one param defined
-//         stop = start;
-//         start = 0;
-//     }
 
-//     if (typeof step == 'undefined') {
-//         step = 1;
-//     }
-
-//     if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
-//         return [];
-//     }
-
-//     var result = [];
-//     for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
-//         result.push(i);
-//     }
-
-//     return result;
-// };
-
-const rangeCreator = (start, end) => Array.from({length: (end - start)}, (v, k) => k + start);
+//removed for now can be added back later
+// const rangeCreator = (start, end) => Array.from({length: (end - start)}, (v, k) => k + start);
 
 function handleError(res: Response, err: any) {
     return res.status(500).send({ message: `${err.code} - ${err.message}` });
