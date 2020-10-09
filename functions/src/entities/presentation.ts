@@ -34,7 +34,7 @@ export class Presentation extends BaseEntity {
     @ManyToOne(type => Conference, conference => conference.presentations, {cascade: true, onDelete: "CASCADE" })
     conference: Conference;
 
-    @ManyToOne(type => Session, session => session.presentations)
+    @ManyToOne(type => Session, session => session.presentations, {cascade: true, onDelete: "SET NULL" })
     session: Session;
 
     // @ManyToOne(type => Topic, topic => topic.presentations)
