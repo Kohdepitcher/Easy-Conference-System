@@ -22,6 +22,12 @@ export function sessionRoutesConfig(app: Application) {
         new SessionController().createSession
     ])
 
+    app.post('/assign-sessions-presentations-for-conference/:conferenceID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new SessionController().assignSessionsToPresentations
+    ])
+
     // READ
     // get all sessions for user
     app.get('/sessions/:userUID', [
@@ -56,8 +62,10 @@ export function sessionRoutesConfig(app: Application) {
     ])
 
     // //DELETE
-    // app.delete('/presentations/:presentationID', [
-    //     new  PresentationController().updateOrganisation
-    // ])
+    app.delete('/sessions/:sessionID', [
+        isAuthenticated,
+        isAuthorized({ hasRole: [AuthRoles.Admin] }),
+        new  SessionController().deleteSession
+    ])
 
 }
