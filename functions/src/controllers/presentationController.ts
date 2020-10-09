@@ -338,6 +338,12 @@ export class PresentationController {
 
             .where("Conference.conferenceID = :id", { id: conferenceID })
 
+            //order by date asc
+            .orderBy("Session.date", "ASC")
+
+            //then order by start time
+            .addOrderBy("Session.startTime", "ASC")
+
             .getMany();
         
 
