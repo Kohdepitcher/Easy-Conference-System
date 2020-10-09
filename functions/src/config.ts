@@ -24,6 +24,10 @@ export const config: ConnectionOptions = {
     entities: [
        'lib/entities/**/*.js'
     ],
+    "migrations": ["migration/*.js"],
+    "cli": {
+        "migrationsDir": "migration"
+    },
 
     // Production Mode
     ...(prod && {
