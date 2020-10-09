@@ -270,10 +270,13 @@ export class userController {
     */
 
     async patch(req: Request, res: Response) {
+
+        // //temp store a UID that will be set soon
+        var specifiedUID
+        
         try {
 
-            // //temp store a UID that will be set soon
-            var specifiedUID
+            
 
             //if a user is a presenter
             if (res.locals.role == AuthRoles.presenter) {
@@ -355,6 +358,86 @@ export class userController {
                 //update the user roles
                 await admin.auth().setCustomUserClaims(specifiedUID, { role })
             }
+            
+            //get and store the specific user from db
+            const user = await admin.auth().getUser(specifiedUID)
+
+
+            //update the user in the DB
+            //create a new connection
+            const connection = await connect();
+            
+            //create reference to the user repo
+            const userRepo = connection.getRepository(User);
+            
+            //fetch the user from DB that matches the UID
+            const updateUser = await userRepo.findOne({UUID: specifiedUID});
+                       
+            //name is the display name
+            updateUser.name = displayName;
+
+            //set user email
+            updateUser.email = email;
+
+            //set user country
+            updateUser.country = country;
+
+            //set user timezone
+            updateUser.timeZone = timeZone;
+            
+            //save the changes to the DB
+            await userRepo.save(updateUser);
+            
+            return res.status(204).send({ user: mapUser(user) })
+        } catch (err) {
+            return handleError(res, err)
+        }
+    }
+
+    async patchUserDuringSignup(req: Request, res: Response) {
+
+        // //temp store a UID that will be set soon
+        var specifiedUID = res.locals.uid;
+        
+        try {
+
+            //create a constant to store the request body
+            const { displayName, email, country, timeZone } = req.body
+
+            //if any of the required fields are empty
+            // no name in body
+            if (!displayName) {
+                
+                //send 400 error to client
+                return res.status(400).send({ message: 'Missing displayName for user' })
+            }
+
+            if (!email) {
+                
+                //send 400 error to client
+                return res.status(400).send({ message: 'Missing email for user' })
+            }
+
+            //no country in body
+            if (!country) {
+
+                //send error message to client
+                return res.status(400).send({ message: 'Missing country for user'})
+            }
+
+            //no timezone in budy
+            if (!timeZone) {
+
+                //return error message to client
+                return res.send(400).send({ message: 'Missing timezone for user'})
+            }
+
+                        
+            
+            //update the user information in fire auth
+            await admin.auth().updateUser(specifiedUID, { displayName, email })
+
+
             
             //get and store the specific user from db
             const user = await admin.auth().getUser(specifiedUID)
