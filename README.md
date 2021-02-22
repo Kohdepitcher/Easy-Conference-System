@@ -15,6 +15,7 @@ The back end was written in Typescript and was built as an REST API that ran on 
  - Back end
 	 - MySQL running inside Google Cloud SQL
 	 - TypeORM - object-relational mapping library
+	 -  Express - middleware library
 	 - TypeScript and NodeJS
 	 - Firebase Admin SDK
  - Front end
