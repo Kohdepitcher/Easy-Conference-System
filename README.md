@@ -1,5 +1,5 @@
 #  Easy Conference System
-This was created as apart of our final project before graduation. The project owner wanted to make conference scheduling easier during the time of Covid-19. We proposed an online system that would handle nominations for topics for different conferences and allow staff to easily see instant viewing of data within areas of the system. 
+This was created as apart of our final project before graduation. The project owner, Easy-Conferece wanted to make conference scheduling easier during the time of Covid-19 as their current process was manually data entry within an spreadsheet. We proposed an online system that would handle nominations for topics for different conferences and allow staff to easily see instant viewing of data within areas of the system. 
 
 [Access Easy Conference System](https://easyconferencescheduling.web.app)
 
