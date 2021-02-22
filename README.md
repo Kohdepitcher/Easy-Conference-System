@@ -8,9 +8,9 @@ This was created as apart of our final project before graduation. The project ow
 ## Technologies
 The project utilised a variety of technologies and frameworks for all parts of the project. Our front end, website, was built using pure vanilla HTML, CSS, Javascript. User authentication was handled by using the Firebase API on our website.
 
-The back end was written in Typescript and was built as an REST API that ran on NodeJS inside cloud functions hosted in Firebase. By doing so, we created a server less backend that would only run as needed via calls to our endpoints which would save on running costs. For our Database layer, we used MySQL running on Google Cloud SQL which was interacted with via TypeORM, our ORM library of choice, to make interactions easier and enabled an easier modelling of objects.
+The back end was written in Typescript and was built as an REST API that ran on NodeJS inside cloud functions hosted in Firebase. By doing so, we created a server less backend that would only run as needed via calls to our endpoints which would save on running costs.  Our API is secured using bearer auth tokens that as http requests are made, the middleware will reject any requests with missing or invalid Firebase Auth tokens.
 
- 
+For our Database layer, we used MySQL running on Google Cloud SQL which was interacted with via TypeORM, our ORM library of choice, to make interactions easier and enabled an easier modelling of objects.
 
  - Back end
 	 - MySQL running inside Google Cloud SQL
