@@ -3,6 +3,9 @@ This was created as apart of our final project before graduation. The project ow
 
 [Access Easy Conference System](https://easyconferencescheduling.web.app)
 
+Admin account - email: testadmin@test.com, password: testadmin
+User account - email: testuser@test.com, password: testuser
+
 [Access the portfolio piece about the project](https://portfolium.com/pp/3FBBB6DF-4F50-4953-B888-FA0BA7A7A06D)
 
 ## Technologies
