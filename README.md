@@ -3,7 +3,7 @@ This was created as apart of our final project before graduation. The project ow
 
 [Access Easy Conference System](https://easyconferencescheduling.web.app)
 
-Example accounts for acces:
+Example accounts for access:
 - Admin account - email: testadmin@test.com, password: testadmin
 - User account - email: testuser@test.com, password: testuser
 
